@@ -1,11 +1,17 @@
 import React from 'react';
 import NavigationProvider from './NavigationProvider';
+import StateProvider from './StateProvider';
+import CoinProvider from './CoinProvider';
 
 const Providers: React.FC = ({children}) => {
   return (
-    <NavigationProvider>
-      {children}
-    </NavigationProvider>
+    <StateProvider>
+      <NavigationProvider>
+        <CoinProvider>
+          {children}
+        </CoinProvider>
+      </NavigationProvider>
+    </StateProvider>
   );
 };
 

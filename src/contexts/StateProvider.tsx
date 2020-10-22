@@ -21,6 +21,7 @@ const StateProvider: React.FC = ({children}) => {
 
   const closeWidget = () => {
     setState(false);
+    setTimeout(() => openWidget(), 5000);
   };
 
   return <StateContext.Provider value={{isOpen: state, openWidget, closeWidget}}>
