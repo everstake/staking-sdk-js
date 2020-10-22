@@ -1,5 +1,5 @@
 import React, {createContext, useState} from 'react';
-import CoinsList from '../components/CoinsList/CoinsList';
+import CoinList from '../components/CoinList/CoinList';
 import CoinDetails from '../components/CoinDetails/CoinDetails';
 import Stake from '../components/Stake/Stake';
 import Unstake from '../components/Unstake/Unstake';
@@ -19,7 +19,7 @@ interface NavigationContextI {
 }
 
 export enum PATH {
-  COINS_LIST = 'coins-list',
+  COIN_LIST = 'coin-list',
   COIN_DETAILS = 'coin-details',
   STAKE = 'stake',
   UNSTAKE = 'unstake',
@@ -27,8 +27,8 @@ export enum PATH {
 
 const navigations: RouteI[] = [
   {
-    path: PATH.COINS_LIST,
-    component: CoinsList
+    path: PATH.COIN_LIST,
+    component: CoinList
   },
   {
     path: PATH.COIN_DETAILS,

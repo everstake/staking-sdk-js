@@ -1,0 +1,26 @@
+@import "src/sass/vars"
+.staking-sdk
+  .coin-item
+    display: flex
+    align-items: center
+    &__icon
+      +size(40px)
+      margin: 16px
+    &__info
+      display: flex
+      align-items: center
+      flex: 1
+      padding: 16px 16px 16px 0
+      border-bottom: 1px solid var(--everstakeDivider)
+    &__name
+      font: 400 16px/24px var(--everstakeFont)
+      letter-spacing: 0.15px
+      color: var(--everstakeTextColorPrimary)
+    &__apr
+      font: 400 14px/20px var(--everstakeFont)
+      letter-spacing: 0.25px
+      color: var(--everstakeTextColorSecondary)
+    &__staked-sum
+      font: 400 14px/16px var(--everstakeFont)
+      letter-spacing: 0.4px
+      margin-left: auto

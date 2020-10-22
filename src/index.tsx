@@ -32,6 +32,7 @@ export class WalletSdk {
 window.WalletSdk = WalletSdk;
 
 const wallet = new WalletSdk('wallet-sdk');
+console.log('wallet', wallet);
 // setTimeout(() => wallet.open(), 5000);
 
 
