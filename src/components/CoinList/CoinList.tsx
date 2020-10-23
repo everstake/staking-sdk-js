@@ -22,17 +22,21 @@ const CoinList = () => {
     {!!coinList && coinList.length > 0 ? <div className='coin-list__body'>
       {stakedCoinList.length && <>
         <p className='coin-list__subtitle'>Staked</p>
-        {stakedCoinList.map(coin => {
-          const props = new CoinItemProps(coin);
-          return <CoinItem {...props} key={coin.id}/>;
-        })}
+        <ul className='coin-list__list'>
+          {stakedCoinList.map(coin => {
+            const props = new CoinItemProps(coin);
+            return <CoinItem {...props} key={coin.id}/>;
+          })}
+        </ul>
       </>}
       {readyToStakeCoinList.length && <>
         <p className='coin-list__subtitle'>Ready to stake</p>
-        {readyToStakeCoinList.map(coin => {
-          const props = new CoinItemProps(coin);
-          return <CoinItem {...props} key={coin.id}/>;
-        })}
+        <ul className='coin-list__list'>
+          {readyToStakeCoinList.map(coin => {
+            const props = new CoinItemProps(coin);
+            return <CoinItem {...props} key={coin.id}/>;
+          })}
+        </ul>
       </>}
     </div> : <p className='coin-list__subtitle'>No coins</p>}
   </div>;

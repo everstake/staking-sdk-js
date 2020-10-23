@@ -85,4 +85,8 @@ export class Coin implements CoinDto, Omit<Partial<StakingInfoDto>, 'coinId'> {
       this.validator = staking.validator;
     }
   }
+
+  get isStaked(): boolean {
+    return !!this.amount && !isNaN(+this.amount) && +this.amount > 0;
+  }
 }

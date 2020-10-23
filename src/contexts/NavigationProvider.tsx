@@ -7,15 +7,15 @@ import Unstake from '../components/Unstake/Unstake';
 interface RouteI {
   path: PATH;
   component: React.ComponentType | React.ClassType<any, any, any>;
-  params?: unknown;
+  params?: { [key: string]: any };
 }
 
 interface NavigationContextI {
   route: RouteI;
   navigations: RouteI[];
   tree: RouteI[];
-  navigate?: (path: PATH, params?: any) => boolean;
-  goBack?: () => boolean;
+  navigate: (path: PATH, params?: { [key: string]: any }) => boolean;
+  goBack: () => boolean;
 }
 
 export enum PATH {
@@ -44,10 +44,14 @@ const navigations: RouteI[] = [
   },
 ];
 
+const rootRoute: RouteI = {...navigations[1], params: {coinId: '0'}};
+
 const initialValue: NavigationContextI = {
-  route: navigations[0],
+  route: rootRoute,
   navigations,
-  tree: [navigations[0]]
+  tree: [rootRoute],
+  navigate: () => false,
+  goBack: () => false
 };
 
 export const NavigationContext = createContext<NavigationContextI>(initialValue);
@@ -56,7 +60,7 @@ const NavigationProvider: React.FC = ({children}) => {
   const [route, setRoute] = useState<RouteI>(initialValue.route);
   const [tree, setTree] = useState<RouteI[]>(initialValue.tree);
 
-  const navigate = (path: PATH, params?: any, changeTree = true): boolean => {
+  const navigate = (path: PATH, params?: { [key: string]: any }, changeTree = true): boolean => {
     const newRoute: RouteI | undefined = navigations.find(nav => nav.path === path);
     if (!newRoute || path === route.path) {
       return false;

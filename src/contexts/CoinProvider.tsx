@@ -8,12 +8,14 @@ interface CoinI {
   coinList: Coin[];
   stakedCoinList: Coin[];
   readyToStakeCoinList: Coin[];
+  getCoin: (coinId: string) => Coin | undefined;
 }
 
 const initialValue: CoinI = {
   coinList: [],
   stakedCoinList: [],
-  readyToStakeCoinList: []
+  readyToStakeCoinList: [],
+  getCoin: () => undefined
 };
 
 export const CoinContext = createContext<CoinI>(initialValue);
@@ -31,26 +33,31 @@ const CoinProvider: React.FC = ({children}) => {
       newCoinList.push(new Coin(coin, findCoinInStakedList));
     });
     setCoinList(newCoinList);
-  }, [isOpen]);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
       fetchCoins();
     }
-  }, [isOpen]);
+  }, [fetchCoins, isOpen]);
 
   const getStakedCoinList = (): Coin[] => {
-    return coinList.filter(coin => coin.amount && +coin.amount > 0);
+    return coinList.filter(coin => coin.isStaked);
   };
 
   const getReadyToStakeCoinList = (): Coin[] => {
-    return coinList.filter(coin => !coin.amount || +coin.amount === 0);
+    return coinList.filter(coin => !coin.isStaked);
+  };
+
+  const getCoin = (coinId: string): Coin | undefined => {
+    return coinList.find(coin => coin.id === coinId);
   };
 
   return <CoinContext.Provider value={{
     coinList,
     stakedCoinList: getStakedCoinList(),
-    readyToStakeCoinList: getReadyToStakeCoinList()
+    readyToStakeCoinList: getReadyToStakeCoinList(),
+    getCoin
   }}>
     {children}
   </CoinContext.Provider>;
