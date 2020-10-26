@@ -9,11 +9,13 @@ declare const window: any;
 
 export class WalletSdk {
   logTestText?: () => void;
+  ref: any = React.createRef();
+  handlers: any = {};
   constructor(id: string) {
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
-          <StakingSdk/>
+          <StakingSdk handlers={this.handlers}/>
         </Providers>
       </React.StrictMode>,
       document.getElementById(id)
@@ -21,7 +23,10 @@ export class WalletSdk {
   }
 
   open() {
-    console.log('open');
+    const handler = this.handlers.onOpen;
+    if (typeof handler === 'function') {
+      handler();
+    }
   }
 
   close() {
@@ -31,8 +36,9 @@ export class WalletSdk {
 
 window.WalletSdk = WalletSdk;
 
-const wallet = new WalletSdk('wallet-sdk');
-console.log('wallet', wallet);
+// const wallet = new WalletSdk('wallet-sdk');
+// window.wallet = wallet;
+// console.log('wallet', wallet);
 // setTimeout(() => wallet.open(), 5000);
 
 
