@@ -1,20 +1,23 @@
 @import "vars"
 .staking-sdk
-  .stake-btn, .unstake-btn
+  .stake-btn, .unstake-btn, .open-calculator-btn
+    font: 500 16px/16px var(--everstakeFont)
+    letter-spacing: .75px
     border-radius: 4px
+    text-align: center
   .stake-btn
     width: 100%
     color: var(--everstakeColorAccent)
     background-color: var(--everstakeButtonStackeBackground)
-    font: 500 16px/16px var(--everstakeFont)
-    letter-spacing: .75px
     padding: 12px
-    text-align: center
+  .open-calculator-btn
+    width: 100%
+    color: var(--everstakeColorPrimary)
+    background-color: var(--everstakeButtonOpenCalculatorBackground)
+
+    padding: 12px
   .unstake-btn
     min-width: 98px
     color: var(--everstakeColorAccent)
     background-color: var(--everstakeButtonUnstackeBackground)
-    font: 500 16px/16px var(--everstakeFont)
-    letter-spacing: .75px
     padding: 8px
-    text-align: center

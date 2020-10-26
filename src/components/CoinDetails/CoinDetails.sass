@@ -40,6 +40,11 @@
             margin-right: 24px
           span
             color: var(--everstakeTextColorPrimaryInverted)
+    &__actions
+      display: flex
+      justify-content: space-between
+    &__action
+      width: calc(50% - 4px)
     &__body
       flex: 1
       overflow: auto
@@ -57,6 +62,15 @@
         &__amount
           font: 500 24px/28px var(--everstakeFont)
           color: var(--everstakeTextColorPrimary)
+        &__info
+          display: flex
+        &__item
+          font: 500 14px/24px var(--everstakeFont)
+          color: var(--everstakeTextColorSecondary)
+          &:first-child
+            margin-right: 24px
+          span
+            color: var(--everstakeTextColorPrimary)
       .staked__title, .about__title
         font: 400 14px/20px var(--everstakeFont)
         letter-spacing: .25px

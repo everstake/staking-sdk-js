@@ -44,7 +44,7 @@ const navigations: RouteI[] = [
   },
 ];
 
-const rootRoute: RouteI = {...navigations[1], params: {coinId: '0'}};
+const rootRoute: RouteI = {...navigations[0]};
 
 const initialValue: NavigationContextI = {
   route: rootRoute,

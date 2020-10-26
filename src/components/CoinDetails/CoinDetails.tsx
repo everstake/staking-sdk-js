@@ -49,6 +49,7 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
           </div>
           <div className='coin-details__actions'>
             <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>Stake</button>
+            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>Open calculator</button>
           </div>
         </div>
       </div>
@@ -61,7 +62,8 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
             <button className='staked__action unstake-btn'>Unstake</button>
           </div>
           <div className='staked__info'>
-            123
+            <p className='staked__item'>Validator: <span>{coin.validator?.validatorName || '-'}</span></p>
+            <p className='staked__item'>Yearly income: <span>{coin.yieldPercent}%</span></p>
           </div>
         </div>}
 
