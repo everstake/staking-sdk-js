@@ -7,7 +7,7 @@ interface StateContextI {
 }
 
 const initialValue: StateContextI = {
-  isOpen: true
+  isOpen: false
 };
 
 export const StateContext = createContext<StateContextI>(initialValue);
