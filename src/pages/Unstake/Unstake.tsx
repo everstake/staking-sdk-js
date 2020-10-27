@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Unstake.sass';
 import useCoin from '../../hooks/useCoin';
 import {Coin} from '../../models/coins.model';
 import useNavigation from '../../hooks/useNavigation';
 import Input from '../../components/Input/Input';
 import {useForm} from 'react-hook-form';
+import CustomSlider from '../../components/CustomSlider/CustomSlider';
 
 interface UnstakeParams {
   coinId: string;
@@ -15,6 +16,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
   const {getCoin} = useCoin();
   const coin: Coin | undefined = getCoin(coinId);
   const {goBack, navigate} = useNavigation();
+  const [rangeValue, setRangeValue] = useState<number | number[]>(20);
   const {register, handleSubmit, errors} = useForm({
     defaultValues: {
       amount: '0'
@@ -25,9 +27,18 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
     return null;
   }
 
+  const valuetext = (value: number) => {
+    return `${value}°C`;
+  };
+
+  const handleSliderChange = (event: any, newValue: number | number[]) => {
+    setRangeValue(newValue);
+  };
+
   return <div className='unstake'>
     Unstake<br/>
     coinId: {coinId}
+    rangeValue: {rangeValue}
     <br/>
     <Input name='amount'
            label='Enter amount'
@@ -40,6 +51,8 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
            type='text'
            suffix={coin?.symbol}
            errors={errors}/>
+
+    <CustomSlider value={rangeValue} min={0} max={100} step={20} valuetext={valuetext} onChange={handleSliderChange}/>
   </div>;
 };
 
