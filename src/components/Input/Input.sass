@@ -1,0 +1,52 @@
+@import "src/sass/vars"
+.staking-sdk
+  .input
+    display: block
+    width: 100%
+    padding: 8px 12px
+    border-radius: 4px
+    font: 400 32px/37.5px var(--everstakeFont)
+    background-color: transparent
+    color: var(--everstakeTextColorPrimary)
+    border: 1px solid var(--everstakeInputBorderColor)
+    transition: border .25s
+    +placeholder
+      font: 400 32px/37.5px var(--everstakeFont)
+      color: var(--everstakeTextColorPrimary)
+      opacity: .5
+    &.focus-visible
+      outline: none
+      border-color: var(--everstakeTextColorPrimary)
+    &__element
+      position: relative
+      display: block
+    &__header
+      display: flex
+      align-items: center
+      justify-content: space-between
+      margin-bottom: 2px
+    &__label
+      display: block
+      font: 400 14px/24px var(--everstakeFont)
+      color: var(--everstakeColorAccent)
+      opacity: .4
+    &__label-right
+      font: 400 14px/24px var(--everstakeFont)
+      color: var(--everstakeTextColorSecondary)
+      margin-left: auto
+    &__wrap
+      display: block
+      position: relative
+    &__suffix
+      position: absolute
+      right: 10px
+      bottom: 9px
+      font: 400 32px/37.5px var(--everstakeFont)
+      color: var(--everstakeTextColorPrimary)
+      opacity: .5
+    &__error
+      //border-color: var(--warning-color)
+    &__error-message
+      //font: 400 9px var(--everstakeFont)
+      //color: var(--warning-color)
+      margin-top: 3px

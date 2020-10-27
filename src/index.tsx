@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'focus-visible/dist/focus-visible.min';
 import './index.sass';
 import * as serviceWorker from './serviceWorker';
-import StakingSdk from './components/StakingSdk/StakingSdk';
+import StakingSdk from './pages/StakingSdk/StakingSdk';
 import Providers from './contexts/Providers';
 
 declare const window: any;
@@ -34,12 +35,10 @@ export class WalletSdk {
   }
 }
 
-window.WalletSdk = WalletSdk;
+// ToDo: Remove initializing
+const walletSdk = new WalletSdk('wallet-sdk');
 
-// const wallet = new WalletSdk('wallet-sdk');
-// window.wallet = wallet;
-// console.log('wallet', wallet);
-// setTimeout(() => wallet.open(), 5000);
+window.WalletSdk = WalletSdk;
 
 
 

@@ -3,8 +3,8 @@ import './CoinDetails.sass';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
 import {Coin} from '../../models/coins.model';
-import BackArrowIcon from '../icons/BackArrowIcon';
-import InfoIcon from '../icons/InfoIcon';
+import BackArrowIcon from '../../components/icons/BackArrowIcon';
+import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
 
 interface CoinDetailsParams {
@@ -16,11 +16,6 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
   const {getCoin} = useCoin();
   const coin: Coin | undefined = getCoin(coinId);
   const {goBack, navigate} = useNavigation();
-
-  const handleUnstake = () => {
-    // ToDo: Needed implement unstake
-    console.log('Unstake');
-  };
 
   if (!coin) {
     return null;
@@ -59,7 +54,7 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
           <p className='staked__title'>Staked</p>
           <div className='staked__wrap'>
             <p className='staked__amount'>{coin.amount} {coin.symbol}</p>
-            <button className='staked__action unstake-btn'>Unstake</button>
+            <button onClick={() => navigate(PATH.UNSTAKE, {coinId})} className='staked__action unstake-btn'>Unstake</button>
           </div>
           <div className='staked__info'>
             <p className='staked__item'>Validator: <span>{coin.validator?.validatorName || '-'}</span></p>

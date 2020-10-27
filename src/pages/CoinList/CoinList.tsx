@@ -1,8 +1,8 @@
 import React from 'react';
 import './CoinList.sass';
 import useWidgetState from '../../hooks/useWidgetState';
-import CloseIcon from '../icons/CloseIcon';
-import InfoIcon from '../icons/InfoIcon';
+import CloseIcon from '../../components/icons/CloseIcon';
+import InfoIcon from '../../components/icons/InfoIcon';
 import CoinItem, {CoinItemProps} from './components/CoinItem/CoinItem';
 import useCoin from '../../hooks/useCoin';
 

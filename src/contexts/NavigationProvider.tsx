@@ -1,8 +1,8 @@
 import React, {createContext, useState} from 'react';
-import CoinList from '../components/CoinList/CoinList';
-import CoinDetails from '../components/CoinDetails/CoinDetails';
-import Stake from '../components/Stake/Stake';
-import Unstake from '../components/Unstake/Unstake';
+import CoinList from '../pages/CoinList/CoinList';
+import CoinDetails from '../pages/CoinDetails/CoinDetails';
+import Stake from '../pages/Stake/Stake';
+import Unstake from '../pages/Unstake/Unstake';
 
 interface RouteI {
   path: PATH;
@@ -44,7 +44,9 @@ const navigations: RouteI[] = [
   },
 ];
 
-const rootRoute: RouteI = {...navigations[0]};
+// ToDo: Return default router
+// const rootRoute: RouteI = {...navigations[0]};
+const rootRoute: RouteI = {...navigations[3], params: {coinId: '0'}};
 
 const initialValue: NavigationContextI = {
   route: rootRoute,
