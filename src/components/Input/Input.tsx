@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import './Input.sass';
 
 export interface IProps {
@@ -11,6 +11,7 @@ export interface IProps {
   type: 'password' | 'text' | 'email' | 'number' | 'search' | 'tel' | 'url';
   register: any;
   errors: any;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input: React.FC<IProps> = (props: IProps) => {
@@ -26,6 +27,7 @@ const Input: React.FC<IProps> = (props: IProps) => {
     </span>}
     <span className='input__wrap'>
       <input className={inputClassName}
+             onChange={props.onChange}
              type={props.type}
              name={props.name}
              placeholder={props.placeholder}

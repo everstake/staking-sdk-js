@@ -45,8 +45,8 @@ const navigations: RouteI[] = [
 ];
 
 // ToDo: Return default router
-// const rootRoute: RouteI = {...navigations[0]};
-const rootRoute: RouteI = {...navigations[3], params: {coinId: '0'}};
+const rootRoute: RouteI = {...navigations[0]};
+// const rootRoute: RouteI = {...navigations[3], params: {coinId: '0'}};
 
 const initialValue: NavigationContextI = {
   route: rootRoute,

@@ -1,2 +1,29 @@
 .staking-sdk
   .unstake
+    display: flex
+    flex-direction: column
+    height: 100%
+    &__header
+      padding: 16px
+      display: flex
+      align-items: center
+      .back-btn
+        padding: 4px
+        font-size: 0
+        margin-right: 32px
+      .info-btn
+        padding: 2px
+        font-size: 0
+        margin-left: auto
+    &__title
+      font: 500 20px/24px var(--everstakeFont)
+    &__form
+      padding: 16px
+    &__time
+      font: 400 14px/24px var(--everstakeFont)
+      margin-top: 16px
+      margin-bottom: 4px
+      opacity: .4
+    &__message
+      font: 500 16px/18px var(--everstakeFont)
+      margin-bottom: 24px

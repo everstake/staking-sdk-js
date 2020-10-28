@@ -10,6 +10,13 @@
     color: var(--everstakeTextColorPrimary)
     border: 1px solid var(--everstakeInputBorderColor)
     transition: border .25s
+    &[type=number]
+      -moz-appearance: textfield
+      &::-webkit-inner-spin-button, &::-webkit-outer-spin-button
+        -webkit-appearance: none
+        -moz-appearance: none
+        appearance: none
+        margin: 0
     +placeholder
       font: 400 32px/37.5px var(--everstakeFont)
       color: var(--everstakeTextColorPrimary)
