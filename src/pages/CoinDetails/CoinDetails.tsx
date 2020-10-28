@@ -25,11 +25,11 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
     <div className='coin-details'>
       <div className='coin-details__header'>
         <div className='coin-details__top'>
-          <button className='back-btn' onClick={() => goBack()}>{<BackArrowIcon color={'var(--everstakeColorPrimary)'}/>}</button>
+          <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon color={'var(--everstakeColorPrimary)'}/>}</button>
           <h3 className='coin-details__title'>{coin.name}</h3>
 
           {/*ToDo: Добавить обработчик события*/}
-          <button className='info-btn'>{<InfoIcon color={'var(--everstakeColorPrimary)'}/>}</button>
+          <button className='info-btn icon-btn'>{<InfoIcon color={'var(--everstakeColorPrimary)'}/>}</button>
         </div>
         <div className='coin-details__info'>
           <div className='info-block'>
@@ -44,7 +44,9 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
           </div>
           <div className='coin-details__actions'>
             <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>Stake</button>
-            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>Open calculator</button>
+            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>
+              Open calculator
+            </button>
           </div>
         </div>
       </div>

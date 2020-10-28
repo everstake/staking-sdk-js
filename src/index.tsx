@@ -5,6 +5,7 @@ import './index.sass';
 import * as serviceWorker from './serviceWorker';
 import StakingSdk from './pages/StakingSdk/StakingSdk';
 import Providers from './contexts/Providers';
+import {WalletConfig} from './contexts/StateProvider';
 
 declare const window: any;
 
@@ -12,21 +13,21 @@ export class WalletSdk {
   logTestText?: () => void;
   ref: any = React.createRef();
   handlers: any = {};
-  constructor(id: string) {
+  constructor(public config: WalletConfig) {
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
           <StakingSdk handlers={this.handlers}/>
         </Providers>
       </React.StrictMode>,
-      document.getElementById(id)
+      document.getElementById(config.elemId)
     );
   }
 
   open() {
     const handler = this.handlers.onOpen;
     if (typeof handler === 'function') {
-      handler();
+      handler(this.config);
     }
   }
 
@@ -36,7 +37,7 @@ export class WalletSdk {
 }
 
 // ToDo: Remove initializing
-const walletSdk = new WalletSdk('wallet-sdk');
+const walletSdk = new WalletSdk({elemId: 'wallet-sdk'});
 
 window.WalletSdk = WalletSdk;
 

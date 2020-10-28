@@ -1,23 +1,77 @@
 @import "vars"
 .staking-sdk
   .stake-btn, .unstake-btn, .open-calculator-btn
+    position: relative
     font: 500 16px/16px var(--everstakeFont)
     letter-spacing: .75px
     border-radius: 4px
     text-align: center
+    transition: background-color .25s, opacity .25s, color .25s
+    &:after
+      content: ''
+      position: absolute
+      top: -3px
+      left: -3px
+      width: calc(100% + 6px)
+      height: calc(100% + 6px)
+      box-shadow: none
+      transition: box-shadow .25s
+      pointer-events: none
+    &:focus
+      outline: none
+    &.focus-visible
+      &:after
+        box-shadow: 0 0 0 2px var(--everstakeFocusColor)
+    &[disabled]
+      cursor: default
+
   .stake-btn
     width: 100%
     color: var(--everstakeColorAccent)
     background-color: var(--everstakeButtonStackeBackground)
     padding: 12px
+    &:hover, &:active
+      opacity: .9
+
   .open-calculator-btn
     width: 100%
     color: var(--everstakeColorPrimary)
     background-color: var(--everstakeButtonOpenCalculatorBackground)
-
     padding: 12px
+    &:hover, &:active
+      background-color: var(--everstakeButtonOpenCalculatorBackgroundHover)
+    &[disabled]
+      background-color: var(--everstakeButtonOpenCalculatorBackground)
+      color: var(--everstakeButtonOpenCalculatorBackgroundHover)
+
   .unstake-btn
     min-width: 98px
     color: var(--everstakeColorAccent)
     background-color: var(--everstakeButtonUnstackeBackground)
     padding: 8px
+    &:hover, &:active
+      background-color: var(--everstakeButtonUnstackeBackgroundHover)
+    &[disabled]
+      color: var(--everstakeButtonUnstackeColorDisabled)
+      background-color: var(--everstakeButtonUnstackeBackground)
+
+  .icon-btn
+    position: relative
+    transition: opacity .25s
+    &:hover, &:active
+      opacity: .75
+    &:after
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      box-shadow: none
+      transition: box-shadow .25s
+      pointer-events: none
+    &:focus
+      outline: none
+    &.focus-visible
+      &:after
+        box-shadow: 0 0 0 2px var(--everstakeFocusColor)

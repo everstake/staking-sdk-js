@@ -29,6 +29,15 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="wallet-sdk"></div>
+    <script>
+      function open1() {
+        const walletSdk = new WalletSdk({elemId: 'wallet-sdk'});
+        walletSdk.open();
+      }
+    </script>
+    <button onclick="open1()">Open1</button>
+
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
