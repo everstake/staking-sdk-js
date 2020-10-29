@@ -10,16 +10,17 @@ const CoinList = () => {
   const {closeWidget} = useWidgetState();
   const {coinList, stakedCoinList, readyToStakeCoinList} = useCoin();
 
-  const info = () => {
-    window.open('https://everstake.one/', '_blank');
-  };
-
   return <div className='coin-list'>
     <div className='coin-list__header'>
       <button className='close-btn icon-btn' onClick={() => closeWidget && closeWidget()}>{<CloseIcon/>}</button>
       <h3 className='coin-list__title'>Stake</h3>
 
-      <button onClick={info} className='info-btn icon-btn'>{<InfoIcon/>}</button>
+      <a href='https://everstake.one/'
+         aria-label='Everstake'
+         target='_blank'
+         className='info-btn icon-btn'>
+        {<InfoIcon/>}
+      </a>
     </div>
 
     {!!coinList && coinList.length > 0 ? <div className='coin-list__body'>
