@@ -89,4 +89,10 @@ export class Coin implements CoinDto, Omit<Partial<StakingInfoDto>, 'coinId'> {
   get isStaked(): boolean {
     return !!this.amount && !isNaN(+this.amount) && +this.amount > 0;
   }
+
+  get hasRewards(): boolean {
+    return !!this.amountToClaim && !isNaN(+this.amountToClaim) && +this.amountToClaim > 0;
+  }
 }
+
+

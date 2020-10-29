@@ -20,7 +20,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
   const {coinId} = params;
   const {getCoin} = useCoin();
   const coin: Coin | undefined = getCoin(coinId);
-  const {goBack, navigate} = useNavigation();
+  const {goBack} = useNavigation();
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
   const [amount, setAmount] = useState<number | null>(null);
   const {register, handleSubmit, errors, setValue, getValues} = useForm<UnstakeForm>({
@@ -74,6 +74,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
     </div>
 
     <form onSubmit={handleSubmit(handleUnstake)} className='unstake__form'>
+      <div className='unstake__input-wrap'>
       <Input name='amount'
              onChange={handleAmountChange}
              label='Enter amount'
@@ -86,8 +87,9 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
              type='number'
              suffix={coin?.symbol}
              errors={errors}/>
+      </div>
 
-      <CustomSlider value={rangeValue} min={0} max={100} step={20} valuetext={valuetext} onChange={handleSliderChange}/>
+      <CustomSlider value={rangeValue} min={0} max={100} step={25} valuetext={valuetext} onChange={handleSliderChange}/>
 
       <p className='unstake__time'>Unstake time</p>
       <p className='unstake__message'>The funds will return in one day</p>

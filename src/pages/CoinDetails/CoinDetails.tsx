@@ -52,16 +52,23 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
       </div>
 
       <div className='coin-details__body'>
-        {coin.isStaked && <div className='staked'>
-          <p className='staked__title'>Staked</p>
-          <div className='staked__wrap'>
-            <p className='staked__amount'>{coin.amount} {coin.symbol}</p>
-            <button onClick={() => navigate(PATH.UNSTAKE, {coinId})} className='staked__action unstake-btn'>Unstake</button>
-          </div>
-          <div className='staked__info'>
-            <p className='staked__item'>Validator: <span>{coin.validator?.validatorName || '-'}</span></p>
-            <p className='staked__item'>Yearly income: <span>{coin.yieldPercent}%</span></p>
-          </div>
+        {(coin.isStaked || coin.hasRewards) && <div className='coin-details__action-block'>
+          {coin.isStaked && <div className='staked'>
+            <p className='staked__title'>Staked</p>
+            <div className='staked__wrap'>
+              <p className='staked__amount'>{coin.amount} {coin.symbol}</p>
+              <button onClick={() => navigate(PATH.UNSTAKE, {coinId})} className='staked__action unstake-btn'>Unstake</button>
+            </div>
+            <div className='staked__info'>
+              <p className='staked__item'>Validator: <span>{coin.validator?.validatorName || '-'}</span></p>
+              <p className='staked__item'>Yearly income: <span>{coin.yieldPercent}%</span></p>
+            </div>
+          </div>}
+
+          {coin.hasRewards && <div className='rewards'>
+            <button className='rewards__btn accent__btn'>Claim rewards</button>
+            <p className='rewards__info'>Available rewards: <span>{coin.amountToClaim} {coin.symbol}</span></p>
+          </div>}
         </div>}
 
         <div className='about'>
