@@ -1,56 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap')
 \:root
   --everstakeFont: 'Roboto', sans-serif
-  --everstakeColorPrimary: #FFFFFF
-  --everstakeColorPrimaryDark: #C4C4C4
-  --everstakeColorAccent: #000000
-  --everstakeWindowBackground: #FFFFFF
-
-
-  --everstakeTextColorPrimary: rgba(0, 0, 0, .87)
-  --everstakeTextColorPrimaryInverted: rgba(255, 255, 255, .87)
-  --everstakeTextColorSecondary: rgba(0, 0, 0, .6)
-  --everstakeTextColorSecondaryInverted: rgba(255, 255, 255, .6)
-
-  --everstakeDivider: rgba(0, 0, 0, .12)
-
-  --everstakeButtonStackeBackground: rgba(255, 255, 255, 0.95)
-  --everstakeButtonOpenCalculatorBackground: rgba(255, 255, 255, 0.15)
-  --everstakeButtonOpenCalculatorBackgroundHover: rgba(255, 255, 255, 0.3)
-  --everstakeButtonUnstackeBackground: rgba(0, 0, 0, .1)
-  --everstakeButtonUnstackeBackgroundHover: rgba(0, 0, 0, .2)
-  --everstakeButtonUnstackeColorDisabled: rgba(0, 0, 0, .3)
-
-  --everstakeInputBorderColor: rgba(0, 0, 0, .4)
-
-  --everstakeDetailsHeaderBg: #1D1D1D
-
-  --everstakeFocusColor: #0094FF
+  --everstakeColorPrimary: 255, 255, 255
+  --everstakeColorAccent: 0, 0, 0
+  --everstakeWindowBackground: var(--everstakeColorPrimary)
+  --everstakeDetailsHeaderBg: 29, 29, 29
+  --everstakeFocusColor: 0, 148, 255
 
 // my-mixins
-
-=flex($direction, $justify, $align)
-  display: flex
-  flex-direction: $direction
-  justify-content: $justify
-  align-items: $align
-
-=card_shadow
-  box-shadow: 0 4px 8px -7px rgba(0,0,0,.2)
-
-=gradient($way, $color1, $color2)
-  background: $color1
-  background: linear-gradient(to $way, $color1 0%, $color2 100%)
 
 =size($size)
   width: $size
   height: $size
-
-=custom_bg($size)
-  background-color: transparent
-  background-size: $size
-  background-position: center center
-  background-repeat: no-repeat
 
 =clipping_text()
   white-space: nowrap

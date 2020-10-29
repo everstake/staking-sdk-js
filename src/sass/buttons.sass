@@ -21,44 +21,44 @@
       outline: none
     &.focus-visible
       &:after
-        box-shadow: 0 0 0 2px var(--everstakeFocusColor)
+        box-shadow: 0 0 0 2px rgba(var(--everstakeFocusColor), 1)
     &[disabled]
       cursor: default
 
   .stake-btn
     width: 100%
-    color: var(--everstakeColorAccent)
-    background-color: var(--everstakeButtonStackeBackground)
+    color: rgba(var(--everstakeColorAccent), 1)
+    background-color: rgba(var(--everstakeColorPrimary), .95)
     padding: 12px
     &:hover, &:active
       opacity: .9
 
   .open-calculator-btn
     width: 100%
-    color: var(--everstakeColorPrimary)
-    background-color: var(--everstakeButtonOpenCalculatorBackground)
+    color: rgba(var(--everstakeColorPrimary), 1)
+    background-color: rgba(var(--everstakeColorPrimary), .15)
     padding: 12px
     &:hover, &:active
-      background-color: var(--everstakeButtonOpenCalculatorBackgroundHover)
+      background-color: rgba(var(--everstakeColorPrimary), .3)
     &[disabled]
-      background-color: var(--everstakeButtonOpenCalculatorBackground)
-      color: var(--everstakeButtonOpenCalculatorBackgroundHover)
+      background-color: rgba(var(--everstakeColorPrimary), .15)
+      color: rgba(var(--everstakeColorPrimary), .3)
 
   .unstake-btn
     min-width: 98px
-    color: var(--everstakeColorAccent)
-    background-color: var(--everstakeButtonUnstackeBackground)
+    color: rgba(var(--everstakeColorAccent), 1)
+    background-color: rgba(var(--everstakeColorAccent), .1)
     padding: 8px
     &:hover, &:active
-      background-color: var(--everstakeButtonUnstackeBackgroundHover)
+      background-color: rgba(var(--everstakeColorAccent), .2)
     &[disabled]
-      color: var(--everstakeButtonUnstackeColorDisabled)
-      background-color: var(--everstakeButtonUnstackeBackground)
+      color: rgba(var(--everstakeColorAccent), .3)
+      background-color: rgba(var(--everstakeColorAccent), .1)
 
   .accent__btn
     width: 100%
-    color: var(--everstakeColorPrimary)
-    background-color: var(--everstakeColorAccent)
+    color: rgba(var(--everstakeColorPrimary), 1)
+    background-color: rgba(var(--everstakeColorAccent), 1)
     padding: 19px 16px
     &:hover, &:active
       opacity: .8
@@ -84,4 +84,4 @@
       outline: none
     &.focus-visible
       &:after
-        box-shadow: 0 0 0 2px var(--everstakeFocusColor)
+        box-shadow: 0 0 0 2px rgba(var(--everstakeFocusColor), 1)

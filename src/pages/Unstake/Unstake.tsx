@@ -102,7 +102,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
 
 const LabelRight = (coin?: Coin) => {
   return {
-    __html: `Staked: <span class='bold' style="color: var(--everstakeColorAccent)">${coin?.amount} ${coin?.symbol}</span>`
+    __html: `Staked: <span class='bold' style="color: rgba(var(--everstakeColorAccent), 1)">${coin?.amount} ${coin?.symbol}</span>`
   };
 };
 

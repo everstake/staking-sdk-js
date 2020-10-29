@@ -25,11 +25,11 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
     <div className='coin-details'>
       <div className='coin-details__header'>
         <div className='coin-details__top'>
-          <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon color={'var(--everstakeColorPrimary)'}/>}</button>
+          <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}</button>
           <h3 className='coin-details__title'>{coin.name}</h3>
 
           {/*ToDo: Добавить обработчик события*/}
-          <button className='info-btn icon-btn'>{<InfoIcon color={'var(--everstakeColorPrimary)'}/>}</button>
+          <button className='info-btn icon-btn'>{<InfoIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}</button>
         </div>
         <div className='coin-details__info'>
           <div className='info-block'>
