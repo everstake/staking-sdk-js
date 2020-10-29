@@ -21,6 +21,10 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
     return null;
   }
 
+  const info = () => {
+    window.open(`https://everstake.one/${coin.name.toLowerCase()}`, '_blank');
+  };
+
   return (
     <div className='coin-details'>
       <div className='coin-details__header'>
@@ -28,8 +32,7 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
           <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}</button>
           <h3 className='coin-details__title'>{coin.name}</h3>
 
-          {/*ToDo: Добавить обработчик события*/}
-          <button className='info-btn icon-btn'>{<InfoIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}</button>
+          <button onClick={info} className='info-btn icon-btn'>{<InfoIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}</button>
         </div>
         <div className='coin-details__info'>
           <div className='info-block'>
