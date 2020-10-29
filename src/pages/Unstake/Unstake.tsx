@@ -7,6 +7,7 @@ import Input from '../../components/Input/Input';
 import {useForm} from 'react-hook-form';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
+import Big from 'big.js';
 
 interface UnstakeParams {
   coinId: string;
@@ -36,10 +37,10 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
   };
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newAmount = getValues('amount') || 0;
+    const newAmountInBig = Big(getValues('amount') || 0);
     setAmount(getValues('amount'));
     if (coin && coin.amount) {
-      const newRangeValue = newAmount * 100 / +coin.amount;
+      const newRangeValue = +newAmountInBig.times(100).div(coin.amount).toFixed();
       setRangeValue(newRangeValue);
     }
   };
@@ -47,7 +48,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
   const handleSliderChange = (event: any, newValue: number | number[]) => {
     setRangeValue(newValue);
     if (coin && coin.amount && typeof newValue === 'number') {
-      const newAmount = +coin.amount * newValue / 100;
+      const newAmount = +Big(coin.amount).times(newValue).div(100).toFixed();
       setAmount(newAmount);
       setValue('amount', newAmount);
     }
