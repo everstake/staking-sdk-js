@@ -48,7 +48,7 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
           </div>
           <div className='coin-details__actions'>
             <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>Stake</button>
-            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>
+            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.CALCULATOR, {coinId})}>
               Open calculator
             </button>
           </div>

@@ -3,6 +3,7 @@ import CoinList from '../pages/CoinList/CoinList';
 import CoinDetails from '../pages/CoinDetails/CoinDetails';
 import Stake from '../pages/Stake/Stake';
 import Unstake from '../pages/Unstake/Unstake';
+import Calculator from '../pages/Calculator/Calculator';
 
 interface RouteI {
   path: PATH;
@@ -22,6 +23,7 @@ export enum PATH {
   COIN_LIST = 'coin-list',
   COIN_DETAILS = 'coin-details',
   STAKE = 'stake',
+  CALCULATOR = 'calculator',
   UNSTAKE = 'unstake',
 }
 
@@ -37,6 +39,10 @@ const navigations: RouteI[] = [
   {
     path: PATH.STAKE,
     component: Stake
+  },
+  {
+    path: PATH.CALCULATOR,
+    component: Calculator
   },
   {
     path: PATH.UNSTAKE,
