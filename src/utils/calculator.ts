@@ -16,7 +16,6 @@ export class CalculatorModel {
     this.coinPrecision = coin.precision;
     this.periodSeconds = coin.yieldInterval;
     this.yieldPercent = coin.yieldPercent;
-    this._amount = coin.amount || '0';
     this.fee = fee;
   }
 
@@ -53,6 +52,7 @@ export class CalculatorModel {
   }
 
   get dailyIncome(): string {
+    console.log('dailyIncome');
     return formatAmount(this.perDay, this.coinPrecision, this.coinSymbol);
   }
   get monthlyIncome(): string {
