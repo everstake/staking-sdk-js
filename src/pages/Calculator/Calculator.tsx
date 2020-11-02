@@ -77,78 +77,79 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   };
 
   return <div className='calculator'>
-    <div className='calculator__header'>
-      <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon/>}</button>
-      <h3 className='calculator__title'>Calculator</h3>
-    </div>
-
-    <form onSubmit={handleSubmit(proceedToStaking)}>
-      <div className='calculator__input-wrap'>
-        <Input name='amount'
-               onChange={() => changeCalculatorProperties('amount')}
-               label='Enter amount'
-               placeholder='0.00'
-               register={register({
-                 required: {value: true, message: 'Amount cannot be empty'},
-                 validate: validateAmount,
-               })}
-               type='number'
-               suffix={selectedCoin.symbol}
-               errors={errors}/>
+    {isOpenCoinSelector && <CoinSelector close={closeCoinSelector}/>}
+    {(!isOpenCoinSelector && !isOpenValidatorSelector) && <div className='calculator__wrapper'>
+      <div className='calculator__header'>
+        <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon/>}</button>
+        <h3 className='calculator__title'>Calculator</h3>
       </div>
 
-      <div className='calculator__selectors'>
-        <p className='selectors__header'>Select options</p>
-        <button type='button' onClick={() => setIsOpenCoinSelector(true)} className='selectors__btn'>
-          <span className='selectors__btn-container'>
-            <span className='selectors__btn-info'>
-              <span className='selectors__btn-title'>{selectedCoin.name}</span>
-              <span className='selectors__btn-desc'>Yearly income: {selectedCoin.yieldPercent}%</span>
-            </span>
-            <span className='selectors__btn-type'>Currency</span>
-          </span>
-        </button>
-        <button type='button' onClick={() => setIsOpenValidatorSelector(true)} className='selectors__btn'>
-          <span className='selectors__btn-container'>
-            <span className='selectors__btn-info'>123</span>
-            <span className='selectors__btn-type'>Validator</span>
-          </span>
-        </button>
-      </div>
-
-      <div className='calculator__settings'>
-        <div className='info'>
-          <div className='info__item'>
-            <p className='info__period'>Daily income</p>
-            <p className='info__amount'>{calculator.dailyIncome || '0'}</p>
-          </div>
-          <div className='info__item'>
-            <p className='info__period'>Monthly</p>
-            <p className='info__amount'>{calculator.monthlyIncome || '0'}</p>
-          </div>
-          <div className='info__item'>
-            <p className='info__period'>Yearly</p>
-            <p className='info__amount'>{calculator.yearlyIncome || '0'}</p>
-          </div>
+      <form onSubmit={handleSubmit(proceedToStaking)}>
+        <div className='calculator__input-wrap'>
+          <Input name='amount'
+                 onChange={() => changeCalculatorProperties('amount')}
+                 label='Enter amount'
+                 placeholder='0.00'
+                 register={register({
+                   required: {value: true, message: 'Amount cannot be empty'},
+                   validate: validateAmount
+                 })}
+                 type='number'
+                 suffix={selectedCoin.symbol}
+                 errors={errors}/>
         </div>
 
-        <CustomCheckbox name='includeValidatorFee'
-                        className='calculator__checkbox'
-                        label='Include validator fee'
-                        onChange={() => changeCalculatorProperties('includeValidatorFee')}
-                        register={register}/>
+        <div className='calculator__selectors'>
+          <p className='selectors__header'>Select options</p>
+          <button type='button' onClick={() => setIsOpenCoinSelector(true)} className='selectors__btn'>
+            <span className='selectors__btn-container'>
+              <span className='selectors__btn-info'>
+                <span className='selectors__btn-title'>{selectedCoin.name}</span>
+                <span className='selectors__btn-desc'>Yearly income: {selectedCoin.yieldPercent}%</span>
+              </span>
+              <span className='selectors__btn-type'>Currency</span>
+            </span>
+          </button>
+          <button type='button' onClick={() => setIsOpenValidatorSelector(true)} className='selectors__btn'>
+            <span className='selectors__btn-container'>
+              <span className='selectors__btn-info'>123</span>
+              <span className='selectors__btn-type'>Validator</span>
+            </span>
+          </button>
+        </div>
 
-        <CustomCheckbox name='includeReinvestment'
-                        label='Reinvest earnings'
-                        className='calculator__checkbox'
-                        onChange={() => changeCalculatorProperties('includeReinvestment')}
-                        register={register}/>
+        <div className='calculator__settings'>
+          <div className='info'>
+            <div className='info__item'>
+              <p className='info__period'>Daily income</p>
+              <p className='info__amount'>{calculator.dailyIncome || '0'}</p>
+            </div>
+            <div className='info__item'>
+              <p className='info__period'>Monthly</p>
+              <p className='info__amount'>{calculator.monthlyIncome || '0'}</p>
+            </div>
+            <div className='info__item'>
+              <p className='info__period'>Yearly</p>
+              <p className='info__amount'>{calculator.yearlyIncome || '0'}</p>
+            </div>
+          </div>
 
-        <button className='calculator__btn accent__btn'>Proceed to staking</button>
-      </div>
-    </form>
+          <CustomCheckbox name='includeValidatorFee'
+                          className='calculator__checkbox'
+                          label='Include validator fee'
+                          onChange={() => changeCalculatorProperties('includeValidatorFee')}
+                          register={register}/>
 
-    {isOpenCoinSelector && <CoinSelector close={closeCoinSelector}/>}
+          <CustomCheckbox name='includeReinvestment'
+                          label='Reinvest earnings'
+                          className='calculator__checkbox'
+                          onChange={() => changeCalculatorProperties('includeReinvestment')}
+                          register={register}/>
+
+          <button className='calculator__btn accent__btn'>Proceed to staking</button>
+        </div>
+      </form>
+    </div>}
   </div>;
 };
 

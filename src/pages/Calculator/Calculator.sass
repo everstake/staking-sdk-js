@@ -25,6 +25,11 @@
         &__btn
           width: 100%
           padding-left: 16px
+          transition: box-shadow .25s
+          &:focus
+            outline: none
+          &.focus-visible
+            box-shadow: inset 0 0 0 2px rgba(var(--everstakeFocusColor), 1)
           &-container
             display: flex
             justify-content: space-between
