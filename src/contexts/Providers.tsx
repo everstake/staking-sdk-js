@@ -3,6 +3,7 @@ import NavigationProvider from './NavigationProvider';
 import StateProvider from './StateProvider';
 import CoinProvider from './CoinProvider';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import ValidatorsProvider from './ValidatorsProvider';
 
 const theme = createMuiTheme({
   palette: {
@@ -17,9 +18,11 @@ const Providers: React.FC = ({children}) => {
     <StateProvider>
       <NavigationProvider>
         <CoinProvider>
-          <ThemeProvider theme={theme}>
-            {children}
-          </ThemeProvider>
+          <ValidatorsProvider>
+            <ThemeProvider theme={theme}>
+              {children}
+            </ThemeProvider>
+          </ValidatorsProvider>
         </CoinProvider>
       </NavigationProvider>
     </StateProvider>

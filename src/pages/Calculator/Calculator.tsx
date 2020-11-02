@@ -8,6 +8,8 @@ import {useForm} from 'react-hook-form';
 import useCalculator from '../../hooks/useCalculator';
 import CustomCheckbox from '../../components/CustomCheckbox/CustomCheckbox';
 import CoinSelector from '../../components/CoinSelector/CoinSelector';
+import ValidatorSelector from '../../components/ValidatorSelector/ValidatorSelector';
+import useValidators from '../../hooks/useValidators';
 
 interface CalculatorParams {
   coinId: string;
@@ -23,6 +25,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   const {selectedCoin} = useCoin();
   const {goBack} = useNavigation();
   const calculator = useCalculator();
+  const {selectedCoinValidator} = useValidators();
   const [isOpenCoinSelector, setIsOpenCoinSelector] = useState(false);
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
   const {register, handleSubmit, errors, getValues} = useForm<CalculatorForm>({
@@ -34,11 +37,10 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   });
 
   useEffect(() => {
-    if (selectedCoin) {
-      // ToDo: Fix fee
-      calculator.initCalculator(selectedCoin, '3');
+    if (selectedCoin && selectedCoinValidator) {
+      calculator.initCalculator(selectedCoin, selectedCoinValidator.fee);
     }
-  }, [selectedCoin]);
+  }, [selectedCoin, selectedCoinValidator]);
 
   if (!selectedCoin) {
     return null;
@@ -46,6 +48,10 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
 
   const closeCoinSelector = () => {
     setIsOpenCoinSelector(false);
+  };
+
+  const closeValidatorSelector = () => {
+    setIsOpenValidatorSelector(false);
   };
 
   const changeCalculatorProperties = (field: keyof CalculatorForm) => {
@@ -78,6 +84,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
 
   return <div className='calculator'>
     {isOpenCoinSelector && <CoinSelector close={closeCoinSelector}/>}
+    {isOpenValidatorSelector && <ValidatorSelector close={closeValidatorSelector}/>}
     {(!isOpenCoinSelector && !isOpenValidatorSelector) && <div className='calculator__wrapper'>
       <div className='calculator__header'>
         <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon/>}</button>
@@ -111,8 +118,11 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
             </span>
           </button>
           <button type='button' onClick={() => setIsOpenValidatorSelector(true)} className='selectors__btn'>
-            <span className='selectors__btn-container'>
-              <span className='selectors__btn-info'>123</span>
+            <span className={'selectors__btn-container' + (selectedCoinValidator?.isDefault ? ' selectors__btn-container--accent' : '')}>
+              <span className='selectors__btn-info'>
+                <span className='selectors__btn-title'>{selectedCoinValidator?.name}</span>
+                <span className='selectors__btn-desc'>Fee: {selectedCoinValidator?.fee}%</span>
+              </span>
               <span className='selectors__btn-type'>Validator</span>
             </span>
           </button>

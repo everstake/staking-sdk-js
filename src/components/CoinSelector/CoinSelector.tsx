@@ -28,7 +28,7 @@ const CoinSelector: React.FC<CoinSelectorProps> = (props) => {
     {!!coinList && coinList.length > 0 ? <div className='coin-selector__body'>
       {coinList.length && <>
         <ul className='coin-selector__list'>
-          {coinList.map(coin => {
+          {coinList.filter(coin => coin.isActive).map(coin => {
             const coinItemProps = new CoinItemProps(coin, handleCoinClick);
             return <CoinItem {...coinItemProps} key={coin.id}/>;
           })}
