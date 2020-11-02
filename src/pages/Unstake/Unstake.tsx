@@ -9,18 +9,12 @@ import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import Big from 'big.js';
 
-interface UnstakeParams {
-  coinId: string;
-}
-
 interface UnstakeForm {
   amount: number | null;
 }
 
-const Unstake: React.FC<UnstakeParams> = (params) => {
-  const {coinId} = params;
-  const {getCoin} = useCoin();
-  const coin: Coin | undefined = getCoin(coinId);
+const Unstake: React.FC = () => {
+  const {selectedCoin} = useCoin();
   const {goBack} = useNavigation();
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
   const [amount, setAmount] = useState<number | null>(null);
@@ -28,7 +22,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
     defaultValues: {amount}
   });
 
-  if (!coin) {
+  if (!selectedCoin) {
     return null;
   }
 
@@ -39,16 +33,16 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newAmountInBig = Big(getValues('amount') || 0);
     setAmount(getValues('amount'));
-    if (coin && coin.amount) {
-      const newRangeValue = +newAmountInBig.times(100).div(coin.amount).toFixed();
+    if (selectedCoin && selectedCoin.amount) {
+      const newRangeValue = +newAmountInBig.times(100).div(selectedCoin.amount).toFixed();
       setRangeValue(newRangeValue);
     }
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
     setRangeValue(newValue);
-    if (coin && coin.amount && typeof newValue === 'number') {
-      const newAmount = +Big(coin.amount).times(newValue).div(100).toFixed();
+    if (selectedCoin && selectedCoin.amount && typeof newValue === 'number') {
+      const newAmount = +Big(selectedCoin.amount).times(newValue).div(100).toFixed();
       setAmount(newAmount);
       setValue('amount', newAmount);
     }
@@ -61,7 +55,7 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
   const validateAmount = (value: number): string | true => {
     if (isNaN(value)) {
       return 'Amount must be number';
-    } else if (amount && coin.amount && +amount > +coin.amount) {
+    } else if (amount && selectedCoin.amount && +amount > +selectedCoin.amount) {
       return 'Amount too large';
     } else {
       return true;
@@ -79,14 +73,14 @@ const Unstake: React.FC<UnstakeParams> = (params) => {
       <Input name='amount'
              onChange={handleAmountChange}
              label='Enter amount'
-             labelRightHtml={LabelRight(coin)}
+             labelRightHtml={LabelRight(selectedCoin)}
              placeholder='0.00'
              register={register({
                required: {value: true, message: 'Amount cannot be empty'},
                validate: validateAmount,
              })}
              type='number'
-             suffix={coin?.symbol}
+             suffix={selectedCoin?.symbol}
              errors={errors}/>
       </div>
 

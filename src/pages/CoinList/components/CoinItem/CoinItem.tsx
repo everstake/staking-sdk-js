@@ -1,8 +1,6 @@
 import React from 'react';
 import './CoinItem.sass';
 import {Coin} from '../../../../models/coins.model';
-import useNavigation from '../../../../hooks/useNavigation';
-import {PATH} from '../../../../contexts/NavigationProvider';
 
 export class CoinItemProps {
   id: string;
@@ -11,7 +9,7 @@ export class CoinItemProps {
   iconUrl: string;
   symbol: string;
   amount?: string;
-  constructor(coin: Coin) {
+  constructor(coin: Coin, public click: (coinId: string) => void) {
     this.id = coin.id;
     this.name = coin.name;
     this.apr = coin.apr;
@@ -22,9 +20,8 @@ export class CoinItemProps {
 }
 
 const CoinItem: React.FC<CoinItemProps> = (props) => {
-  const {navigate} = useNavigation();
   return <li className='coin-item'>
-    <button className='coin-item__btn' onClick={() => navigate(PATH.COIN_DETAILS, {coinId: props.id})}>
+    <button type='button' className='coin-item__btn' onClick={() => props.click(props.id)}>
       <img src={props.iconUrl} alt={`${props.name} coin icon`} className='coin-item__icon'/>
       <div className='coin-item__info'>
         <div className='coin-item__info-group'>

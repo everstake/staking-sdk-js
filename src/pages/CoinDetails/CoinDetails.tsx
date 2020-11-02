@@ -2,22 +2,15 @@ import React from 'react';
 import './CoinDetails.sass';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
-import {Coin} from '../../models/coins.model';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
 
-interface CoinDetailsParams {
-  coinId: string;
-}
-
-const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
-  const {coinId} = params;
-  const {getCoin} = useCoin();
-  const coin: Coin | undefined = getCoin(coinId);
+const CoinDetails: React.FC = () => {
+  const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
 
-  if (!coin) {
+  if (!selectedCoin) {
     return null;
   }
 
@@ -25,11 +18,13 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
     <div className='coin-details'>
       <div className='coin-details__header'>
         <div className='coin-details__top'>
-          <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}</button>
-          <h3 className='coin-details__title'>{coin.name}</h3>
+          <button className='back-btn icon-btn' onClick={() => goBack()}>
+            {<BackArrowIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}
+          </button>
+          <h3 className='coin-details__title'>{selectedCoin.name}</h3>
 
-          <a href={`https://everstake.one/${coin.name.toLowerCase()}`}
-             aria-label={`Coin ${coin.name} on everstake`}
+          <a href={`https://everstake.one/${selectedCoin.name.toLowerCase()}`}
+             aria-label={`Coin ${selectedCoin.name} on everstake`}
              target='_blank'
              className='info-btn icon-btn'>
             {<InfoIcon color={'rgba(var(--everstakeColorPrimary), 1)'}/>}
@@ -37,18 +32,18 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
         </div>
         <div className='coin-details__info'>
           <div className='info-block'>
-            <img src={coin.iconUrl} alt={`${coin.name} coin icon`} className='info-block__icon'/>
+            <img src={selectedCoin.iconUrl} alt={`${selectedCoin.name} coin icon`} className='info-block__icon'/>
             <div className='info-block__info'>
-              <h3 className='info-block__title'>{`${coin.name} (${coin.symbol})`}</h3>
+              <h3 className='info-block__title'>{`${selectedCoin.name} (${selectedCoin.symbol})`}</h3>
               <div className='info-block__bottom'>
-                <p className='info-block__item'>APR: <span>{coin.apr}%</span></p>
-                <p className='info-block__item'>Service fee: <span>{`${coin.fee.min}-${coin.fee.max}`}%</span></p>
+                <p className='info-block__item'>APR: <span>{selectedCoin.apr}%</span></p>
+                <p className='info-block__item'>Service fee: <span>{`${selectedCoin.fee.min}-${selectedCoin.fee.max}`}%</span></p>
               </div>
             </div>
           </div>
           <div className='coin-details__actions'>
-            <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {coinId})}>Stake</button>
-            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.CALCULATOR, {coinId})}>
+            <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE)}>Stake</button>
+            <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.CALCULATOR)}>
               Open calculator
             </button>
           </div>
@@ -56,28 +51,28 @@ const CoinDetails: React.FC<CoinDetailsParams> = (params) => {
       </div>
 
       <div className='coin-details__body'>
-        {(coin.isStaked || coin.hasRewards) && <div className='coin-details__action-block'>
-          {coin.isStaked && <div className='staked'>
+        {(selectedCoin.isStaked || selectedCoin.hasRewards) && <div className='coin-details__action-block'>
+          {selectedCoin.isStaked && <div className='staked'>
             <p className='staked__title'>Staked</p>
             <div className='staked__wrap'>
-              <p className='staked__amount'>{coin.amount} {coin.symbol}</p>
-              <button onClick={() => navigate(PATH.UNSTAKE, {coinId})} className='staked__action unstake-btn'>Unstake</button>
+              <p className='staked__amount'>{selectedCoin.amount} {selectedCoin.symbol}</p>
+              <button onClick={() => navigate(PATH.UNSTAKE)} className='staked__action unstake-btn'>Unstake</button>
             </div>
             <div className='staked__info'>
-              <p className='staked__item'>Validator: <span>{coin.validator?.validatorName || '-'}</span></p>
-              <p className='staked__item'>Yearly income: <span>{coin.yieldPercent}%</span></p>
+              <p className='staked__item'>Validator: <span>{selectedCoin.validator?.validatorName || '-'}</span></p>
+              <p className='staked__item'>Yearly income: <span>{selectedCoin.yieldPercent}%</span></p>
             </div>
           </div>}
 
-          {coin.hasRewards && <div className='rewards'>
+          {selectedCoin.hasRewards && <div className='rewards'>
             <button className='rewards__btn accent__btn'>Claim rewards</button>
-            <p className='rewards__info'>Available rewards: <span>{coin.amountToClaim} {coin.symbol}</span></p>
+            <p className='rewards__info'>Available rewards: <span>{selectedCoin.amountToClaim} {selectedCoin.symbol}</span></p>
           </div>}
         </div>}
 
         <div className='about'>
           <p className='about__title'>About</p>
-          <p className='about__text'>{coin.about}</p>
+          <p className='about__text'>{selectedCoin.about}</p>
         </div>
       </div>
 

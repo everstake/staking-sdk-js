@@ -9,7 +9,11 @@ const useCalculator = () => {
   const [includeValidatorFee, setIncludeValidatorFee] = useState<boolean>(false);
 
   const initCalculator = (coin: Coin, fee: string) => {
-    setCalculator(new CalculatorModel(coin, fee));
+    const newCalc = new CalculatorModel(coin, fee);
+    newCalc.amount = amount;
+    newCalc.includeValidatorFee = includeValidatorFee;
+    newCalc.includeReinvestment = includeReinvestment;
+    setCalculator(newCalc);
   };
 
   const updateAmount = (newAmount: string) => {

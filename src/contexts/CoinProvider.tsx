@@ -12,13 +12,17 @@ interface CoinI {
   stakedCoinList: Coin[];
   readyToStakeCoinList: Coin[];
   getCoin: (coinId: string) => Coin | undefined;
+  selectCoin: (coinId: string) => boolean;
+  selectedCoin: Coin | undefined;
 }
 
 const initialValue: CoinI = {
   coinList: [],
   stakedCoinList: [],
   readyToStakeCoinList: [],
-  getCoin: () => undefined
+  getCoin: () => undefined,
+  selectCoin: () => false,
+  selectedCoin: undefined
 };
 
 export const CoinContext = createContext<CoinI>(initialValue);
@@ -43,6 +47,7 @@ const getCacheCoinList = (): Coin[] => {
 
 const CoinProvider: React.FC = ({children}) => {
   const [coinList, setCoinList] = useState<Coin[]>(getCacheCoinList());
+  const [selectedCoin, setSelectedCoin] = useState<Coin | undefined>(undefined);
   const {isOpen} = useWidgetState();
 
   const fetchCoins = useCallback(async () => {
@@ -52,6 +57,10 @@ const CoinProvider: React.FC = ({children}) => {
     localStorage.setItem(STAKING_KEY, JSON.stringify(stakingRes.data));
 
     setCoinList(getCoinList(coinListRes.data, stakingRes.data));
+
+
+    // ToDo: remove setter
+    selectCoin('0');
   }, []);
 
   useEffect(() => {
@@ -72,11 +81,23 @@ const CoinProvider: React.FC = ({children}) => {
     return coinList.find(coin => coin.id === coinId);
   };
 
+  const selectCoin = (coinId: string): boolean => {
+    const findCoin = coinList.find(coin => coin.id === coinId);
+    if (findCoin) {
+      setSelectedCoin(findCoin);
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return <CoinContext.Provider value={{
     coinList,
     stakedCoinList: getStakedCoinList(),
     readyToStakeCoinList: getReadyToStakeCoinList(),
-    getCoin
+    getCoin,
+    selectedCoin,
+    selectCoin
   }}>
     {children}
   </CoinContext.Provider>;

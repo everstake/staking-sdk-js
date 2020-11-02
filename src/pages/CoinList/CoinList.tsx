@@ -5,10 +5,20 @@ import CloseIcon from '../../components/icons/CloseIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import CoinItem, {CoinItemProps} from './components/CoinItem/CoinItem';
 import useCoin from '../../hooks/useCoin';
+import useNavigation from '../../hooks/useNavigation';
+import {PATH} from '../../contexts/NavigationProvider';
 
 const CoinList = () => {
   const {closeWidget} = useWidgetState();
-  const {coinList, stakedCoinList, readyToStakeCoinList} = useCoin();
+  const {navigate} = useNavigation();
+  const {coinList, stakedCoinList, readyToStakeCoinList, selectCoin} = useCoin();
+
+  const handleCoinClick = (coinId: string) => {
+    const isSelected = selectCoin(coinId);
+    if (isSelected) {
+      navigate(PATH.COIN_DETAILS);
+    }
+  };
 
   return <div className='coin-list'>
     <div className='coin-list__header'>
@@ -28,7 +38,7 @@ const CoinList = () => {
         <p className='coin-list__subtitle'>Staked</p>
         <ul className='coin-list__list'>
           {stakedCoinList.map(coin => {
-            const props = new CoinItemProps(coin);
+            const props = new CoinItemProps(coin, handleCoinClick);
             return <CoinItem {...props} key={coin.id}/>;
           })}
         </ul>
@@ -37,7 +47,7 @@ const CoinList = () => {
         <p className='coin-list__subtitle'>Ready to stake</p>
         <ul className='coin-list__list'>
           {readyToStakeCoinList.map(coin => {
-            const props = new CoinItemProps(coin);
+            const props = new CoinItemProps(coin, handleCoinClick);
             return <CoinItem {...props} key={coin.id}/>;
           })}
         </ul>

@@ -38,7 +38,7 @@ export class CalculatorModel {
     this._includeValidatorFee = isValidatorFee;
   }
   set amount(amount: string) {
-    this._amount = amount;
+    this._amount = amount || '0';
   }
 
   private periodScale(): string {
@@ -52,7 +52,6 @@ export class CalculatorModel {
   }
 
   get dailyIncome(): string {
-    console.log('dailyIncome');
     return formatAmount(this.perDay, this.coinPrecision, this.coinSymbol);
   }
   get monthlyIncome(): string {
@@ -81,7 +80,7 @@ export class CalculatorModel {
 }
 
 export const formatAmount = (amount: number, precision: number, symbol: string): string => {
-  return Big(amount).round(precision).toFixed() + ' ' + symbol;
+  return Big(amount).round(+precision).toFixed() + ' ' + symbol;
 };
 
 const MILLISECONDS_PER_SECOND = 1000;

@@ -1,0 +1,24 @@
+.staking-sdk
+  .coin-selector
+    position: absolute
+    display: flex
+    flex-direction: column
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    background-color: rgba(var(--everstakeWindowBackground), 1)
+    &__header
+      padding: 16px
+      display: flex
+      align-items: center
+      margin-bottom: 16px
+      .close-btn
+        padding: 4px
+        font-size: 0
+        margin-right: 32px
+    &__title
+      font: 500 20px/24px var(--everstakeFont)
+    &__body
+      flex: 1
+      overflow-y: auto
