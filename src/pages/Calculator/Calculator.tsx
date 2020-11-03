@@ -89,6 +89,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   };
 
   const proceedToStaking = (data: any) => {
+    // ToDo: add callback
     console.log('data', data);
   };
 
