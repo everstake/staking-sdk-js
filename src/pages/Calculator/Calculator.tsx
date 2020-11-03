@@ -3,7 +3,7 @@ import './Calculator.sass';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
-import Input from '../../components/Input/Input';
+import CustomInput from '../../components/CustomInput/CustomInput';
 import {useForm} from 'react-hook-form';
 import useCalculator from '../../hooks/useCalculator';
 import CustomCheckbox from '../../components/CustomCheckbox/CustomCheckbox';
@@ -28,7 +28,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   const {selectedCoinValidator} = useValidators();
   const [isOpenCoinSelector, setIsOpenCoinSelector] = useState(false);
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
-  const {register, handleSubmit, errors, getValues} = useForm<CalculatorForm>({
+  const {register, handleSubmit, errors, getValues, setValue, control} = useForm<CalculatorForm>({
     defaultValues: {
       amount: calculator.amount,
       includeValidatorFee: calculator.includeValidatorFee,
@@ -36,15 +36,25 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
     }
   });
 
+  useEffect(() => {}, [calculator]);
+
   useEffect(() => {
     if (selectedCoin && selectedCoinValidator) {
       calculator.initCalculator(selectedCoin, selectedCoinValidator.fee);
+      setValue('amount', calculator.amount);
+      setValue('includeValidatorFee', calculator.includeValidatorFee);
+      setValue('includeReinvestment', calculator.includeReinvestment);
     }
   }, [selectedCoin, selectedCoinValidator]);
 
   if (!selectedCoin) {
     return null;
   }
+
+  const handleCheckboxChange = (name: keyof Omit<CalculatorForm, 'amount'>, checked: boolean) => {
+    setValue(name, checked);
+    changeCalculatorProperties(name);
+  };
 
   const closeCoinSelector = () => {
     setIsOpenCoinSelector(false);
@@ -93,17 +103,17 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
 
       <form onSubmit={handleSubmit(proceedToStaking)}>
         <div className='calculator__input-wrap'>
-          <Input name='amount'
-                 onChange={() => changeCalculatorProperties('amount')}
-                 label='Enter amount'
-                 placeholder='0.00'
-                 register={register({
+          <CustomInput name='amount'
+                       onChange={() => changeCalculatorProperties('amount')}
+                       label='Enter amount'
+                       placeholder='0.00'
+                       register={register({
                    required: {value: true, message: 'Amount cannot be empty'},
                    validate: validateAmount
                  })}
-                 type='number'
-                 suffix={selectedCoin.symbol}
-                 errors={errors}/>
+                       type='number'
+                       suffix={selectedCoin.symbol}
+                       errors={errors}/>
         </div>
 
         <div className='calculator__selectors'>
@@ -147,14 +157,14 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
           <CustomCheckbox name='includeValidatorFee'
                           className='calculator__checkbox'
                           label='Include validator fee'
-                          onChange={() => changeCalculatorProperties('includeValidatorFee')}
-                          register={register}/>
+                          onChange={(checked) => handleCheckboxChange('includeValidatorFee', checked)}
+                          control={control}/>
 
           <CustomCheckbox name='includeReinvestment'
-                          label='Reinvest earnings'
                           className='calculator__checkbox'
-                          onChange={() => changeCalculatorProperties('includeReinvestment')}
-                          register={register}/>
+                          label='Reinvest earnings'
+                          onChange={(checked) => handleCheckboxChange('includeReinvestment', checked)}
+                          control={control}/>
 
           <button className='calculator__btn accent__btn'>Proceed to staking</button>
         </div>

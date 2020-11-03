@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from 'react';
-import './Input.sass';
+import './CustomInput.sass';
 
 export interface IProps {
   label?: string;
@@ -14,7 +14,7 @@ export interface IProps {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<IProps> = (props: IProps) => {
+const CustomInput: React.FC<IProps> = (props: IProps) => {
   let inputClassName = 'input';
   if (props.errors[props.name]) {
     inputClassName += ' input__error';
@@ -39,4 +39,4 @@ const Input: React.FC<IProps> = (props: IProps) => {
   </label>;
 };
 
-export default Input;
+export default CustomInput;

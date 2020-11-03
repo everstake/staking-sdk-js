@@ -1,6 +1,6 @@
 import {Coin} from '../models/coins.model';
 import {CalculatorModel} from '../utils/calculator';
-import {useEffect, useState} from 'react';
+import {useMemo, useState} from 'react';
 
 const useCalculator = () => {
   const [calculator, setCalculator] = useState<CalculatorModel | null>(null);
@@ -40,7 +40,17 @@ const useCalculator = () => {
     setIncludeReinvestment(reinvestmentState);
   };
 
-  useEffect(() => {}, [calculator, amount, includeReinvestment, includeValidatorFee]);
+  const dailyIncome = useMemo<string>(() => {
+    return calculator ? calculator.dailyIncome : '0';
+  }, [calculator, amount, includeReinvestment, includeValidatorFee]);
+
+  const monthlyIncome = useMemo<string>(() => {
+    return calculator ? calculator.monthlyIncome : '0';
+  }, [calculator, amount, includeReinvestment, includeValidatorFee]);
+
+  const yearlyIncome = useMemo<string>(() => {
+    return calculator ? calculator.yearlyIncome : '0';
+  }, [calculator, amount, includeReinvestment, includeValidatorFee]);
 
   return {
     initCalculator,
@@ -50,9 +60,9 @@ const useCalculator = () => {
     updateAmount,
     isValidationFee,
     isReinvestment,
-    dailyIncome: calculator ? calculator.dailyIncome : '0',
-    monthlyIncome: calculator ? calculator.monthlyIncome : '0',
-    yearlyIncome: calculator ? calculator.yearlyIncome : '0'
+    dailyIncome,
+    monthlyIncome,
+    yearlyIncome
   };
 };
 

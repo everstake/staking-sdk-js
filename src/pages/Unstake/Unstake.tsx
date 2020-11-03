@@ -3,7 +3,7 @@ import './Unstake.sass';
 import useCoin from '../../hooks/useCoin';
 import {Coin} from '../../models/coins.model';
 import useNavigation from '../../hooks/useNavigation';
-import Input from '../../components/Input/Input';
+import CustomInput from '../../components/CustomInput/CustomInput';
 import {useForm} from 'react-hook-form';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
@@ -70,18 +70,18 @@ const Unstake: React.FC = () => {
 
     <form onSubmit={handleSubmit(handleUnstake)} className='unstake__form'>
       <div className='unstake__input-wrap'>
-      <Input name='amount'
-             onChange={handleAmountChange}
-             label='Enter amount'
-             labelRightHtml={LabelRight(selectedCoin)}
-             placeholder='0.00'
-             register={register({
+      <CustomInput name='amount'
+                   onChange={handleAmountChange}
+                   label='Enter amount'
+                   labelRightHtml={LabelRight(selectedCoin)}
+                   placeholder='0.00'
+                   register={register({
                required: {value: true, message: 'Amount cannot be empty'},
                validate: validateAmount,
              })}
-             type='number'
-             suffix={selectedCoin?.symbol}
-             errors={errors}/>
+                   type='number'
+                   suffix={selectedCoin?.symbol}
+                   errors={errors}/>
       </div>
 
       <CustomSlider value={rangeValue} min={0} max={100} step={25} valuetext={valuetext} onChange={handleSliderChange}/>
