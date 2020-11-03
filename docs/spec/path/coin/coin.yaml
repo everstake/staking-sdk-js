@@ -1,0 +1,14 @@
+get:
+  tags:
+    - "Coin"
+  summary: "Get coin list"
+  operationId: "get-coin-list"
+  responses:
+    200:
+      description: "Successfully retrieved coin list"
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/CoinResult"

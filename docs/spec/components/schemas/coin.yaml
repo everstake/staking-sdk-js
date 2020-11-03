@@ -1,0 +1,80 @@
+CoinResult:
+  type: object
+  decription: Coin model
+  properties:
+    id:
+      type: string
+      description: Coin id
+      example: "0"
+    "name":
+      type: string
+      description: Coin name
+      example: "Tezos"
+    iconUrl:
+      type: string
+      description: Icon url
+      example: "https://s2.coinmarketcap.com/static/img/coins/64x64/2011.png"
+    apr:
+      type: string
+      description: Apr
+      example: "10"
+    order:
+      type: string
+      description: Coin oirder
+      example: "1"
+    yieldInterval:
+      type: string
+      description: Yield interval
+      example: "86400"
+    yieldPercent:
+      type: string
+      description: Yield percent
+      example: "0.0274"
+    isActive:
+      type: boolean
+      description: Is coin active
+      example: true
+    symbol:
+      type: string
+      description: Coin symbpl
+      example: "XTZ"
+    precision:
+      type: string
+      description: Coin precision
+      example: "6"
+    needsClaiming:
+      type: boolean
+      description: Is needs claiming
+      example: true
+    intervalStake:
+      type: string
+      description: Stake intrerval
+      example: "0"
+    intervalUnstake:
+      type: string
+      description: Unstake intrerval
+      example: "86400"
+    toUsd:
+      type: string
+      description: Exchange rate
+      example: "2.0"
+    about:
+      type: string
+      description: Text description about the coin
+      example: "Lorem ipsum dolor sit amet"
+    aboutUrl:
+      type: string
+      description: Url to the coin website
+      example: "https://tezos.com/"
+    fee:
+      type: object
+      decription: Fee model
+      properties:
+        min:
+          type: string
+          description: Min fee
+          example: "1"
+        max:
+          type: string
+          description: Max fee
+          example: "3"

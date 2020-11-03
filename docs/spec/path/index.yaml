@@ -1,0 +1,2 @@
+/coin:
+  $ref: ./coin/coin.yaml
