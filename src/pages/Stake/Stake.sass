@@ -1,2 +1,78 @@
 .staking-sdk
   .stake
+    position: relative
+    width: 100%
+    height: 100%
+    overflow-y: auto
+    &__header
+      padding: 16px
+      display: flex
+      align-items: center
+      .back-btn
+        padding: 4px
+        font-size: 0
+        margin-right: 32px
+    &__title
+      font: 500 20px/24px var(--everstakeFont)
+      letter-spacing: .15px
+      color: rgba(var(--everstakeColorAccent), .87)
+      margin-bottom: 4px
+    &__subtitle
+      font: 400 14px/24px var(--everstakeFont)
+      color: rgba(var(--everstakeColorAccent), .6)
+      span
+        font-weight: 500
+        color: rgba(var(--everstakeColorAccent), .87)
+    &__selector-wrap
+      .selector
+        &__header
+          font: 400 14px/24px var(--everstakeFont)
+          color: rgba(var(--everstakeColorAccent), .4)
+          margin-left: 16px
+          border-bottom: 1px solid rgba(var(--everstakeColorAccent), .1)
+        &__btn
+          width: 100%
+          padding-left: 16px
+          transition: box-shadow .25s
+          &:focus
+            outline: none
+          &.focus-visible
+            box-shadow: inset 0 0 0 2px rgba(var(--everstakeFocusColor), 1)
+          &-container
+            display: flex
+            justify-content: space-between
+            align-items: center
+            border-bottom: 1px solid rgba(var(--everstakeColorAccent), .1)
+            padding: 12px 12px 12px 0
+            &--accent
+              background-image: linear-gradient(to right, rgba(var(--everstakeColorPrimaryDark), 0) 0, rgba(var(--everstakeColorGreen), .1) 100%)
+          &-title, &-desc
+            display: block
+            text-align: left
+          &-title
+            font: 500 16px/24px var(--everstakeFont)
+            letter-spacing: .15px
+            height: 24px
+          &-desc
+            font: 400 14px/20px var(--everstakeFont)
+            letter-spacing: .25px
+            color: rgba(var(--everstakeColorAccent), .6)
+            height: 20px
+          &-type
+            font: 400 14px/16px var(--everstakeFont)
+            color: rgba(var(--everstakeColorAccent), .87)
+            padding-right: 16px
+            margin-top: 2px
+        &__reliable-label
+          background-color: rgba(var(--everstakeColorGreen), 1)
+          color: rgba(var(--everstakeWindowBackground), 1)
+          padding: 4px 12px
+          border-radius: 4px
+    &__controls
+      padding: 0 16px 16px
+    &__input-wrap
+      margin-bottom: 16px
+    &__bottom
+      padding: 16px
+    &__btn
+      margin-bottom: 24px

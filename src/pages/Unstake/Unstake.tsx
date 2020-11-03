@@ -26,7 +26,7 @@ const Unstake: React.FC = () => {
     return null;
   }
 
-  const valuetext = (value: number) => {
+  const valuetext = (value: number): string => {
     return `${value}%`;
   };
 
@@ -70,18 +70,18 @@ const Unstake: React.FC = () => {
 
     <form onSubmit={handleSubmit(handleUnstake)} className='unstake__form'>
       <div className='unstake__input-wrap'>
-      <CustomInput name='amount'
-                   onChange={handleAmountChange}
-                   label='Enter amount'
-                   labelRightHtml={LabelRight(selectedCoin)}
-                   placeholder='0.00'
-                   register={register({
-               required: {value: true, message: 'Amount cannot be empty'},
-               validate: validateAmount,
-             })}
-                   type='number'
-                   suffix={selectedCoin?.symbol}
-                   errors={errors}/>
+        <CustomInput name='amount'
+                     onChange={handleAmountChange}
+                     label='Enter amount'
+                     labelRightHtml={LabelRight(selectedCoin)}
+                     placeholder='0.00'
+                     register={register({
+                       required: {value: true, message: 'Amount cannot be empty'},
+                       validate: validateAmount
+                     })}
+                     type='number'
+                     suffix={selectedCoin?.symbol}
+                     errors={errors}/>
       </div>
 
       <CustomSlider value={rangeValue} min={0} max={100} step={25} valuetext={valuetext} onChange={handleSliderChange}/>
@@ -89,7 +89,7 @@ const Unstake: React.FC = () => {
       <p className='unstake__time'>Unstake time</p>
       <p className='unstake__message'>The funds will return in one day</p>
 
-      <button className='unstake__btn accent__btn'>Unstake</button>
+      <button className='unstake__btn accent-btn'>Unstake</button>
     </form>
 
   </div>;

@@ -65,7 +65,7 @@ const CoinDetails: React.FC = () => {
           </div>}
 
           {selectedCoin.hasRewards && <div className='rewards'>
-            <button className='rewards__btn accent__btn'>Claim rewards</button>
+            <button className='rewards__btn accent-btn'>Claim rewards</button>
             <p className='rewards__info'>Available rewards: <span>{selectedCoin.amountToClaim} {selectedCoin.symbol}</span></p>
           </div>}
         </div>}

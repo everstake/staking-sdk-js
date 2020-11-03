@@ -10,6 +10,7 @@ import CustomCheckbox from '../../components/CustomCheckbox/CustomCheckbox';
 import CoinSelector from '../../components/CoinSelector/CoinSelector';
 import ValidatorSelector from '../../components/ValidatorSelector/ValidatorSelector';
 import useValidators from '../../hooks/useValidators';
+import CalculateInfoCard from '../../components/CalculateInfoCard/CalculateInfoCard';
 
 interface CalculatorParams {
   coinId: string;
@@ -35,8 +36,6 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
       includeReinvestment: calculator.includeReinvestment
     }
   });
-
-  useEffect(() => {}, [calculator]);
 
   useEffect(() => {
     if (selectedCoin && selectedCoinValidator) {
@@ -88,7 +87,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
     }
   };
 
-  const proceedToStaking = (data: any) => {
+  const proceedToStaking = (data: CalculatorForm) => {
     // ToDo: add callback
     console.log('data', data);
   };
@@ -140,20 +139,11 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
         </div>
 
         <div className='calculator__settings'>
-          <div className='info'>
-            <div className='info__item'>
-              <p className='info__period'>Daily income</p>
-              <p className='info__amount'>{calculator.dailyIncome || '0'}</p>
-            </div>
-            <div className='info__item'>
-              <p className='info__period'>Monthly</p>
-              <p className='info__amount'>{calculator.monthlyIncome || '0'}</p>
-            </div>
-            <div className='info__item'>
-              <p className='info__period'>Yearly</p>
-              <p className='info__amount'>{calculator.yearlyIncome || '0'}</p>
-            </div>
-          </div>
+
+          <CalculateInfoCard
+            dailyIncome={calculator.dailyIncome}
+            monthlyIncome={calculator.monthlyIncome}
+            yearlyIncome={calculator.yearlyIncome}/>
 
           <CustomCheckbox name='includeValidatorFee'
                           className='calculator__checkbox'
@@ -167,7 +157,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
                           onChange={(checked) => handleCheckboxChange('includeReinvestment', checked)}
                           control={control}/>
 
-          <button className='calculator__btn accent__btn'>Proceed to staking</button>
+          <button className='calculator__btn accent-btn'>Proceed to staking</button>
         </div>
       </form>
     </div>}
