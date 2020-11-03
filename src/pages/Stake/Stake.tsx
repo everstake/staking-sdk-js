@@ -12,13 +12,18 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import Big from 'big.js';
 
+interface StakeParams {
+  amount: string;
+}
+
 interface StakeForm {
   amount: string;
 }
 
-const Stake = () => {
+const Stake: React.FC<StakeParams> = (params) => {
+  const {amount} = params;
   const {goBack} = useNavigation();
-  const calculator = useCalculator();
+  const {config, initCalculator, updateAmount, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator(amount);
   const {selectedCoin} = useCoin();
   // ToDo: use real balance
   const [balance, setBalance] = useState<string>('20');
@@ -26,13 +31,21 @@ const Stake = () => {
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
   const {register, handleSubmit, errors, setValue, getValues} = useForm<StakeForm>({
-    defaultValues: {amount: calculator.amount}
+    defaultValues: {amount: config.amount}
   });
+
+  const getRangeValue = (partAmount: string, fullAmount: string): number => {
+    return +Big(partAmount || 0).times(100).div(fullAmount).toFixed();
+  };
+
+  useEffect(() => {
+    setRangeValue(getRangeValue(amount, balance));
+  }, []);
 
   useEffect(() => {
     if (selectedCoin && selectedCoinValidator) {
-      calculator.initCalculator(selectedCoin, selectedCoinValidator.fee);
-      setValue('amount', calculator.amount);
+      initCalculator(selectedCoin, selectedCoinValidator.fee);
+      setValue('amount', config.amount);
     }
   }, [selectedCoin, selectedCoinValidator]);
 
@@ -40,11 +53,10 @@ const Stake = () => {
     return null;
   }
 
-  const updateAmount = () => {
-    const amount = getValues('amount');
-    calculator.updateAmount(amount);
-    const newRangeValue = +Big(amount || 0).times(100).div(balance).toFixed();
-    setRangeValue(newRangeValue);
+  const handleAmount = () => {
+    const formAmount = getValues('amount');
+    updateAmount(formAmount);
+    setRangeValue(getRangeValue(formAmount, balance));
   };
 
   const closeValidatorSelector = () => {
@@ -66,7 +78,7 @@ const Stake = () => {
     if (typeof newValue === 'number') {
       const newAmount = Big(balance).times(newValue).div(100).toFixed();
       setValue('amount', newAmount);
-      calculator.updateAmount(getValues('amount'));
+      updateAmount(getValues('amount'));
     }
   };
 
@@ -92,7 +104,7 @@ const Stake = () => {
       <div className='stake__controls'>
         <div className='stake__input-wrap'>
           <CustomInput name='amount'
-                       onChange={updateAmount}
+                       onChange={handleAmount}
                        label='Enter amount'
                        labelRightHtml={LabelRight(balance, selectedCoin.symbol)}
                        placeholder='0.00'
@@ -124,9 +136,9 @@ const Stake = () => {
       <div className='stake__bottom'>
         <button className='stake__btn accent-btn'>Stake</button>
         <CalculateInfoCard
-          dailyIncome={calculator.dailyIncome}
-          monthlyIncome={calculator.monthlyIncome}
-          yearlyIncome={calculator.yearlyIncome}/>
+          dailyIncome={dailyIncome}
+          monthlyIncome={monthlyIncome}
+          yearlyIncome={yearlyIncome}/>
       </div>
     </form>}
 

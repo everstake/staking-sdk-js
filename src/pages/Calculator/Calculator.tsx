@@ -11,10 +11,7 @@ import CoinSelector from '../../components/CoinSelector/CoinSelector';
 import ValidatorSelector from '../../components/ValidatorSelector/ValidatorSelector';
 import useValidators from '../../hooks/useValidators';
 import CalculateInfoCard from '../../components/CalculateInfoCard/CalculateInfoCard';
-
-interface CalculatorParams {
-  coinId: string;
-}
+import {PATH} from '../../contexts/NavigationProvider';
 
 interface CalculatorForm {
   amount: string;
@@ -22,27 +19,27 @@ interface CalculatorForm {
   includeReinvestment: boolean;
 }
 
-const Calculator: React.FC<CalculatorParams> = (params) => {
+const Calculator: React.FC = () => {
   const {selectedCoin} = useCoin();
-  const {goBack} = useNavigation();
-  const calculator = useCalculator();
+  const {goBack, navigate} = useNavigation();
+  const {config, initCalculator, updateAmount, isValidationFee, isReinvestment, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator();
   const {selectedCoinValidator} = useValidators();
   const [isOpenCoinSelector, setIsOpenCoinSelector] = useState(false);
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
   const {register, handleSubmit, errors, getValues, setValue, control} = useForm<CalculatorForm>({
     defaultValues: {
-      amount: calculator.amount,
-      includeValidatorFee: calculator.includeValidatorFee,
-      includeReinvestment: calculator.includeReinvestment
+      amount: config.amount,
+      includeValidatorFee: config.includeValidatorFee,
+      includeReinvestment: config.includeReinvestment
     }
   });
 
   useEffect(() => {
     if (selectedCoin && selectedCoinValidator) {
-      calculator.initCalculator(selectedCoin, selectedCoinValidator.fee);
-      setValue('amount', calculator.amount);
-      setValue('includeValidatorFee', calculator.includeValidatorFee);
-      setValue('includeReinvestment', calculator.includeReinvestment);
+      initCalculator(selectedCoin, selectedCoinValidator.fee);
+      setValue('amount', config.amount);
+      setValue('includeValidatorFee', config.includeValidatorFee);
+      setValue('includeReinvestment', config.includeReinvestment);
     }
   }, [selectedCoin, selectedCoinValidator]);
 
@@ -66,13 +63,13 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   const changeCalculatorProperties = (field: keyof CalculatorForm) => {
     switch (field) {
       case 'amount':
-        calculator.updateAmount(getValues(field));
+        updateAmount(getValues(field));
         break;
       case 'includeValidatorFee':
-        calculator.isValidationFee(getValues(field));
+        isValidationFee(getValues(field));
         break;
       case 'includeReinvestment':
-        calculator.isReinvestment(getValues(field));
+        isReinvestment(getValues(field));
         break;
       default:
         return;
@@ -88,8 +85,7 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
   };
 
   const proceedToStaking = (data: CalculatorForm) => {
-    // ToDo: add callback
-    console.log('data', data);
+    navigate(PATH.STAKE, {amount: data.amount});
   };
 
   return <div className='calculator'>
@@ -141,9 +137,9 @@ const Calculator: React.FC<CalculatorParams> = (params) => {
         <div className='calculator__settings'>
 
           <CalculateInfoCard
-            dailyIncome={calculator.dailyIncome}
-            monthlyIncome={calculator.monthlyIncome}
-            yearlyIncome={calculator.yearlyIncome}/>
+            dailyIncome={dailyIncome}
+            monthlyIncome={monthlyIncome}
+            yearlyIncome={yearlyIncome}/>
 
           <CustomCheckbox name='includeValidatorFee'
                           className='calculator__checkbox'
