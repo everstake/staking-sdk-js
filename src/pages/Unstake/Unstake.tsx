@@ -8,6 +8,7 @@ import {useForm} from 'react-hook-form';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import Big from 'big.js';
+import emitter from '../../utils/Emitter';
 
 interface UnstakeForm {
   amount: number | null;
@@ -48,8 +49,8 @@ const Unstake: React.FC = () => {
     }
   };
 
-  const handleUnstake = (e: any) => {
-    console.log('Unstake', getValues('amount'));
+  const handleUnstake = (data: UnstakeForm) => {
+    emitter.emit('unstake', data);
   };
 
   const validateAmount = (value: number): string | true => {

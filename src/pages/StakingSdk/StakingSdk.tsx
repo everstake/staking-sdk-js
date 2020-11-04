@@ -18,7 +18,7 @@ export interface StakingSdkProps {
 
 const StakingSdk: React.FC<StakingSdkProps> = (props) => {
   const {isOpen, openWidget, closeWidget} = useWidgetState();
-  const {route, navigations} = useNavigation();
+  const {route} = useNavigation();
 
   props.handlers.onOpen = (config: WalletConfig) => {
     openWidget(config);
@@ -32,7 +32,7 @@ const StakingSdk: React.FC<StakingSdkProps> = (props) => {
     <div className='staking-sdk' onClick={handleCardClick}>
       {route.path === PATH.COIN_LIST && <CoinList/>}
       {route.path === PATH.COIN_DETAILS && <CoinDetails/>}
-      {route.path === PATH.STAKE && <Stake amount={(route.params && route.params.amount) || '0'}/>}
+      {route.path === PATH.STAKE && <Stake amount={(route.params && route.params.amount) || ''}/>}
       {route.path === PATH.CALCULATOR && <Calculator/>}
       {route.path === PATH.UNSTAKE && <Unstake/>}
     </div>

@@ -30,14 +30,23 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="wallet-sdk"></div>
     <script>
-      function open1() {
+      function openWalletSdk() {
         const walletSdk = new WalletSdk({
           elemId: 'wallet-sdk'
         });
         walletSdk.open();
+        walletSdk.on('stake', (data) => {
+          console.log('walletSdk stake', data);
+        })
+        walletSdk.on('unstake', (data) => {
+          console.log('walletSdk unstake', data);
+        })
+        walletSdk.on('claimRewards', (data) => {
+          console.log('walletSdk claimRewards', data);
+        })
       }
     </script>
-    <button onclick="open1()">Open1</button>
+    <button onclick="openWalletSdk()">Open</button>
 
 
     <!--

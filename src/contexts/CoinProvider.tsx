@@ -58,9 +58,6 @@ const CoinProvider: React.FC = ({children}) => {
 
     setCoinList(getCoinList(coinListRes.data, stakingRes.data));
 
-
-    // ToDo: remove setter
-    selectCoin('0');
   }, []);
 
   useEffect(() => {

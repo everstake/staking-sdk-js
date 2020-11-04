@@ -6,6 +6,7 @@ import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
 import {FeeDto} from '../../models/coins.model';
+import emitter from '../../utils/Emitter';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
@@ -17,6 +18,10 @@ const CoinDetails: React.FC = () => {
 
   const getFeeStr = (fee: FeeDto): string => {
     return fee.min === fee.max ? fee.min + '%' : `${fee.min}-${fee.max}%`;
+  };
+
+  const claimRewards = () => {
+    emitter.emit('claimRewards', {rewards: true});
   };
 
   return (
@@ -47,7 +52,7 @@ const CoinDetails: React.FC = () => {
             </div>
           </div>
           <div className='coin-details__actions'>
-            <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {amount: '0'})}>Stake</button>
+            <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {amount: ''})}>Stake</button>
             <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.CALCULATOR)}>
               Open calculator
             </button>
@@ -70,7 +75,7 @@ const CoinDetails: React.FC = () => {
           </div>}
 
           {selectedCoin.hasRewards && <div className='rewards'>
-            <button className='rewards__btn accent-btn'>Claim rewards</button>
+            <button onClick={claimRewards} className='rewards__btn accent-btn'>Claim rewards</button>
             <p className='rewards__info'>Available rewards: <span>{selectedCoin.amountToClaim} {selectedCoin.symbol}</span></p>
           </div>}
         </div>}

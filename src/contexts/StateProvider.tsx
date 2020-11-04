@@ -32,8 +32,7 @@ interface StateContextI {
 }
 
 const initialValue: StateContextI = {
-  // ToDo: Return default value (false)
-  isOpen: true,
+  isOpen: false,
   openWidget: () => undefined
 };
 

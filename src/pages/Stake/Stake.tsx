@@ -11,6 +11,7 @@ import {useForm} from 'react-hook-form';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import Big from 'big.js';
+import emitter from '../../utils/Emitter';
 
 interface StakeParams {
   amount: string;
@@ -22,6 +23,7 @@ interface StakeForm {
 
 const Stake: React.FC<StakeParams> = (params) => {
   const {amount} = params;
+  console.log('amount', amount);
   const {goBack} = useNavigation();
   const {config, initCalculator, updateAmount, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator(amount);
   const {selectedCoin} = useCoin();
@@ -87,7 +89,7 @@ const Stake: React.FC<StakeParams> = (params) => {
   };
 
   const stake = (data: StakeForm) => {
-    console.log('data', data);
+    emitter.emit('stake', data);
   };
 
   return <div className='stake'>
