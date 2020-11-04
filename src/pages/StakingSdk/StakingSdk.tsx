@@ -18,7 +18,7 @@ export interface StakingSdkProps {
 
 const StakingSdk: React.FC<StakingSdkProps> = (props) => {
   const {isOpen, openWidget, closeWidget} = useWidgetState();
-  const {route} = useNavigation();
+  const {route, navigations} = useNavigation();
 
   props.handlers.onOpen = (config: WalletConfig) => {
     openWidget(config);

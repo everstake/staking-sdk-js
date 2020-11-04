@@ -34,14 +34,16 @@ const Calculator: React.FC = () => {
     }
   });
 
+  console.log('render');
+
   useEffect(() => {
-    if (selectedCoin && selectedCoinValidator) {
+    if (selectedCoin && selectedCoinValidator && !isOpenCoinSelector && !isOpenValidatorSelector) {
       initCalculator(selectedCoin, selectedCoinValidator.fee);
       setValue('amount', config.amount);
       setValue('includeValidatorFee', config.includeValidatorFee);
       setValue('includeReinvestment', config.includeReinvestment);
     }
-  }, [selectedCoin, selectedCoinValidator]);
+  }, [selectedCoin, selectedCoinValidator, isOpenCoinSelector, isOpenValidatorSelector]);
 
   if (!selectedCoin) {
     return null;
@@ -118,7 +120,7 @@ const Calculator: React.FC = () => {
             <span className='selectors__btn-container'>
               <span className='selectors__btn-info'>
                 <span className='selectors__btn-title'>{selectedCoin.name}</span>
-                <span className='selectors__btn-desc'>Yearly income: {selectedCoin.yieldPercent}%</span>
+                <span className='selectors__btn-desc'>Yearly income: {selectedCoin.apr}%</span>
               </span>
               <span className='selectors__btn-type'>Currency</span>
             </span>

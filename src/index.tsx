@@ -37,7 +37,7 @@ export class WalletSdk {
 }
 
 // ToDo: Remove initializing
-const walletSdk = new WalletSdk({elemId: 'wallet-sdk'});
+// const walletSdk = new WalletSdk({elemId: 'wallet-sdk'});
 
 window.WalletSdk = WalletSdk;
 

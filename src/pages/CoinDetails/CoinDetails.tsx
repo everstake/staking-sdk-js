@@ -5,6 +5,7 @@ import useNavigation from '../../hooks/useNavigation';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
+import {FeeDto} from '../../models/coins.model';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
@@ -13,6 +14,10 @@ const CoinDetails: React.FC = () => {
   if (!selectedCoin) {
     return null;
   }
+
+  const getFeeStr = (fee: FeeDto): string => {
+    return fee.min === fee.max ? fee.min + '%' : `${fee.min}-${fee.max}%`;
+  };
 
   return (
     <div className='coin-details'>
@@ -37,7 +42,7 @@ const CoinDetails: React.FC = () => {
               <h3 className='info-block__title'>{`${selectedCoin.name} (${selectedCoin.symbol})`}</h3>
               <div className='info-block__bottom'>
                 <p className='info-block__item'>APR: <span>{selectedCoin.apr}%</span></p>
-                <p className='info-block__item'>Service fee: <span>{`${selectedCoin.fee.min}-${selectedCoin.fee.max}`}%</span></p>
+                <p className='info-block__item'>Service fee: <span>{getFeeStr(selectedCoin.fee)}</span></p>
               </div>
             </div>
           </div>
@@ -60,7 +65,7 @@ const CoinDetails: React.FC = () => {
             </div>
             <div className='staked__info'>
               <p className='staked__item'>Validator: <span>{selectedCoin.validator?.validatorName || '-'}</span></p>
-              <p className='staked__item'>Yearly income: <span>{selectedCoin.yieldPercent}%</span></p>
+              <p className='staked__item'>Yearly income: <span>{selectedCoin.apr}%</span></p>
             </div>
           </div>}
 

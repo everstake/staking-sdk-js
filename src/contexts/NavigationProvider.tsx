@@ -52,7 +52,7 @@ const navigations: RouteI[] = [
 
 // ToDo: Return default router
 const rootRoute: RouteI = {...navigations[0]};
-// const rootRoute: RouteI = {...navigations[2], params: {amount: '7'}};
+// const rootRoute: RouteI = {...navigations[3]};
 
 const initialValue: NavigationContextI = {
   route: rootRoute,

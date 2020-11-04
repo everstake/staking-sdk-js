@@ -67,7 +67,7 @@ const Stake: React.FC<StakeParams> = (params) => {
     if (isNaN(value)) {
       return 'Amount must be number';
     } else if (Big(value).gt(balance)) {
-      return 'Amount must be number';
+      return 'Amount cannot be more than your balance';
     } else {
       return true;
     }
