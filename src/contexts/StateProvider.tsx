@@ -4,9 +4,24 @@ import {KEYCODE} from '../models/utils';
 
 export class WalletConfig {
   elemId: string;
-  constructor(elemId: string) {
+  theme?: Theme;
+  constructor(elemId: string, theme?: Theme) {
     this.elemId = elemId;
+    if (theme) {
+      this.theme = theme;
+    }
   }
+}
+
+export interface Theme {
+  ColorPrimary: string;
+  ColorPrimaryDark: string;
+  ColorAccent: string;
+  WindowBackground: string;
+  DetailsHeaderBg: string;
+  FocusColor: string;
+  ColorGreen: string;
+  WarningColor: string;
 }
 
 interface StateContextI {
@@ -22,6 +37,11 @@ const initialValue: StateContextI = {
   openWidget: () => undefined
 };
 
+const hexToRgb = (hex: string): string => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? parseInt(result[1], 16) + ', ' + parseInt(result[2], 16) + ', ' + parseInt(result[3], 16) : '';
+};
+
 export const StateContext = createContext<StateContextI>(initialValue);
 
 const StateProvider: React.FC = ({children}) => {
@@ -32,6 +52,9 @@ const StateProvider: React.FC = ({children}) => {
     setState(true);
     setConfig(walletConfig);
     addInert(walletConfig.elemId);
+    if (walletConfig.theme) {
+      updateColorTheme(walletConfig.theme);
+    }
   };
 
   const closeWidget = () => {
@@ -68,6 +91,13 @@ const StateProvider: React.FC = ({children}) => {
     Array.from(document.body.children).forEach(child => {
       // @ts-ignore
       child.inert = false;
+    });
+  };
+
+  const updateColorTheme = (theme: Theme) => {
+    const root = document.documentElement;
+    Object.keys(theme).forEach((property) => {
+      root.style.setProperty('--everstake' + property.charAt(0).toUpperCase() + property.slice(1), hexToRgb(theme[property as (keyof Theme)]));
     });
   };
 

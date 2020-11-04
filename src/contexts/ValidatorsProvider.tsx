@@ -4,6 +4,8 @@ import useCoin from '../hooks/useCoin';
 import axios from 'axios';
 import {API} from '../models/constans';
 
+const VALIDATORS_KEY = 'everstake-validators';
+
 interface ValidatorsContextI {
   coinValidators: Validator[];
   selectCoinValidator: (validatorId: string) => boolean;

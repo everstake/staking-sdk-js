@@ -9,7 +9,7 @@
     background-color: transparent
     color: rgba(var(--everstakeColorAccent), .87)
     border: 1px solid rgba(var(--everstakeColorAccent), .4)
-    transition: border .25s
+    transition: border .25s, background-color .25s
     &[type=number]
       -moz-appearance: textfield
       &::-webkit-inner-spin-button, &::-webkit-outer-spin-button
@@ -52,8 +52,11 @@
       color: rgba(var(--everstakeColorAccent), .87)
       opacity: .5
     &__error
-      //border-color: var(--warning-color)
+      border-color: rgba(var(--everstakeWarningColor), .4)
+      background-color: rgba(var(--everstakeWarningColor), .1)
+      &.focus-visible
+        border-color: rgba(var(--everstakeWarningColor), .4)
     &__error-message
-      //font: 400 9px var(--everstakeFont)
-      //color: var(--warning-color)
-      margin-top: 3px
+      font: 400 14px/24px var(--everstakeFont)
+      color: rgba(var(--everstakeWarningColor), .4)
+      margin-top: 2px
