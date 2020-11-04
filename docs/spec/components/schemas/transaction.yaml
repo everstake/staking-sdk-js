@@ -1,0 +1,10 @@
+NewTransactionModel:
+  type: object
+  description: Key-value dictionary of blockchain-specific fields required to create a new transaction.
+  additionalProperties:
+    type: string
+  example:
+    address: hx3b43ac6c6ef940252ed8ff2bcebae956fa39ca0b
+    type: voting
+    lastBlock: "998822"
+    amount: "333.2233"

@@ -1,0 +1,34 @@
+put:
+  tags:
+    - "Coin"
+  summary: "Get staked amounts for coins"
+  operationId: "get-stake-amounts"
+  requestBody:
+    description: List of addresses to return staked amounts for.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/StakeListParams"
+  responses:
+    200:
+      description: "Successfully retrieved stake amounts"
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/StakeModel"
+    400 Invalid coin id:
+      description: "Invalid coid id"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInvalidCoinId"
+    400 Invalid address format:
+      description: "Invalid address format"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInvalidAddressFormat"
+  

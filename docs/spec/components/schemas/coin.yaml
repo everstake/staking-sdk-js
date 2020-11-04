@@ -1,6 +1,23 @@
-CoinResult:
+CoinModel:
   type: object
-  decription: Coin model
+  required:
+    - id
+    - name
+    - iconUrl
+    - apr
+    - order
+    - yieldInterval
+    - yieldPercent
+    - isActive
+    - symbol
+    - precision
+    - needsClaiming
+    - intervalStake
+    - intervalUnstake
+    - toUsd
+    - about
+    - aboutUrl
+    - validators
   properties:
     id:
       type: string
@@ -16,65 +33,59 @@ CoinResult:
       example: "https://s2.coinmarketcap.com/static/img/coins/64x64/2011.png"
     apr:
       type: string
-      description: Apr
+      description: Annual Percentage Rate. Yearly income in percent.
       example: "10"
     order:
       type: string
-      description: Coin oirder
+      description: Coin sort order in the list.
       example: "1"
     yieldInterval:
       type: string
-      description: Yield interval
+      description: Yield interval. Number of seconds passed when user receive yield percent (next field) rewards.
       example: "86400"
     yieldPercent:
       type: string
-      description: Yield percent
+      description: Yield percent. Reward received when yield interval (previous field) passes.
       example: "0.0274"
     isActive:
       type: boolean
-      description: Is coin active
+      description: Is coin active. If false it is shown as "coming soon".
       example: true
     symbol:
       type: string
-      description: Coin symbpl
+      description: Coin symbol.
       example: "XTZ"
     precision:
       type: string
-      description: Coin precision
+      description: Coin precision. Number of digits after comma this coin's amounts have.
       example: "6"
     needsClaiming:
       type: boolean
-      description: Is needs claiming
+      description: Is needs claiming. If true show claiming interface in coin details screen.
       example: true
     intervalStake:
       type: string
-      description: Stake intrerval
+      description: Stake intrerval. Time in seconds after which staked amount starts collecting rewards.
       example: "0"
     intervalUnstake:
       type: string
-      description: Unstake intrerval
+      description: Unstake intrerval. Time in seconds after which unstaked amount returns to the user.
       example: "86400"
     toUsd:
       type: string
-      description: Exchange rate
-      example: "2.0"
+      description: Exchange rate to USD. How much USD each coin costs. For future use.
+      example: "2.01"
     about:
       type: string
-      description: Text description about the coin
+      description: Long text description of the coin for the details screen.
       example: "Lorem ipsum dolor sit amet"
     aboutUrl:
       type: string
-      description: Url to the coin website
-      example: "https://tezos.com/"
-    fee:
-      type: object
-      decription: Fee model
-      properties:
-        min:
-          type: string
-          description: Min fee
-          example: "1"
-        max:
-          type: string
-          description: Max fee
-          example: "3"
+      description: Url to more info about staking on Everstake website.
+      example: "https://everstake.one/tezos"
+    validators:
+      type: array
+      description: List of coin validators
+      items:
+        $ref: "#/components/schemas/ValidatorModel"
+

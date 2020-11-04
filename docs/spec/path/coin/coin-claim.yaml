@@ -1,0 +1,47 @@
+post:
+  tags:
+    - "Coin"
+  summary: "Claim rewards for the coins staked"
+  operationId: "post-coin-claim"
+  parameters:
+    - in: path
+      required: true
+      description: Id of the coin to claim rewards for.
+  requestBody:
+    description: Address to claim rewards for.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/ClaimParams"
+  responses:
+    200:
+      description: "Claim validated, returing required fields for creating transaction."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NewTransactionModel"
+    400 Invalid coin id:
+      description: "Invalid coid id"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInvalidCoinId"
+    400 Claim not supported:
+      description: "Claim not supported"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorClaimNotSupported"
+    400 Nothing to claim:
+      description: "Nothing to claim"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorNothingToClaim"
+    400 Invalid address format:
+      description: "Invalid address format"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorInvalidAddressFormat"

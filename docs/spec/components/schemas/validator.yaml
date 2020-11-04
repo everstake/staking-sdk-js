@@ -1,0 +1,24 @@
+ValidatorModel:
+  type: object
+  required:
+    - id
+    - name
+    - fee
+    - isReliable
+  properties:
+    id:
+      type: string
+      description: Validator id. This id is unique only to the list of validators of a particular coin. Validator with the same name can appear with different ids in different coins.
+      example: "0"
+    "name":
+      type: string
+      description: Validator name.
+      example: "Everstake"
+    fee:
+      type: string
+      description: String value for the validator fee in percents from user's reward.
+      example: "1.5"
+    isReliable:
+      type: boolean
+      description: Validator "reliability" flag. From the list of validators only one is usually reliable (although data model supports several reliable validators) and it is pre-selected when user starts staking process.
+      example: true

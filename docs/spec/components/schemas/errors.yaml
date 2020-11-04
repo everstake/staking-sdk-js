@@ -1,0 +1,61 @@
+GenericError:
+  type: object
+  required:
+    - code
+    - message
+  properties:
+    code: 
+      type: string
+      description: Error code to be hardcoded into the caller.
+    message:
+      type: string
+      description: Human-readable error message.
+
+ErrorInvalidCoinId:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: InvalidCoinId
+        message: -3 coin id is invalid
+
+ErrorInvalidValidatorId:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: InvalidCoinId
+        message: 233 validator id is invalid
+    
+ErrorInvalidAddressFormat:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: InvalidAddressFormat
+        message: thhhfkdkeoppd34 address is invalid
+
+ErrorClaimNotSupported:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: ClaimNotSupported
+        message: Claim not supported for coin id 4
+
+ErrorNothingToClaim:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: NothingToClaim
+        message: Claim amount is zero or too low
+
+ErrorUnstakeAmountTooHigh:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: UnstakeAmountTooHigh
+        message: Amount 455.44 is higher than staked amount 433.22
+
+ErrorStakeAmountTooHigh:
+  allOf:
+    - $ref: "#/components/schemas/GenericError"
+    - example:
+        code: StakeAmountTooHigh
+        message: Amount 455.44 is higher than account balance 433.22

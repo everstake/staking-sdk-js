@@ -1,2 +1,6 @@
 schemas:
   $ref#coin: ./schemas/coin.yaml
+  $ref#validator: ./schemas/validator.yaml
+  $ref#stake: ./schemas/stake.yaml
+  $ref#errors: ./schemas/errors.yaml
+  $ref#transaction: ./schemas/transaction.yaml

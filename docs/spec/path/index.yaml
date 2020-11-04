@@ -1,2 +1,10 @@
 /coin:
   $ref: ./coin/coin.yaml
+/coin/{id}/stake:
+  $ref: ./coin/coin-stake.yaml
+/coin/{id}/claim:
+  $ref: ./coin/coin-claim.yaml
+/coin/{id}/unstake:
+  $ref: ./coin/coin-unstake.yaml
+/stake:
+  $ref: ./stake/stake.yaml

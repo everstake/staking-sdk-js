@@ -11,4 +11,4 @@ get:
           schema:
             type: "array"
             items:
-              $ref: "#/components/schemas/CoinResult"
+              $ref: "#/components/schemas/CoinModel"
