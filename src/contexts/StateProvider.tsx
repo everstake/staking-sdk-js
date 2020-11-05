@@ -24,7 +24,7 @@ export interface Theme {
   WarningColor: string;
 }
 
-interface StateContextI {
+export interface StateContextI {
   isOpen: boolean;
   config?: WalletConfig;
   openWidget: (walletConfig: WalletConfig) => void;

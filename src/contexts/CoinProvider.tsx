@@ -7,7 +7,7 @@ import {API} from '../models/constans';
 const COIN_LIST_KEY = 'everstake-coin-list';
 const STAKING_KEY = 'everstake-staking';
 
-interface CoinI {
+export interface CoinI {
   coinList: Coin[];
   stakedCoinList: Coin[];
   readyToStakeCoinList: Coin[];

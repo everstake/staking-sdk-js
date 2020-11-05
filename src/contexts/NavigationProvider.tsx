@@ -11,7 +11,7 @@ interface RouteI {
   params?: { [key: string]: any };
 }
 
-interface NavigationContextI {
+export interface NavigationContextI {
   route: RouteI;
   navigations: RouteI[];
   tree: RouteI[];

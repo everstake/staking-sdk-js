@@ -1,8 +1,8 @@
 import {useContext} from 'react';
-import {ValidatorsContext} from '../contexts/ValidatorsProvider';
+import {ValidatorsContext, ValidatorsContextI} from '../contexts/ValidatorsProvider';
 
 const useValidators = () => {
-  return useContext(ValidatorsContext);
+  return useContext<ValidatorsContextI>(ValidatorsContext);
 };
 
 export default useValidators;

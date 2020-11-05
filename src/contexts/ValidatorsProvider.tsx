@@ -6,7 +6,7 @@ import {API} from '../models/constans';
 
 const VALIDATORS_KEY = 'everstake-validators';
 
-interface ValidatorsContextI {
+export interface ValidatorsContextI {
   coinValidators: Validator[];
   selectCoinValidator: (validatorId: string) => boolean;
   selectedCoinValidator: Validator | undefined;
