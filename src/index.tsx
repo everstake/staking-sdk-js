@@ -12,7 +12,6 @@ declare const window: any;
 export class StakingSdk {
   private handlers: any = {};
   constructor(public config: StakingSdkConfig) {
-    console.log('StakingSdk constructor');
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
@@ -35,22 +34,22 @@ export class StakingSdk {
   }
 }
 
-const staking = new StakingSdk({elemId: 'staking-sdk'});
-const c = [
-  {
-    symbol: 'XTZ',
-    address: 'Tezos user address',
-    balance: '0.256'
-  },
-  {
-    symbol: 'ICX',
-    address: 'ICON user address',
-    balance: '24.5803'
-  }
-];
-
-setTimeout(() => {
-  staking.open(c);
-}, 100);
+// const staking = new StakingSdk({elemId: 'staking-sdk'});
+// const c = [
+//   {
+//     symbol: 'XTZ',
+//     address: 'Tezos user address',
+//     balance: '0.256'
+//   },
+//   {
+//     symbol: 'ICX',
+//     address: 'ICON user address',
+//     balance: '24.5803'
+//   }
+// ];
+//
+// setTimeout(() => {
+//   staking.open(c);
+// }, 100);
 
 window.StakingSdk = StakingSdk;
