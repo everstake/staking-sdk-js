@@ -1,14 +1,14 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
 import useWidgetState from '../hooks/useWidgetState';
-import {Coin, CoinDto, StakingInfoDto} from '../models/coins.model';
-import axios from 'axios';
-import {API} from '../models/constans';
+import {Coin, CoinDto, StakeDto} from '../models/coins.model';
+import useApi from '../hooks/useApi';
 
 const COIN_LIST_KEY = 'everstake-coin-list';
 const STAKING_KEY = 'everstake-staking';
 
 export interface CoinI {
   coinList: Coin[];
+  coinListLoading: boolean;
   stakedCoinList: Coin[];
   readyToStakeCoinList: Coin[];
   getCoin: (coinId: string) => Coin | undefined;
@@ -18,6 +18,7 @@ export interface CoinI {
 
 const initialValue: CoinI = {
   coinList: [],
+  coinListLoading: false,
   stakedCoinList: [],
   readyToStakeCoinList: [],
   getCoin: () => undefined,
@@ -27,7 +28,7 @@ const initialValue: CoinI = {
 
 export const CoinContext = createContext<CoinI>(initialValue);
 
-const getCoinList = (coins: CoinDto[], stakes: StakingInfoDto[]): Coin[] => {
+const mergeCoinList = (coins: CoinDto[], stakes: StakeDto[]): Coin[] => {
   const newCoinList: Coin[] = [];
   coins.forEach(coin => {
     const findCoinInStakedList = stakes.find(stake => stake.coinId === coin.id);
@@ -41,23 +42,33 @@ const getCacheCoinList = (): Coin[] => {
   const cacheStakes = localStorage.getItem(STAKING_KEY);
 
   const coins: CoinDto[] = cacheCoins ? JSON.parse(cacheCoins) : [];
-  const stakes: StakingInfoDto[] = cacheStakes ? JSON.parse(cacheStakes) : [];
-  return getCoinList(coins, stakes);
+  const stakes: StakeDto[] = cacheStakes ? JSON.parse(cacheStakes) : [];
+  return mergeCoinList(coins, stakes);
 };
 
 const CoinProvider: React.FC = ({children}) => {
+  const [coinListLoading, setCoinListLoading] = useState<boolean>(initialValue.coinListLoading);
   const [coinList, setCoinList] = useState<Coin[]>(getCacheCoinList());
   const [selectedCoin, setSelectedCoin] = useState<Coin | undefined>(undefined);
   const {isOpen} = useWidgetState();
+  const {getCoinList, getStakeList} = useApi();
+  const [onlineStatus, setOnlineStatus] = useState<boolean>(navigator.onLine);
 
   const fetchCoins = useCallback(async () => {
-    const coinListRes = await axios.get<CoinDto[]>(`${API}/coin`);
-    localStorage.setItem(COIN_LIST_KEY, JSON.stringify(coinListRes.data));
-    const stakingRes = await axios.put<StakingInfoDto[]>(`${API}/stake`);
-    localStorage.setItem(STAKING_KEY, JSON.stringify(stakingRes.data));
-
-    setCoinList(getCoinList(coinListRes.data, stakingRes.data));
-
+    try {
+      setCoinListLoading(true);
+      const coinListRes = await getCoinList();
+      localStorage.setItem(COIN_LIST_KEY, JSON.stringify(coinListRes));
+      const stakingRes = await getStakeList();
+      setOnlineStatus(true);
+      localStorage.setItem(STAKING_KEY, JSON.stringify(stakingRes));
+      setCoinList(mergeCoinList(coinListRes, stakingRes));
+    } catch (e) {
+      setCoinListLoading(false);
+      if (e.message === 'Network Error') {
+        setOnlineStatus(false);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -65,6 +76,15 @@ const CoinProvider: React.FC = ({children}) => {
       fetchCoins();
     }
   }, [fetchCoins, isOpen]);
+
+  useEffect(() => {
+    if (!onlineStatus) {
+      window.addEventListener('online',  fetchCoins);
+    } else {
+      window.removeEventListener('online',  fetchCoins);
+    }
+    return () => window.removeEventListener('online',  fetchCoins);
+  }, [onlineStatus]);
 
   const getStakedCoinList = (): Coin[] => {
     return coinList.filter(coin => coin.isStaked);
@@ -90,6 +110,7 @@ const CoinProvider: React.FC = ({children}) => {
 
   return <CoinContext.Provider value={{
     coinList,
+    coinListLoading,
     stakedCoinList: getStakedCoinList(),
     readyToStakeCoinList: getReadyToStakeCoinList(),
     getCoin,

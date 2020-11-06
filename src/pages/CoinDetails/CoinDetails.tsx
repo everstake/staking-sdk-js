@@ -1,27 +1,35 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './CoinDetails.sass';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
-import {FeeDto} from '../../models/coins.model';
 import emitter from '../../utils/Emitter';
+import useApi from '../../hooks/useApi';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
+  const [claimLoading, setClaimLoading] = useState(false);
+  const {claim} = useApi();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!selectedCoin) {
     return null;
   }
 
-  const getFeeStr = (fee: FeeDto): string => {
-    return fee.min === fee.max ? fee.min + '%' : `${fee.min}-${fee.max}%`;
-  };
-
-  const claimRewards = () => {
-    emitter.emit('claimRewards', {rewards: true});
+  const claimRewards = async () => {
+    setClaimLoading(true);
+    try {
+      const claimRes = await claim(selectedCoin.id, {address: ''});
+      emitter.emit('claimRewards', claimRes);
+    } catch (e) {
+      setErrorMessage(e.message);
+      setTimeout(() => setErrorMessage(null), 2500);
+    }
+    setClaimLoading(false);
   };
 
   return (
@@ -47,7 +55,7 @@ const CoinDetails: React.FC = () => {
               <h3 className='info-block__title'>{`${selectedCoin.name} (${selectedCoin.symbol})`}</h3>
               <div className='info-block__bottom'>
                 <p className='info-block__item'>APR: <span>{selectedCoin.apr}%</span></p>
-                <p className='info-block__item'>Service fee: <span>{getFeeStr(selectedCoin.fee)}</span></p>
+                <p className='info-block__item'>Service fee: <span>{selectedCoin.fee}</span></p>
               </div>
             </div>
           </div>
@@ -69,13 +77,14 @@ const CoinDetails: React.FC = () => {
               <button onClick={() => navigate(PATH.UNSTAKE)} className='staked__action unstake-btn'>Unstake</button>
             </div>
             <div className='staked__info'>
-              <p className='staked__item'>Validator: <span>{selectedCoin.validator?.validatorName || '-'}</span></p>
+              <p className='staked__item'>Validator: <span>{selectedCoin.validator?.name || '-'}</span></p>
               <p className='staked__item'>Yearly income: <span>{selectedCoin.apr}%</span></p>
             </div>
           </div>}
 
           {selectedCoin.hasRewards && <div className='rewards'>
-            <button onClick={claimRewards} className='rewards__btn accent-btn'>Claim rewards</button>
+            <button disabled={claimLoading} onClick={claimRewards} className='rewards__btn accent-btn'>Claim rewards</button>
+            {errorMessage && <ErrorMessage className={'rewards__error'} text={errorMessage}/>}
             <p className='rewards__info'>Available rewards: <span>{selectedCoin.amountToClaim} {selectedCoin.symbol}</span></p>
           </div>}
         </div>}

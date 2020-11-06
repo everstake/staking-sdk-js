@@ -9,16 +9,21 @@ import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import Big from 'big.js';
 import emitter from '../../utils/Emitter';
+import useApi from '../../hooks/useApi';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 interface UnstakeForm {
-  amount: number | null;
+  amount: string;
 }
 
 const Unstake: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack} = useNavigation();
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
-  const [amount, setAmount] = useState<number | null>(null);
+  const [amount, setAmount] = useState<string>('');
+  const {unstake} = useApi();
+  const [unstakeLoading, setUnstakeLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {register, handleSubmit, errors, setValue, getValues} = useForm<UnstakeForm>({
     defaultValues: {amount}
   });
@@ -31,7 +36,7 @@ const Unstake: React.FC = () => {
     return `${value}%`;
   };
 
-  const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleAmountChange = () => {
     const newAmountInBig = Big(getValues('amount') || 0);
     setAmount(getValues('amount'));
     if (selectedCoin && selectedCoin.amount) {
@@ -43,14 +48,22 @@ const Unstake: React.FC = () => {
   const handleSliderChange = (event: any, newValue: number | number[]) => {
     setRangeValue(newValue);
     if (selectedCoin && selectedCoin.amount && typeof newValue === 'number') {
-      const newAmount = +Big(selectedCoin.amount).times(newValue).div(100).toFixed();
+      const newAmount = Big(selectedCoin.amount).times(newValue).div(100).toFixed();
       setAmount(newAmount);
       setValue('amount', newAmount);
     }
   };
 
-  const handleUnstake = (data: UnstakeForm) => {
-    emitter.emit('unstake', data);
+  const handleUnstake = async(data: UnstakeForm) => {
+    setUnstakeLoading(true);
+    try {
+      const unstakeRes = await unstake(selectedCoin.id, {amount: data.amount, address: ''});
+      emitter.emit('unstake', unstakeRes);
+    } catch (e) {
+      setErrorMessage(e.message);
+      setTimeout(() => setErrorMessage(null), 2500);
+    }
+    setUnstakeLoading(false);
   };
 
   const validateAmount = (value: number): string | true => {
@@ -90,7 +103,8 @@ const Unstake: React.FC = () => {
       <p className='unstake__time'>Unstake time</p>
       <p className='unstake__message'>The funds will return in one day</p>
 
-      <button className='unstake__btn accent-btn'>Unstake</button>
+      <button disabled={unstakeLoading} className='unstake__btn accent-btn'>Unstake</button>
+      {errorMessage && <ErrorMessage className={'unstake__error'} text={errorMessage}/>}
     </form>
 
   </div>;

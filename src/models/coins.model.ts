@@ -1,66 +1,58 @@
+import {ValidatorDto} from './validators.model';
+
 export interface CoinDto {
   readonly id: string;
   readonly name: string;
   readonly iconUrl: string;
-  readonly apr: number;
-  readonly order: number;
-  readonly yieldInterval: number;
+  readonly apr: string;
+  readonly order: string;
+  readonly yieldInterval: string;
   readonly yieldPercent: string;
   readonly isActive: boolean;
   readonly symbol: string;
-  readonly precision: number;
+  readonly precision: string;
   readonly needsClaiming: boolean;
-  readonly intervalStake: number;
-  readonly intervalUnstake: number;
+  readonly intervalStake: string;
+  readonly intervalUnstake: string;
   readonly toUsd: string;
   readonly about: string;
   readonly aboutUrl: string;
-  readonly fee: FeeDto;
+  readonly validators: ValidatorDto[];
 }
 
-export interface FeeDto {
-  readonly min: string;
-  readonly max: string;
-}
-
-export interface StakingInfoDto {
+export interface StakeDto {
   coinId: string;
   amount: string;
   amountToClaim: string;
-  validator: StakingValidatorDto;
+  validator: ValidatorDto;
 }
 
-export interface StakingValidatorDto {
-  id: string;
-  validatorName: string;
-  fee: string;
-  isReliable: boolean;
-}
-
-export class Coin implements CoinDto, Omit<Partial<StakingInfoDto>, 'coinId'> {
+export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
   id: string;
   name: string;
   iconUrl: string;
-  apr: number;
-  order: number;
-  yieldInterval: number;
+  apr: string;
+  order: string;
+  yieldInterval: string;
   yieldPercent: string;
   isActive: boolean;
   symbol: string;
-  precision: number;
+  precision: string;
   needsClaiming: boolean;
-  intervalStake: number;
-  intervalUnstake: number;
+  intervalStake: string;
+  intervalUnstake: string;
   toUsd: string;
   about: string;
   aboutUrl: string;
-  fee: FeeDto;
+  validators: ValidatorDto[];
 
   amount?: string;
   amountToClaim?: string;
-  validator?: StakingValidatorDto;
+  validator?: ValidatorDto;
 
-  constructor(coin: CoinDto, staking?: StakingInfoDto) {
+  fee: string;
+
+  constructor(coin: CoinDto, staking?: StakeDto) {
     this.id = coin.id;
     this.name = coin.name;
     this.iconUrl = coin.iconUrl;
@@ -77,13 +69,15 @@ export class Coin implements CoinDto, Omit<Partial<StakingInfoDto>, 'coinId'> {
     this.toUsd = coin.toUsd;
     this.about = coin.about;
     this.aboutUrl = coin.aboutUrl;
-    this.fee = coin.fee;
+    this.validators = coin.validators;
 
     if (staking) {
       this.amount = staking.amount;
       this.amountToClaim = staking.amountToClaim;
       this.validator = staking.validator;
     }
+
+    this.fee = this.getFee();
   }
 
   get isStaked(): boolean {
@@ -92,6 +86,13 @@ export class Coin implements CoinDto, Omit<Partial<StakingInfoDto>, 'coinId'> {
 
   get hasRewards(): boolean {
     return !!this.amountToClaim && !isNaN(+this.amountToClaim) && +this.amountToClaim > 0;
+  }
+
+  private getFee(): string {
+    const feeArr = this.validators.map(validator => +validator.fee);
+    const feeMin = Math.min(...feeArr);
+    const feeMax = Math.max(...feeArr);
+    return feeMin === feeMax ? feeMin + '%' : `${feeMin}-${feeMax}%`;
   }
 }
 

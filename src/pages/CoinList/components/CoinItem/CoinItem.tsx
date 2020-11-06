@@ -5,7 +5,7 @@ import {Coin} from '../../../../models/coins.model';
 export class CoinItemProps {
   id: string;
   name: string;
-  apr?: number;
+  apr?: string;
   iconUrl: string;
   symbol: string;
   amount?: string;
