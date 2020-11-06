@@ -3,6 +3,7 @@ import 'wicg-inert';
 import {KEYCODE} from '../models/utils';
 import {Theme, StakingSdkConfig} from '../models/config.model';
 import {hexToRgb} from '../utils/utils';
+import emitter from '../utils/Emitter';
 
 export interface StateContextI {
   isOpen: boolean;
@@ -21,6 +22,10 @@ export const StateContext = createContext<StateContextI>(initialValue);
 const StateProvider: React.FC = ({children}) => {
   const [state, setState] = useState<boolean>(initialValue.isOpen);
   const [config, setConfig] = useState<StakingSdkConfig | undefined>(undefined);
+
+  emitter.on('setConfig', (data) => {
+    setConfig(data);
+  });
 
   const openWidget = (walletConfig: StakingSdkConfig) => {
     setState(true);

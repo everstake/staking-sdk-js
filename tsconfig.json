@@ -15,11 +15,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "sourceMap": true,
     "declaration": true,
     "jsx": "react",
-    "outDir": "dist"
+    "outDir": "staking-sdk-js",
+    "noEmit": false
   },
   "include": [
     "src"

@@ -1,0 +1,7 @@
+{
+	"name": "staking-sdk-js",
+	"version": "1.0.0",
+	"description": "Staking SDK",
+	"typings": "index.d.ts",
+	"main": "index.js"
+}
