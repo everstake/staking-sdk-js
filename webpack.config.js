@@ -1,6 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
-var copyWebpackPlugin = require('copy-webpack-plugin');
 const bundleOutputDir = './dist';
 
 module.exports = (env) => {
@@ -8,10 +6,14 @@ module.exports = (env) => {
 
     return [{
         entry: './src/index.tsx',
+        devtool: 'cheap-module-source-map',
         mode: 'production',
+        target: "node",
         output: {
-            filename: 'widget.js',
+            filename: 'index.js',
             path: path.resolve(bundleOutputDir),
+            library: 'widget',
+            libraryTarget:'umd'
         },
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".jsx"],
