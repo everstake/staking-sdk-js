@@ -1,26 +1,26 @@
 import React, {MouseEvent} from 'react';
-import './StakingSdk.sass';
+import './App.sass';
 import useNavigation from '../../hooks/useNavigation';
 import useWidgetState from '../../hooks/useWidgetState';
-import {WalletConfig} from '../../contexts/StateProvider';
 import {PATH} from '../../contexts/NavigationProvider';
 import CoinList from '../CoinList/CoinList';
 import CoinDetails from '../CoinDetails/CoinDetails';
 import Stake from '../Stake/Stake';
 import Calculator from '../Calculator/Calculator';
 import Unstake from '../Unstake/Unstake';
+import {StakingSdkConfig} from '../../models/config.model';
 
 export interface StakingSdkProps {
   handlers: {
-    onOpen: ((config: WalletConfig) => void) | undefined;
+    onOpen: ((config: StakingSdkConfig) => void) | undefined;
   };
 }
 
-const StakingSdk: React.FC<StakingSdkProps> = (props) => {
+const App: React.FC<StakingSdkProps> = (props) => {
   const {isOpen, openWidget, closeWidget} = useWidgetState();
-  const {route, navigations} = useNavigation();
+  const {route} = useNavigation();
 
-  props.handlers.onOpen = (config: WalletConfig) => {
+  props.handlers.onOpen = (config: StakingSdkConfig) => {
     openWidget(config);
   };
 
@@ -32,11 +32,11 @@ const StakingSdk: React.FC<StakingSdkProps> = (props) => {
     <div className='staking-sdk' onClick={handleCardClick}>
       {route.path === PATH.COIN_LIST && <CoinList/>}
       {route.path === PATH.COIN_DETAILS && <CoinDetails/>}
-      {route.path === PATH.STAKE && <Stake amount={(route.params && route.params.amount) || '0'}/>}
+      {route.path === PATH.STAKE && <Stake amount={(route.params && route.params.amount) || ''}/>}
       {route.path === PATH.CALCULATOR && <Calculator/>}
       {route.path === PATH.UNSTAKE && <Unstake/>}
     </div>
   </div> : null;
 };
 
-export default StakingSdk;
+export default App;

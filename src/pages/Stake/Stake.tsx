@@ -11,6 +11,9 @@ import {useForm} from 'react-hook-form';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import Big from 'big.js';
+import emitter from '../../utils/Emitter';
+import useApi from '../../hooks/useApi';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 interface StakeParams {
   amount: string;
@@ -33,6 +36,9 @@ const Stake: React.FC<StakeParams> = (params) => {
   const {register, handleSubmit, errors, setValue, getValues} = useForm<StakeForm>({
     defaultValues: {amount: config.amount}
   });
+  const {stake} = useApi();
+  const [stakeLoading, setStakeLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const getRangeValue = (partAmount: string, fullAmount: string): number => {
     return +Big(partAmount || 0).times(100).div(fullAmount).toFixed();
@@ -49,7 +55,7 @@ const Stake: React.FC<StakeParams> = (params) => {
     }
   }, [selectedCoin, selectedCoinValidator]);
 
-  if (!selectedCoin) {
+  if (!selectedCoin || !selectedCoinValidator) {
     return null;
   }
 
@@ -86,13 +92,21 @@ const Stake: React.FC<StakeParams> = (params) => {
     return `${value}% ${selectedCoin.symbol}`;
   };
 
-  const stake = (data: StakeForm) => {
-    console.log('data', data);
+  const handleStake = async (data: StakeForm) => {
+    setStakeLoading(true);
+    try {
+      const stakeRes = await stake(selectedCoin.id, {amount: data.amount, address: '', validatorId: selectedCoinValidator.id});
+      emitter.emit('stake', stakeRes);
+    } catch (e) {
+      setErrorMessage(e.message);
+      setTimeout(() => setErrorMessage(null), 2500);
+    }
+    setStakeLoading(false);
   };
 
   return <div className='stake'>
     {isOpenValidatorSelector && <ValidatorSelector close={closeValidatorSelector}/>}
-    {!isOpenValidatorSelector && <form className='stake__form' onSubmit={handleSubmit(stake)}>
+    {!isOpenValidatorSelector && <form className='stake__form' onSubmit={handleSubmit(handleStake)}>
       <div className='stake__header'>
         <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon/>}</button>
         <div className='stake__title-container'>
@@ -134,7 +148,10 @@ const Stake: React.FC<StakeParams> = (params) => {
       </div>
 
       <div className='stake__bottom'>
-        <button className='stake__btn accent-btn'>Stake</button>
+        <button disabled={stakeLoading} className='stake__btn accent-btn'>Stake</button>
+
+        {errorMessage && <ErrorMessage className={'stake__error'} text={errorMessage}/>}
+
         <CalculateInfoCard
           dailyIncome={dailyIncome}
           monthlyIncome={monthlyIncome}

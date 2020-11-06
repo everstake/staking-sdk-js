@@ -3,8 +3,8 @@ import {Coin} from '../models/coins.model';
 
 export class CalculatorModel {
   private readonly coinSymbol: string;
-  private readonly coinPrecision: number;
-  private readonly periodSeconds: number;
+  private readonly coinPrecision: string;
+  private readonly periodSeconds: string;
   private readonly yieldPercent: string;
   private _amount = '0';
   private fee: string;
@@ -61,7 +61,7 @@ export class CalculatorModel {
     return formatAmount(this.perYear, this.coinPrecision, this.coinSymbol);
   }
 
-  private calculate(duration: number, periodDuration: number): number {
+  private calculate(duration: number, periodDuration: string): number {
     const periodCount = Big(duration).div(periodDuration).toFixed(this.INTERVAL_SCALE);
     let periodIncome = Big(0);
     if (this._includeReinvestment) {
@@ -79,7 +79,7 @@ export class CalculatorModel {
   }
 }
 
-export const formatAmount = (amount: number, precision: number, symbol: string): string => {
+export const formatAmount = (amount: number, precision: string, symbol: string): string => {
   return Big(amount).round(+precision).toFixed() + ' ' + symbol;
 };
 

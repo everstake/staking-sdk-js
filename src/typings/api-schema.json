@@ -1,0 +1,4802 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the ABBC Server API",
+    "version": "1.0.0",
+    "title": "ABBC Server API"
+  },
+  "basePath": "/",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "host": "abbc-multi-node-server-test.herokuapp.com",
+  "paths": {
+    "/transaction": {
+      "put": {
+        "summary": "Get transaction list",
+        "parameters": [
+          {
+            "name": "GetTransactionListRequestDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetTransactionListRequestDto"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "required": false,
+            "in": "header",
+            "description": "Api key for public methods (only if api key auth is turned on)",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetTransactionListResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Transactions"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transaction"
+      }
+    },
+    "/block": {
+      "get": {
+        "summary": "Get block list",
+        "parameters": [
+          {
+            "type": "number",
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "Item offset paging parameter",
+            "default": 0
+          },
+          {
+            "type": "number",
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "Item count paging parameter",
+            "default": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetBlockWithTotalDto"
+            }
+          }
+        },
+        "tags": [
+          "Blocks"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "block"
+      }
+    },
+    "/admin/token": {
+      "put": {
+        "summary": "Returns expiring JWT token for admins.",
+        "parameters": [
+          {
+            "name": "PutFormTokenBodyDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PutFormTokenBodyDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PutFormTokenResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "admintoken"
+      }
+    },
+    "/admin/migration-request/{status}": {
+      "get": {
+        "summary": "Get list of the requests of appropriate status (1, 2, 3)",
+        "parameters": [
+          {
+            "type": "number",
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "Item offset paging parameter",
+            "default": 0
+          },
+          {
+            "type": "number",
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "Item count paging parameter",
+            "default": 100
+          },
+          {
+            "type": "string",
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "example": "Jon",
+            "description": "Search by name, email, phone and altPhone fields"
+          },
+          {
+            "type": "",
+            "name": "status",
+            "required": true,
+            "in": "path",
+            "example": 1,
+            "description": "User migration status: 1 - request verified, 2 - accepted, 3 - rejected",
+            "isArray": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetMigrationRequestsResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminmigration-request{status}"
+      }
+    },
+    "/admin/migration-request/{requestId}": {
+      "put": {
+        "summary": "JWT auth admin method for updating user migration request. Has 3 options: pending to accepted, pending to rejected, rejected to pending",
+        "parameters": [
+          {
+            "name": "MigrationStatusBodyDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/MigrationStatusBodyDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "requestId",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MigrationRequestItem"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          },
+          "409": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConflictException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminmigration-request{requestId}"
+      }
+    },
+    "/admin/environment": {
+      "get": {
+        "summary": "Get list of values from environment table in migration database.",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GetEnvironmentValuesResponseDto"
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminenvironment"
+      }
+    },
+    "/admin/report/{campaignId}": {
+      "get": {
+        "summary": "Get csv report of ADN token airdrop",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "campaignId",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Csv file"
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminreport{campaignId}"
+      }
+    },
+    "/admin/migration-report/{status}": {
+      "get": {
+        "summary": "Get csv migration report",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "status",
+            "required": true,
+            "in": "path",
+            "description": "User status (requested, accepted, rejected, not-requested)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Csv file"
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminmigration-report{status}"
+      }
+    },
+    "/admin/account-balance/report": {
+      "get": {
+        "summary": "Get csv balance report",
+        "responses": {
+          "200": {
+            "description": "Csv file"
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminaccount-balancereport"
+      }
+    },
+    "/admin/admin": {
+      "get": {
+        "summary": "Get full admin list (only for super admins)",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GetAdminsResultDto"
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminadmin"
+      }
+    },
+    "/admin/admin/{id}": {
+      "put": {
+        "summary": "Update admin data (only for super admins)",
+        "parameters": [
+          {
+            "name": "UpdateAdminParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UpdateAdminParamsDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "id",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "adminadmin{id}"
+      }
+    },
+    "/account-balance/top": {
+      "get": {
+        "summary": "Get accounts ordered by ABBC amount",
+        "parameters": [
+          {
+            "type": "number",
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "Item offset paging parameter",
+            "default": 0
+          },
+          {
+            "type": "number",
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "description": "Item count paging parameter",
+            "default": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetTopAccountsResultDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Top accounts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "account-balancetop"
+      }
+    },
+    "/account-balance-cron/update": {
+      "post": {
+        "summary": "Update account list and balances",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Top accounts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "account-balance-cronupdate"
+      }
+    },
+    "/token": {
+      "get": {
+        "summary": "Get token",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "appName",
+            "required": true,
+            "in": "query",
+            "example": "ABBC Wallet iOS",
+            "description": "Application name"
+          },
+          {
+            "type": "string",
+            "name": "appVersion",
+            "required": true,
+            "in": "query",
+            "example": "1.0.0",
+            "description": "Application version"
+          },
+          {
+            "type": "string",
+            "name": "accountHash",
+            "required": true,
+            "in": "query",
+            "example": "137b3ed108e9aa74e2da43d3d044996037ab264896b13ab4e36562e865S",
+            "description": "Hashed user private key"
+          },
+          {
+            "type": "string",
+            "name": "publicKeyHash",
+            "required": true,
+            "in": "query",
+            "example": "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b",
+            "description": "Hashed account public key (sha256)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetTokenResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "token"
+      }
+    },
+    "/environment": {
+      "get": {
+        "summary": "Get list of values from environment table in migration database.",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UserEnverinmentDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "environment"
+      }
+    },
+    "/user/device": {
+      "post": {
+        "summary": "Create or update user device",
+        "parameters": [
+          {
+            "name": "PostUserDeviceRequestDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PostUserDeviceRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PostUserDeviceResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "userdevice"
+      }
+    },
+    "/user/device/{deviceId}": {
+      "delete": {
+        "summary": "Delete device by :deviceId",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "deviceId",
+            "required": true,
+            "in": "path",
+            "description": "Device ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DeleteUserDeviceResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "userdevice{deviceId}"
+      }
+    },
+    "/user/data": {
+      "post": {
+        "summary": "Create user",
+        "parameters": [
+          {
+            "name": "CreateUserParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateUserParamsDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateUserResultDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/EmailForbiddenException"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "userdata"
+      },
+      "put": {
+        "summary": "User email confirmation",
+        "parameters": [
+          {
+            "name": "ConfirmUserParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ConfirmUserParamsDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidCodeException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "userdata"
+      }
+    },
+    "/migration-cron/address/check": {
+      "post": {
+        "summary": "Check addresses",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          }
+        },
+        "tags": [
+          "Cron Migrations"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-cronaddresscheck"
+      }
+    },
+    "/migration-cron/trx/check": {
+      "post": {
+        "summary": "Check transactions",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          }
+        },
+        "tags": [
+          "Cron Migrations"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-crontrxcheck"
+      }
+    },
+    "/migration-cron/trx/send": {
+      "post": {
+        "summary": "Send transactions",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          }
+        },
+        "tags": [
+          "Cron Migrations"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-crontrxsend"
+      }
+    },
+    "/account-cron/update": {
+      "post": {
+        "summary": "Checking users without an account name and creating it for those who have a balance",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Cron accounts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "account-cronupdate"
+      }
+    },
+    "/migration": {
+      "post": {
+        "summary": "Post migration",
+        "parameters": [
+          {
+            "name": "PostMigrationRequestDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PostMigrationRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MigrationResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Migrations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration"
+      }
+    },
+    "/migration/{addressTo}": {
+      "get": {
+        "summary": "Get migration info by :addressTo",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "addressTo",
+            "required": true,
+            "in": "path",
+            "description": "Either account name or public key for the new account to receive tokens from the last generation blockchain"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MigrationResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Migrations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration{addressTo}"
+      }
+    },
+    "/migration-request": {
+      "post": {
+        "summary": "Anonymous method for users to submit new migration request.",
+        "parameters": [
+          {
+            "name": "PostMigrationRequestBodyDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PostMigrationRequestBodyDto"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          },
+          "409": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConflictException"
+            }
+          }
+        },
+        "tags": [
+          "Migrations V2"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-request"
+      }
+    },
+    "/migration-request/{requestId}": {
+      "put": {
+        "summary": "Anonymous method, sent by HTML page opened when user taps on request confirmation link in the email message",
+        "parameters": [
+          {
+            "name": "PutMigrationRequestBodyAnonimusDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PutMigrationRequestBodyAnonimusDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "requestId",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MigrationRequestResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          },
+          "409": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConflictException"
+            }
+          }
+        },
+        "tags": [
+          "Migrations V2"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-request{requestId}"
+      }
+    },
+    "/migration-request-phone/{requestId}": {
+      "post": {
+        "summary": "Anonymous method, for sending confirmation code to user's phone",
+        "parameters": [
+          {
+            "name": "SendPhoneConfirmationParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/SendPhoneConfirmationParamsDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "requestId",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Migrations V2"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-request-phone{requestId}"
+      },
+      "put": {
+        "summary": "Anonymous method, for phone confirmation",
+        "parameters": [
+          {
+            "name": "MigrationPhoneVerificationParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/MigrationPhoneVerificationParamsDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "requestId",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Migrations V2"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-request-phone{requestId}"
+      }
+    },
+    "/migration-admin/trx/send": {
+      "post": {
+        "summary": "Checking abbc gen1 transactions. If the transaction is correct and we have not processed it - than we create MigrationTrx",
+        "parameters": [
+          {
+            "name": "PostTransactionRequestDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PostTransactionRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PostTransactionRequestDto"
+            }
+          }
+        },
+        "tags": [
+          "Migration admin"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "migration-admintrxsend"
+      }
+    },
+    "/symbol-info/erc20": {
+      "get": {
+        "summary": "Retrieves multiple currency info for predefined erc20 token address sorted by name",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "example": "YAROSTOKEN",
+            "description": "Token name"
+          },
+          {
+            "type": "number",
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "example": 0,
+            "description": "The number of items to skip before starting to collect the result set, default 20, max 1000"
+          },
+          {
+            "type": "number",
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "example": 0,
+            "description": "Total number of items"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Erc20SymbolInfoResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Symbol Info"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "symbol-infoerc20"
+      }
+    },
+    "/symbol-info/erc20/{contractAddress}": {
+      "get": {
+        "summary": "Retrieves single currency info for predefined erc20 token address",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "contractAddress",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Erc20SymbolInfoDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          },
+          "400: Invalid contract address": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidContractAddressException"
+            }
+          }
+        },
+        "tags": [
+          "Symbol Info"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "symbol-infoerc20{contractAddress}"
+      }
+    },
+    "/symbol-info": {
+      "get": {
+        "summary": "Retrieves multiple currency info for predefined token address sorted by name",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "example": "YAROSTOKEN",
+            "description": "Token name"
+          },
+          {
+            "type": "number",
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "example": 0,
+            "description": "The number of items to skip before starting to collect the result set, default 20, max 1000"
+          },
+          {
+            "type": "number",
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "example": 0,
+            "description": "Total number of items"
+          },
+          {
+            "type": "number",
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "example": 0,
+            "description": "Token type: 0 - ERC20, 1 - EOS, 2 - ABBC",
+            "enum": [
+              0,
+              1,
+              2
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SymbolInfoResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Symbol Info"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "symbol-info"
+      }
+    },
+    "/transaction/erc20/{contractAddress}": {
+      "put": {
+        "summary": "Retrieves transaction info for predefined erc20 token address",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "contractAddress",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "BodyTransactionInfoPredifinedDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyTransactionInfoPredifinedDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponseTransactionInfoPredifinedDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transactionerc20{contractAddress}"
+      }
+    },
+    "/transaction/erc20/{transactionId}": {
+      "get": {
+        "summary": "Retrieves info about single erc20 transaction",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "transactionId",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/TrxInfoSingleDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transactionerc20{transactionId}"
+      }
+    },
+    "/transaction/{symbol}": {
+      "post": {
+        "summary": "Creates new transaction with given params",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "symbol",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "BodyCreateTransactionDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyCreateTransactionDto"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/TrxIdDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "400 Not enough balance": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotEnoughBalanceException"
+            }
+          },
+          "400 Gas limit too low": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GasLimitTooLowException"
+            }
+          },
+          "400 Insufficient funds error": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InsufficientFundsException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transaction{symbol}"
+      },
+      "put": {
+        "summary": "Retrieves transaction info for predefined currency and addresses",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "symbol",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "BodyTransactionInfoPredifinedDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyTransactionInfoPredifinedDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponseTransactionInfoPredifinedDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transaction{symbol}"
+      }
+    },
+    "/transaction/{symbol}/{transactionId}": {
+      "get": {
+        "summary": "Retrieves info about single transaction",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "transactionId",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "type": "string",
+            "name": "symbol",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/TrxInfoSingleDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transaction{symbol}{transactionId}"
+      }
+    },
+    "/transactionInfo/erc20": {
+      "put": {
+        "summary": "Required for erc20 transactions to work",
+        "parameters": [
+          {
+            "name": "BodyTransactionInfoErc20Dto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyTransactionInfoErc20Dto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponseTransactionInfoErc20EthDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transactionInfoerc20"
+      }
+    },
+    "/transactionInfo/eth": {
+      "put": {
+        "summary": "Required for ETH transactions to work",
+        "parameters": [
+          {
+            "name": "BodyTransactionInfoEthDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyTransactionInfoEthDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponseTransactionInfoErc20EthDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transactionInfoeth"
+      }
+    },
+    "/transactionInfo/zen": {
+      "get": {
+        "summary": "Required for ZEN transactions to work",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponseTransactionInfoZenDto"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transactionInfozen"
+      }
+    },
+    "/transactionInfo/trx": {
+      "get": {
+        "summary": "Required for TRX transactions to work",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponseTransactionInfoTrxDto"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Transaction"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "transactionInfotrx"
+      }
+    },
+    "/environment/feeInfo/{symbol}": {
+      "get": {
+        "summary": "Return base fees for currency",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "symbol",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SingleFeeInfoDto"
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Environment"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "environmentfeeInfo{symbol}"
+      }
+    },
+    "/environment/dust": {
+      "get": {
+        "summary": "Return currencies dust info",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DustInfoDto"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Environment"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "environmentdust"
+      }
+    },
+    "/balance/erc20": {
+      "put": {
+        "summary": "Retrieves balance of multiple smart contracts",
+        "parameters": [
+          {
+            "name": "BodyPutBalanceErc20Dto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyPutBalanceErc20Dto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ResponsePutBalanceErc20ItemDto"
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "400 Invalid address": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidAddressException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Balance"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "balanceerc20"
+      }
+    },
+    "/balance/mosaic": {
+      "put": {
+        "summary": "Returns balances and token details for all mosaics owned by the account",
+        "parameters": [
+          {
+            "name": "BodyPutBalanceMosaicDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyPutBalanceMosaicDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ResponsePutBalanceMosaicDto"
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Balance"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "balancemosaic"
+      }
+    },
+    "/balance/{symbol}": {
+      "put": {
+        "summary": "Retrieves balance for single currency in specified addresses",
+        "parameters": [
+          {
+            "name": "BodyPutBalanceEthDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyPutBalanceEthDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "symbol",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ResponsePutBalanceEthDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          },
+          "400 Invalid address": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidAddressException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto Balance"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "balance{symbol}"
+      }
+    },
+    "/utxo/{symbol}": {
+      "put": {
+        "summary": "Get utxo",
+        "parameters": [
+          {
+            "name": "BodyUtxoAddressesDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/BodyUtxoAddressesDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "symbol",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ResponsePutUtxoDto"
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Crypto utxo"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "utxo{symbol}"
+      }
+    },
+    "/exchange-rate": {
+      "put": {
+        "summary": "Get exchange rates",
+        "parameters": [
+          {
+            "name": "GetExchangeRateParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/GetExchangeRateParamsDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetExchangeRateResultDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "Currency"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "exchange-rate"
+      }
+    },
+    "/currency-cron/sync-regular": {
+      "post": {
+        "summary": "Trigger for syncing regular currency exchange rates",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Currency"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "currency-cronsync-regular"
+      }
+    },
+    "/currency-cron/sync-crypto": {
+      "post": {
+        "summary": "Trigger for syncing crypto-currency exchange rates",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Currency"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "currency-cronsync-crypto"
+      }
+    },
+    "/currency-cron/sync-tokens": {
+      "post": {
+        "summary": "Trigger for syncing tokens exchange rates",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedException"
+            }
+          }
+        },
+        "tags": [
+          "Currency"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "currency-cronsync-tokens"
+      }
+    },
+    "/system-cron/check-health": {
+      "post": {
+        "summary": "Check system health and send notifications",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          }
+        },
+        "tags": [
+          "Cron"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "system-croncheck-health"
+      }
+    },
+    "/system-cron/check-block-producers": {
+      "post": {
+        "summary": "Check block-producers health and send notifications",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "required": true,
+            "in": "header",
+            "description": "Api key for cron methods",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          }
+        },
+        "tags": [
+          "Cron"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "system-croncheck-block-producers"
+      }
+    },
+    "/promo-campaign/{code}/user": {
+      "post": {
+        "summary": "Add addresses for a promo campaign",
+        "parameters": [
+          {
+            "name": "AddPromoAddressesParamsDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AddPromoAddressesParamsDto"
+            }
+          },
+          {
+            "type": "string",
+            "name": "code",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MigrationNotFoundException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          },
+          "409": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PromoAddressesAlreadyExistException"
+            }
+          }
+        },
+        "tags": [
+          "Promo campaign"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "promo-campaign{code}user"
+      }
+    },
+    "/ddt/user/data": {
+      "post": {
+        "summary": "Create user data",
+        "parameters": [
+          {
+            "name": "PostDdtUserDataRequestDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PostDdtUserDataRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PostDdtUserDataResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          }
+        },
+        "tags": [
+          "DDT"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "ddtuserdata"
+      },
+      "put": {
+        "summary": "Verify user data",
+        "parameters": [
+          {
+            "name": "PutDdtUserDataRequestDto",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PutDdtUserDataRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PutDdtUserDataResponseDto"
+            }
+          },
+          "400": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/InvalidParameters"
+            }
+          },
+          "403": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenException"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/NotFoundException"
+            }
+          }
+        },
+        "tags": [
+          "DDT"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "ddtuserdata"
+      }
+    },
+    "/ping": {
+      "get": {
+        "summary": "Method for ping server",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SuccessTrueDto"
+            }
+          }
+        },
+        "tags": [
+          "Common"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "ping"
+      }
+    },
+    "/info/coinsupply": {
+      "get": {
+        "summary": "ABBC coin supply",
+        "responses": {
+          "200": {
+            "description": "ABBC coin supply value"
+          }
+        },
+        "tags": [
+          "Info"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "infocoinsupply"
+      }
+    }
+  },
+  "definitions": {
+    "SymbolDto": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "eosio.token"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "EOS"
+        }
+      },
+      "required": [
+        "address",
+        "symbol"
+      ]
+    },
+    "GetTransactionListRequestDto": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "number",
+          "example": 5,
+          "description": "Item offset paging parameter",
+          "default": 0
+        },
+        "count": {
+          "type": "number",
+          "example": 5,
+          "description": "Item count paging parameter",
+          "default": 100,
+          "maximum": 1000
+        },
+        "txId": {
+          "type": "string",
+          "example": "a26d61afa8f82857a1e2a296ff3d47273d39d4bf79a04581a54d683886f87b03",
+          "description": "Transaction id"
+        },
+        "account": {
+          "type": "string",
+          "example": "myaccountnam",
+          "description": "Account name for filtering transactions"
+        },
+        "dateFrom": {
+          "type": "number",
+          "example": 1558687049000,
+          "description": "Start transactions time in millis"
+        },
+        "dateTo": {
+          "type": "number",
+          "example": 1558698049000,
+          "description": "End transactions time in millis"
+        },
+        "direction": {
+          "type": "string",
+          "example": "incoming",
+          "description": "(Only for transfers) Optional parameter for token transfers (\"incoming\", \"outgoing\"), if account param exists",
+          "enum": [
+            "incoming",
+            "outgoing"
+          ]
+        },
+        "blockFrom": {
+          "type": "string",
+          "example": "235654",
+          "description": "First block for filtering transactions"
+        },
+        "blockTo": {
+          "type": "string",
+          "example": "78484524",
+          "description": "Last block for filtering transactions"
+        },
+        "symbols": {
+          "type": "array",
+          "description": "(Only for transfers) Optional array of symbol objects",
+          "items": {
+            "$ref": "#/definitions/SymbolDto"
+          }
+        },
+        "actions": {
+          "type": "array",
+          "example": [
+            "transfer",
+            "buyram",
+            "delegatebw"
+          ],
+          "description": "Optional array of actions",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GetTransactionDto": {
+      "type": "object",
+      "properties": {
+        "blockIndex": {
+          "type": "string",
+          "example": "235874",
+          "description": "Index of block where transaction is"
+        },
+        "txId": {
+          "type": "string",
+          "example": "1d3537b6716f660dc1f901108c63d580e0edb8b1298a2cde4e11a4225c04f226",
+          "description": "Transaction id"
+        },
+        "actDigest": {
+          "type": "string",
+          "example": "1b4a32090fe7866e5dd9e9ab1239e7ad8fe89e5ca03cda4eb3f0ebe46df89945",
+          "description": "Unique action digest"
+        },
+        "account": {
+          "type": "string",
+          "example": "eosio.token",
+          "description": "Contract account name"
+        },
+        "action": {
+          "type": "string",
+          "example": "transfer",
+          "description": "Action name"
+        },
+        "receiver": {
+          "type": "string",
+          "example": "eosio.token",
+          "description": "Contract receiving action notification"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "from": "eosio.ram",
+            "to": "gateiowallet",
+            "quantity": "28.9153 EOS",
+            "memo": "sell ram"
+          },
+          "description": "Action data in parsed json format, or string in the \"raw\" field"
+        },
+        "from": {
+          "type": "string",
+          "example": "gateiowallet",
+          "description": "Account transfer was sent from"
+        },
+        "to": {
+          "type": "string",
+          "example": "haydqobrgmge",
+          "description": "Account transfer was sent to"
+        },
+        "amount": {
+          "type": "string",
+          "example": "28.9153",
+          "description": "Amount of transfer"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "EOS",
+          "description": "Symbol of transfered token"
+        },
+        "memo": {
+          "type": "string",
+          "example": "sell ram",
+          "description": "Memo added to transaction"
+        },
+        "timestamp": {
+          "type": "number",
+          "example": 1532928303500,
+          "description": "Timestamp of transaction in millis"
+        }
+      },
+      "required": [
+        "blockIndex",
+        "txId",
+        "actDigest",
+        "account",
+        "action",
+        "receiver",
+        "data",
+        "timestamp"
+      ]
+    },
+    "GetTransactionListResponseDto": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number",
+          "example": 5,
+          "description": "Total count of items in list"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GetTransactionDto"
+          }
+        }
+      },
+      "required": [
+        "total",
+        "list"
+      ]
+    },
+    "InvalidParameters": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "form",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Validation failed",
+          "description": "Invalid request parameters"
+        },
+        "errorField": {
+          "type": "string",
+          "example": "name",
+          "description": "Field name which failed"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "GetBlockDto": {
+      "type": "object",
+      "properties": {
+        "block_hash": {
+          "type": "string",
+          "example": "00000010f78386aeac6e92f1fcb5e00041aa76afe743fed75b94f392c948c497",
+          "description": "Block hash"
+        },
+        "block_number": {
+          "type": "number",
+          "example": 12,
+          "description": "Block number"
+        },
+        "block_producer": {
+          "type": "string",
+          "example": "eosio",
+          "description": "Block producer"
+        },
+        "block_transactions": {
+          "type": "number",
+          "example": 12,
+          "description": "Number of transactions"
+        },
+        "timestamp": {
+          "type": "number",
+          "example": 1559718013500,
+          "description": "Block timestamp"
+        }
+      },
+      "required": [
+        "block_hash",
+        "block_number",
+        "block_producer",
+        "block_transactions",
+        "timestamp"
+      ]
+    },
+    "GetBlockWithTotalDto": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number",
+          "example": 5,
+          "description": "Total count of items in list"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GetBlockDto"
+          }
+        }
+      },
+      "required": [
+        "total",
+        "list"
+      ]
+    },
+    "PutFormTokenBodyDto": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "bob@gmail.com",
+          "description": "account name (email address)"
+        },
+        "password": {
+          "type": "string",
+          "example": "qwerty",
+          "description": "password"
+        }
+      },
+      "required": [
+        "username",
+        "password"
+      ]
+    },
+    "PutFormTokenResponseDto": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "example": "eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjE0NDM3NTMsImp0aSI6IjI0Nzc3OGNhLWUzMl4aHDuri4-WSmfsKwpoULl524iha3R6We_YvBv_eUw1aJX0VPA",
+          "description": "JWT token, it has 1 week lifetime"
+        }
+      },
+      "required": [
+        "token"
+      ]
+    },
+    "UnauthorizedException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "unauthorized",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Unauthorized",
+          "description": "Unauthorized"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "ForbiddenException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "forbidden",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Access forbidden",
+          "description": "Not found"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "NotFoundException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "not_found",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Not found",
+          "description": "Not found"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "MigrationRequestItem": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "number",
+          "example": 1,
+          "description": "Auto-id of request"
+        },
+        "account": {
+          "type": "string",
+          "example": "abbcaccount1",
+          "description": "Account to accept migrated funds (can be account name or public key)"
+        },
+        "userOrigin": {
+          "type": "number",
+          "example": 0,
+          "description": "0 - MC Wallet, 1 - Alladin"
+        },
+        "userName": {
+          "type": "string",
+          "example": "Bob",
+          "description": "Name of user"
+        },
+        "userEmail": {
+          "type": "string",
+          "example": "bob@bob.com",
+          "description": "Email of user"
+        },
+        "userPhone": {
+          "type": "string",
+          "example": "380603848911",
+          "description": "Phone of user"
+        },
+        "altPhone": {
+          "type": "string",
+          "example": "380603848912",
+          "description": "Alternative user's contact phone number"
+        },
+        "userBalance": {
+          "type": "string",
+          "example": "0.5",
+          "description": "Balance of user"
+        },
+        "status": {
+          "type": "number",
+          "example": 0,
+          "description": "User status: 0 - pending, 1 - request verified, 2 - accepted, 3 - rejected"
+        },
+        "created": {
+          "type": "number",
+          "example": 1565485562,
+          "description": "Creation timestamp in seconds"
+        },
+        "updated": {
+          "type": "number",
+          "example": 1565595584,
+          "description": "Updated timestamp in seconds"
+        }
+      },
+      "required": [
+        "requestId",
+        "account",
+        "userOrigin",
+        "userName",
+        "userEmail",
+        "userPhone",
+        "userBalance",
+        "status",
+        "created",
+        "updated"
+      ]
+    },
+    "GetMigrationRequestsResponseDto": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "Item of Request",
+          "items": {
+            "$ref": "#/definitions/MigrationRequestItem"
+          }
+        },
+        "total": {
+          "type": "number",
+          "example": 10,
+          "description": "Quantity of numbers in Response"
+        }
+      },
+      "required": [
+        "items",
+        "total"
+      ]
+    },
+    "MigrationStatusBodyDto": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "",
+          "example": 1,
+          "description": "User migration status: 1 - request verified, 2 - accepted, 3 - rejected"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "ConflictException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "conflict",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Conflict request parameters",
+          "description": "Conflict request parameters"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "GetEnvironmentValuesResponseDto": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "example": "DM12N3K05",
+          "description": "Hard-coded key of a particular environment variable (MAINTENANCE_MODE)"
+        },
+        "value": {
+          "type": "string",
+          "example": "1",
+          "description": "Value, in JSON format, can be: true, 1, \"message\", {\"param\": \"value\"}"
+        },
+        "type": {
+          "type": "string",
+          "example": "number",
+          "description": "One of values: [number, boolean, string, object, array]"
+        }
+      },
+      "required": [
+        "key",
+        "value",
+        "type"
+      ]
+    },
+    "GetAdminsResultDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1,
+          "description": "Admin's id in database"
+        },
+        "username": {
+          "type": "string",
+          "example": "superadmin",
+          "description": "Admin's username for login"
+        },
+        "isSuperAdmin": {
+          "type": "boolean",
+          "example": true,
+          "description": "If \"true\", then admin can modify another admin records"
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": true,
+          "description": "Displays if this admin is enabled"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "isSuperAdmin",
+        "enabled"
+      ]
+    },
+    "UpdateAdminParamsDto": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "example": true,
+          "description": "Disable or enable admin"
+        },
+        "password": {
+          "type": "string",
+          "example": "fjejJA38",
+          "description": "New admin password (8 symbols with one upper, lower and digit)"
+        }
+      }
+    },
+    "SuccessTrueDto": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true,
+          "description": "Response status"
+        }
+      },
+      "required": [
+        "success"
+      ]
+    },
+    "TopAccountsResultDto": {
+      "type": "object",
+      "properties": {
+        "accountName": {
+          "type": "string",
+          "example": "happytopuser",
+          "description": "Name of user's ABBC account"
+        },
+        "balance": {
+          "type": "string",
+          "example": "5871.1701",
+          "description": "Balance of user's account"
+        },
+        "percentage": {
+          "type": "number",
+          "example": 19.05,
+          "description": "Percentage of total ABBC amount"
+        }
+      },
+      "required": [
+        "accountName",
+        "balance",
+        "percentage"
+      ]
+    },
+    "GetTopAccountsResultDto": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number",
+          "example": 5,
+          "description": "Total count of items in list"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TopAccountsResultDto"
+          }
+        }
+      },
+      "required": [
+        "total",
+        "list"
+      ]
+    },
+    "GetTokenResponseDto": {
+      "type": "object",
+      "properties": {
+        "jwtToken": {
+          "type": "string",
+          "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXJhbXMiOnsiYXBwTmFtZSI6IkFCQkMgV2FsbGV0IGlPUyIsImFwcFZlcnNpb24iOiIxLjAuMCIsImFjY291bnRIYXNoIjoiMURGYjNlZDEwOGU5YWE3NGUyZGE0M2QzZDA0NDk5NjAzN2FiMjY0ODk2YjEzYWI0ZTM2NTYyZTg2MTYifSwidXNlcl9pZCI6MTIzMTI2fQ.F291XHNssGojZTZmi_n332Nfr1hFWEZNkas_pK8O85M",
+          "description": "GetToken response"
+        }
+      },
+      "required": [
+        "jwtToken"
+      ]
+    },
+    "UserEnverinmentDto": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "example": "value",
+          "description": "Map of key: value"
+        }
+      },
+      "required": [
+        "key"
+      ]
+    },
+    "PostUserDeviceRequestDto": {
+      "type": "object",
+      "properties": {
+        "fcmToken": {
+          "type": "string",
+          "example": "bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1",
+          "description": "FCM Token"
+        },
+        "deviceType": {
+          "type": "number",
+          "example": 0,
+          "description": "Device type iOS = 0 or ANDROID = 1"
+        },
+        "locale": {
+          "type": "string",
+          "example": "en",
+          "description": "ISO 639-1 language code"
+        }
+      },
+      "required": [
+        "fcmToken",
+        "deviceType",
+        "locale"
+      ]
+    },
+    "PostUserDeviceResponseDto": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success",
+          "description": "Status"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "DeleteUserDeviceResponseDto": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success or error",
+          "description": "Status"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "CreateUserParamsDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Yaroslav",
+          "description": "User name"
+        },
+        "email": {
+          "type": "string",
+          "example": "yaroslav@gmail.com",
+          "description": "User email"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+380661112233",
+          "description": "User phone number (E.164)"
+        }
+      },
+      "required": [
+        "name",
+        "email"
+      ]
+    },
+    "CreateUserResultDto": {
+      "type": "object",
+      "properties": {
+        "alreadyExisted": {
+          "type": "boolean",
+          "example": false,
+          "description": "If \"true\", user with this email has already exist"
+        }
+      },
+      "required": [
+        "alreadyExisted"
+      ]
+    },
+    "EmailForbiddenException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "email_forbidden",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "This e-mail address cannot be used to register with ABBC Wallet. Please try another one not previously used with previous wallet versions.",
+          "description": "Conflict request parameters"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "ConfirmUserParamsDto": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "yaroslav@gmail.com",
+          "description": "User email"
+        },
+        "code": {
+          "type": "string",
+          "example": "A4MP",
+          "description": "Confirmation code"
+        }
+      },
+      "required": [
+        "email",
+        "code"
+      ]
+    },
+    "InvalidCodeException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "invalid_code",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Confirmation code is invalid",
+          "description": "Error readable description"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "PostMigrationRequestDto": {
+      "type": "object",
+      "properties": {
+        "addressTo": {
+          "type": "string",
+          "example": "my-account-name",
+          "description": "Either account name or public key for the new account to receive tokens from the last generation blockchain"
+        }
+      },
+      "required": [
+        "addressTo"
+      ]
+    },
+    "MigrationResponseDto": {
+      "type": "object",
+      "properties": {
+        "addressFrom": {
+          "type": "string",
+          "example": "new-address-name",
+          "description": "Generated address to receive funds"
+        },
+        "status": {
+          "type": "",
+          "example": 0,
+          "description": "0 - ready, 1 - processing, 2 - used"
+        }
+      },
+      "required": [
+        "addressFrom",
+        "status"
+      ]
+    },
+    "PostMigrationRequestBodyDto": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "number",
+          "example": 0,
+          "description": "0 - MC Wallet, 1 - Alladin"
+        },
+        "email": {
+          "type": "string",
+          "example": "bob@bob.com",
+          "description": "user email (from old wallet account)"
+        },
+        "account": {
+          "type": "string",
+          "example": "bob1w2b1b123",
+          "description": "account name or public key for the ABBC Gen.2 blockchain"
+        }
+      },
+      "required": [
+        "origin",
+        "email",
+        "account"
+      ]
+    },
+    "PutMigrationRequestBodyAnonimusDto": {
+      "type": "object",
+      "properties": {
+        "verificationCode": {
+          "type": "string",
+          "example": "X0IDE12",
+          "description": "request verification code "
+        }
+      },
+      "required": [
+        "verificationCode"
+      ]
+    },
+    "MigrationRequestResponseDto": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "example": "380661112233",
+          "description": "User's phone number"
+        }
+      },
+      "required": [
+        "phoneNumber"
+      ]
+    },
+    "SendPhoneConfirmationParamsDto": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "example": "380661112233",
+          "description": "User's contact phone number"
+        }
+      }
+    },
+    "MigrationPhoneVerificationParamsDto": {
+      "type": "object",
+      "properties": {
+        "verificationCode": {
+          "type": "string",
+          "example": "123456",
+          "description": "6 digits verification code from sms"
+        }
+      },
+      "required": [
+        "verificationCode"
+      ]
+    },
+    "PostTransactionRequestDto": {
+      "type": "object",
+      "properties": {
+        "trxs": {
+          "type": "array",
+          "example": "[\"123456\", \"1234567\"]",
+          "description": "List of transaction ids",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "trxs"
+      ]
+    },
+    "Erc20SymbolInfoDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "YAROCOIN",
+          "description": "Name of token"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "YAROS",
+          "description": "Token Symbol"
+        },
+        "contractAddress": {
+          "type": "string",
+          "example": "0x7d2C74007cE75c2509bC1C49376a457cC7AF7013",
+          "description": "Smart contract address"
+        },
+        "decimals": {
+          "type": "number",
+          "example": 5,
+          "description": "Mantissa length"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://abbc.com/static/img/content/team/TOKEN.JPG",
+          "description": "Image url"
+        }
+      },
+      "required": [
+        "name",
+        "symbol",
+        "contractAddress",
+        "decimals",
+        "image"
+      ]
+    },
+    "Erc20SymbolInfoResponseDto": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "number",
+          "example": 0,
+          "description": "Count of offset items"
+        },
+        "count": {
+          "type": "number",
+          "example": 10,
+          "description": "The number of items to return"
+        },
+        "total": {
+          "type": "number",
+          "example": 1,
+          "description": "Total number of items"
+        },
+        "items": {
+          "type": "array",
+          "description": "Item of tokenInfo",
+          "items": {
+            "$ref": "#/definitions/Erc20SymbolInfoDto"
+          }
+        }
+      },
+      "required": [
+        "offset",
+        "count",
+        "total",
+        "items"
+      ]
+    },
+    "InvalidContractAddressException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "invalid_contract_address",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Invalid contract address",
+          "description": "Invalid contract address"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "SymbolInfoDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "YAROCOIN",
+          "description": "Name of token"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "YAROS",
+          "description": "Token Symbol"
+        },
+        "contractAddress": {
+          "type": "string",
+          "example": "0x7d2C74007cE75c2509bC1C49376a457cC7AF7013",
+          "description": "Smart contract address"
+        },
+        "decimals": {
+          "type": "number",
+          "example": 5,
+          "description": "Mantissa length"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://abbc.com/static/img/content/team/TOKEN.JPG",
+          "description": "Image url"
+        },
+        "type": {
+          "type": "number",
+          "example": 0,
+          "description": "Token type: 0 - ERC20, 1 - EOS, 2 - ABBC",
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "symbol",
+        "contractAddress",
+        "decimals",
+        "image",
+        "type"
+      ]
+    },
+    "SymbolInfoResponseDto": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "number",
+          "example": 0,
+          "description": "Count of offset items"
+        },
+        "count": {
+          "type": "number",
+          "example": 10,
+          "description": "The number of items to return"
+        },
+        "total": {
+          "type": "number",
+          "example": 1,
+          "description": "Total number of items"
+        },
+        "items": {
+          "type": "array",
+          "description": "Item of tokenInfo",
+          "items": {
+            "$ref": "#/definitions/SymbolInfoDto"
+          }
+        }
+      },
+      "required": [
+        "offset",
+        "count",
+        "total",
+        "items",
+        "items"
+      ]
+    },
+    "BodyTransactionInfoPredifinedDto": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "example": [
+            "0x2a65aca4d5fc5b5c859090a6c34d164135398226"
+          ],
+          "description": "Address which is tied up to user's wallet",
+          "items": {
+            "type": "string"
+          }
+        },
+        "offset": {
+          "type": "number",
+          "example": 0,
+          "description": "The number of items to skip before starting to collect the result set"
+        },
+        "count": {
+          "type": "number",
+          "example": 0,
+          "description": "Total number of items"
+        }
+      },
+      "required": [
+        "addresses"
+      ]
+    },
+    "TrxInfoDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "XXXXXXX",
+          "description": "Transaction id"
+        },
+        "amount": {
+          "type": "string",
+          "example": "1.0000022",
+          "description": "Transaction amount"
+        },
+        "amountSymbol": {
+          "type": "string",
+          "example": "ETH",
+          "description": "Symbol of transaction currency"
+        },
+        "created": {
+          "type": "number",
+          "example": 1515662372129,
+          "description": "Transaction creation time in millis"
+        },
+        "confirmations": {
+          "type": "number",
+          "example": 10,
+          "description": "Number of confirmation applied to selected transaction"
+        },
+        "isIncoming": {
+          "type": "boolean",
+          "example": true,
+          "description": "Shows if transaction is incoming"
+        }
+      },
+      "required": [
+        "id",
+        "amount",
+        "amountSymbol",
+        "created",
+        "confirmations",
+        "isIncoming"
+      ]
+    },
+    "ResponseTransactionInfoPredifinedDto": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "number",
+          "example": 0,
+          "description": "Count of offset items"
+        },
+        "count": {
+          "type": "number",
+          "example": 10,
+          "description": "The number of items to return"
+        },
+        "total": {
+          "type": "number",
+          "example": 1,
+          "description": "Total number of items"
+        },
+        "items": {
+          "type": "array",
+          "description": "TX Info",
+          "items": {
+            "$ref": "#/definitions/TrxInfoDto"
+          }
+        }
+      },
+      "required": [
+        "offset",
+        "count",
+        "total",
+        "items"
+      ]
+    },
+    "ValueAddressDto": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "XXXXXXX",
+          "description": "Formatted address string"
+        },
+        "value": {
+          "type": "string",
+          "example": "1.00012",
+          "description": "amount on address (in wei!!!)"
+        }
+      },
+      "required": [
+        "address",
+        "value"
+      ]
+    },
+    "TrxInfoSingleDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "XXXXXXX",
+          "description": "Transaction id"
+        },
+        "amountSymbol": {
+          "type": "string",
+          "example": "ETH",
+          "description": "Symbol of transaction currency"
+        },
+        "created": {
+          "type": "number",
+          "example": 1515662372129,
+          "description": "Transaction creation time in millis"
+        },
+        "confirmations": {
+          "type": "number",
+          "example": 10,
+          "description": "Number of confirmation applied to selected transaction"
+        },
+        "description": {
+          "type": "string",
+          "example": "Dump",
+          "description": "Sending you some erc20 tokens"
+        },
+        "from": {
+          "type": "array",
+          "description": "Item of tokenInfo",
+          "items": {
+            "$ref": "#/definitions/ValueAddressDto"
+          }
+        },
+        "to": {
+          "type": "array",
+          "description": "Item of tokenInfo",
+          "items": {
+            "$ref": "#/definitions/ValueAddressDto"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "amountSymbol",
+        "created",
+        "confirmations",
+        "from",
+        "to"
+      ]
+    },
+    "BodyCreateTransactionDto": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "1.14",
+          "description": "Transaction amount"
+        },
+        "currencySymbol": {
+          "type": "string",
+          "example": "ETH",
+          "description": "Currency of transaction"
+        },
+        "address": {
+          "type": "string",
+          "example": "XXXXX",
+          "description": "Receiving address of transaction"
+        },
+        "description": {
+          "type": "string",
+          "example": "Sending you some ",
+          "description": "Optional description of transaction"
+        },
+        "raw": {
+          "type": "string",
+          "example": "SGVsbG8",
+          "description": "Encoded signed transaction body"
+        }
+      },
+      "required": [
+        "raw"
+      ]
+    },
+    "TrxIdDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "XXXXXXX",
+          "description": "Transaction id"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "NotEnoughBalanceException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "not_enough_balance",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Not enough balance",
+          "description": "Not enough balance"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "GasLimitTooLowException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "gas_limit_too_low",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Gas limit too low",
+          "description": "Gas limit too low"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "InsufficientFundsException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "insufficient_funds",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Insufficient funds error",
+          "description": "Eth insufficient funds error"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "BodyTransactionInfoErc20Dto": {
+      "type": "object",
+      "properties": {
+        "contractAddress": {
+          "type": "string",
+          "example": "0x2a65aca4d5fc5b5c859090a6c34d164135398226",
+          "description": "Address of smart-contract of token"
+        },
+        "from": {
+          "type": "string",
+          "example": "0x2a65aca4d5fc5b5c859090a6c34d164135398233",
+          "description": "Address from"
+        },
+        "to": {
+          "type": "string",
+          "example": "0x2a65aca4d5fc5b5c859090a6c34d164135398111",
+          "description": "Address to"
+        },
+        "amount": {
+          "type": "string",
+          "example": "100023",
+          "description": "Total amount in satoshi"
+        }
+      },
+      "required": [
+        "contractAddress",
+        "from",
+        "to",
+        "amount"
+      ]
+    },
+    "ResponseTransactionInfoErc20EthDto": {
+      "type": "object",
+      "properties": {
+        "transactionCount": {
+          "type": "number",
+          "example": 1,
+          "description": "index of transaction on it’s address"
+        },
+        "gasLimit": {
+          "type": "number",
+          "example": 21000,
+          "description": "estimated gas limit for given operation"
+        }
+      },
+      "required": [
+        "transactionCount",
+        "gasLimit"
+      ]
+    },
+    "BodyTransactionInfoEthDto": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "0x2a65aca4d5fc5b5c859090a6c34d164135398226",
+          "description": "Address which is tied up to user's wallet"
+        },
+        "to": {
+          "type": "string",
+          "example": "0x5a0b54d5dc17e0aadc383d2db43b0a0d3e029c4c",
+          "description": "Address where user needs to send funds"
+        },
+        "data": {
+          "type": "string",
+          "example": "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003",
+          "description": "Special data for ERC-20 tokens support, for ETH it will be empty"
+        },
+        "value": {
+          "type": "string",
+          "example": "10000000000000000",
+          "description": "Total amount in satoshi"
+        }
+      },
+      "required": [
+        "address"
+      ]
+    },
+    "ResponseTransactionInfoZenDto": {
+      "type": "object",
+      "properties": {
+        "blockHash": {
+          "type": "string",
+          "example": "00052558d42f50d056f19a22e676827873eae47998288657950e60fbaf577d9f",
+          "description": "Hash of the latest block"
+        },
+        "blockIndex": {
+          "type": "number",
+          "example": 314403,
+          "description": "Index of the latest block"
+        }
+      },
+      "required": [
+        "blockHash",
+        "blockIndex"
+      ]
+    },
+    "ResponseTransactionInfoTrxDto": {
+      "type": "object",
+      "properties": {
+        "refBlockBytes": {
+          "type": "string",
+          "example": "267e",
+          "description": "Last block bytes"
+        },
+        "refBlockHash": {
+          "type": "string",
+          "example": "9a447d222e8de9f2",
+          "description": "Last block hash"
+        }
+      },
+      "required": [
+        "refBlockBytes",
+        "refBlockHash"
+      ]
+    },
+    "SingleFeeInfoDto": {
+      "type": "object",
+      "properties": {
+        "price": {
+          "type": "string",
+          "example": "10",
+          "description": "Low fee which is possible to calculate transaction with"
+        },
+        "time": {
+          "type": "number",
+          "example": 100000,
+          "description": "Average wait time in ms for low fee"
+        }
+      },
+      "required": [
+        "price",
+        "time"
+      ]
+    },
+    "DustInfoDto": {
+      "type": "object",
+      "properties": {
+        "dust": {
+          "type": "object",
+          "example": {
+            "BTC": "512",
+            "LTC": "492"
+          },
+          "description": "Min amount (in satoshi), which can be transferred by currencies"
+        }
+      },
+      "required": [
+        "dust"
+      ]
+    },
+    "BodyPutBalanceErc20Dto": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "example": [
+            "0x7d2C74007cE75c2509bC1C49376a457cC7AF7013"
+          ],
+          "description": "Address which is tied up to user's wallet",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contractAddresses": {
+          "type": "array",
+          "example": [
+            "0x2a65aca4d5fc5b5c859090a6c34d164135398226"
+          ],
+          "description": "Smart contract addresses",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "addresses",
+        "contractAddresses"
+      ]
+    },
+    "ResponsePutBalanceErc20ItemDto": {
+      "type": "object",
+      "properties": {
+        "contractAddress": {
+          "type": "string",
+          "example": "0x7d2C74007cE75c2509bC1C49376a457cC7AF7013",
+          "description": "Contract address"
+        },
+        "balance": {
+          "type": "string",
+          "example": "10",
+          "description": "Balance of smart contract address in wei"
+        }
+      }
+    },
+    "InvalidAddressException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "invalid_address",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "Invalid address",
+          "description": "Invalid address"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "BodyPutBalanceMosaicDto": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "example": [
+            "NCTRI4WCQFMYEQDYJQIBUHZLOJ6CQDZ6JFS4DY6V"
+          ],
+          "description": "Address to get mosaic balance",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "addresses"
+      ]
+    },
+    "ResponsePutBalanceMosaicDto": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "example": "com.company",
+          "description": "Token namespace"
+        },
+        "name": {
+          "type": "string",
+          "example": "token",
+          "description": "Token name in the namespace"
+        },
+        "totalSupply": {
+          "type": "string",
+          "example": "8000000",
+          "description": "Total supply of the token (in whole tokens, NOT IN NEM-satoshi)"
+        },
+        "displayName": {
+          "type": "string",
+          "example": "Super-token",
+          "description": "Optional token display name"
+        },
+        "precision": {
+          "type": "number",
+          "example": 0,
+          "description": "Token precision"
+        },
+        "balance": {
+          "type": "string",
+          "example": "10",
+          "description": "Balance of smart contract address in NEM-satoshi"
+        }
+      },
+      "required": [
+        "namespace",
+        "name",
+        "totalSupply",
+        "displayName",
+        "precision",
+        "balance"
+      ]
+    },
+    "BodyPutBalanceEthDto": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "example": [
+            "XXXXXXX"
+          ],
+          "description": "Address which is tied up to user's wallet",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "addresses"
+      ]
+    },
+    "ResponsePutBalanceEthDto": {
+      "type": "object",
+      "properties": {
+        "tokenSymbol": {
+          "type": "string",
+          "example": "ETH",
+          "description": "Token symbol passed in request"
+        },
+        "amount": {
+          "type": "string",
+          "example": "1.532",
+          "description": "Amount of tokens on user's addresses"
+        },
+        "hasIncomingTransaction": {
+          "type": "array",
+          "example": [
+            true
+          ],
+          "description": "Array of booleans which shows if address on this position has at least one incoming transaction",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "tokenSymbol",
+        "amount",
+        "hasIncomingTransaction"
+      ]
+    },
+    "BodyUtxoAddressesDto": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "example": [
+            "XXXXXXX"
+          ],
+          "description": "Addresses to get utxo",
+          "items": {
+            "type": "string"
+          }
+        },
+        "amount": {
+          "type": "string",
+          "example": "1.0001",
+          "description": "Needed amount"
+        },
+        "satoshisPerByte": {
+          "type": "string",
+          "example": "10",
+          "description": "Satoshis per byte"
+        }
+      },
+      "required": [
+        "addresses",
+        "amount"
+      ]
+    },
+    "ResponsePutUtxoDto": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "1QGpunSj8MA9VLgLXkVyd9pao6BJ8aXNe7",
+          "description": "address"
+        },
+        "txHex": {
+          "type": "string",
+          "example": "190dcc879f8a392c8ce20576ce60b51ab87e51a24be1ceecde257df34e20312c",
+          "description": "transaction id"
+        },
+        "value": {
+          "type": "string",
+          "example": "0.00201874",
+          "description": "unspent output"
+        },
+        "outputIndex": {
+          "type": "number",
+          "example": 0,
+          "description": "output index"
+        },
+        "subScriptHex": {
+          "type": "string",
+          "example": "76a914ff492031b05029903a80c99cd79dec2f473f1a3b88ac",
+          "description": "sub script hex"
+        }
+      },
+      "required": [
+        "address",
+        "txHex",
+        "value",
+        "outputIndex",
+        "subScriptHex"
+      ]
+    },
+    "CurrencyInfoDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "fiat",
+          "description": "Type of currency",
+          "enum": [
+            "fiat",
+            "crypto",
+            "ERC-20",
+            "EOS",
+            "NEM",
+            "BNB"
+          ],
+          "default": "fiat"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "ABBC",
+          "description": "Currency symbol"
+        },
+        "contractAddress": {
+          "type": "string",
+          "example": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+          "description": "Contract address (only for tokens)"
+        }
+      },
+      "required": [
+        "symbol"
+      ]
+    },
+    "GetExchangeRateParamsDto": {
+      "type": "object",
+      "properties": {
+        "currencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CurrencyInfoDto"
+          }
+        },
+        "toCurrency": {
+          "type": "string",
+          "example": "BTC",
+          "description": "Currency to use for rates",
+          "default": "USD"
+        },
+        "timestamp": {
+          "type": "number",
+          "example": 1564496404849,
+          "description": "Approximate timestamp to return rate to, supported up to now-24hrs (millis)",
+          "default": "Current time"
+        }
+      },
+      "required": [
+        "currencies"
+      ]
+    },
+    "CurrencyInfoRateDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "fiat",
+          "description": "Type of currency",
+          "enum": [
+            "fiat",
+            "crypto",
+            "ERC-20",
+            "EOS",
+            "NEM",
+            "BNB"
+          ]
+        },
+        "symbol": {
+          "type": "string",
+          "example": "ABBC",
+          "description": "Currency symbol"
+        },
+        "contractAddress": {
+          "type": "string",
+          "example": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+          "description": "Contract address (only for tokens)"
+        },
+        "rate": {
+          "type": "string",
+          "example": "7.353",
+          "description": "Rate for current currency"
+        }
+      },
+      "required": [
+        "type",
+        "symbol",
+        "rate"
+      ]
+    },
+    "GetExchangeRateResultDto": {
+      "type": "object",
+      "properties": {
+        "rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CurrencyInfoRateDto"
+          }
+        }
+      },
+      "required": [
+        "rates"
+      ]
+    },
+    "PromoAccountDto": {
+      "type": "object",
+      "properties": {
+        "accountName": {
+          "type": "string",
+          "example": "accname11111",
+          "description": "Accounts name"
+        },
+        "publicKey": {
+          "type": "string",
+          "example": "EOS7vW2WcPUxvc99Ly47H1fgLrUHXJqroSPDJTy66aHYsdVrJX9k8\t",
+          "description": "Public key for account (started with \"EOS\")"
+        },
+        "address": {
+          "type": "string",
+          "example": "0xcD98b32500A9A5C4FFbf4C174a83935F5EEC6fd5",
+          "description": "Address connected with the account"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "ETH",
+          "description": "Address symbol"
+        }
+      },
+      "required": [
+        "publicKey",
+        "address",
+        "symbol"
+      ]
+    },
+    "AddPromoAddressesParamsDto": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "description": "Array of accounts",
+          "items": {
+            "$ref": "#/definitions/PromoAccountDto"
+          }
+        }
+      }
+    },
+    "MigrationNotFoundException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "migration_not_found",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "There is no address with completed migration",
+          "description": "Error description"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "PromoAddressesAlreadyExistException": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "addresses_already_exist",
+          "description": "Error code"
+        },
+        "errorDescription": {
+          "type": "string",
+          "example": "All addresses for promo campaign are already added",
+          "description": "Error description"
+        }
+      },
+      "required": [
+        "error",
+        "errorDescription"
+      ]
+    },
+    "PostDdtUserDataRequestDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "PHONE",
+          "description": "Type: PHONE,EMAIL",
+          "enum": [
+            "PHONE",
+            "EMAIL"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "example": "+380661112233",
+          "description": "Email or phone, depended on type"
+        },
+        "name": {
+          "type": "string",
+          "example": "Alice",
+          "description": "Optional user name"
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ]
+    },
+    "PostDdtUserDataResponseDto": {
+      "type": "object",
+      "properties": {
+        "alreadyExisted": {
+          "type": "boolean",
+          "example": false,
+          "description": "User data already exist"
+        }
+      },
+      "required": [
+        "alreadyExisted"
+      ]
+    },
+    "PutDdtUserDataRequestDto": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "380661112233",
+          "description": "Email or phone"
+        },
+        "code": {
+          "type": "string",
+          "example": "X4E2",
+          "description": "Confirmation code (in base32)",
+          "minLength": 4,
+          "maxLength": 4
+        }
+      },
+      "required": [
+        "value",
+        "code"
+      ]
+    },
+    "PutDdtUserDataResponseDto": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true,
+          "description": "Response status"
+        }
+      },
+      "required": [
+        "success"
+      ]
+    }
+  }
+}

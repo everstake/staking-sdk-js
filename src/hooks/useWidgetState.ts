@@ -1,8 +1,8 @@
 import {useContext} from 'react';
-import {StateContext} from '../contexts/StateProvider';
+import {StateContext, StateContextI} from '../contexts/StateProvider';
 
 const useWidgetState = () => {
-  return useContext(StateContext);
+  return useContext<StateContextI>(StateContext);
 };
 
 export default useWidgetState;

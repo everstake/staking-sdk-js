@@ -2,26 +2,28 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'focus-visible/dist/focus-visible.min';
 import './index.sass';
-import * as serviceWorker from './serviceWorker';
-import StakingSdk from './pages/StakingSdk/StakingSdk';
+import App from './pages/App/App';
 import Providers from './contexts/Providers';
-import {WalletConfig} from './contexts/StateProvider';
+import emitter from './utils/Emitter';
+import {StakingSdkConfig} from './models/config.model';
 
 declare const window: any;
 
-export class WalletSdk {
-  logTestText?: () => void;
-  ref: any = React.createRef();
+export class StakingSdk {
   handlers: any = {};
-  constructor(public config: WalletConfig) {
+  constructor(public config: StakingSdkConfig) {
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
-          <StakingSdk handlers={this.handlers}/>
+          <App handlers={this.handlers}/>
         </Providers>
       </React.StrictMode>,
       document.getElementById(config.elemId)
     );
+  }
+
+  on(event: string, listener: (...args: any[]) => void) {
+    return emitter.on(event, listener);
   }
 
   open() {
@@ -30,20 +32,6 @@ export class WalletSdk {
       handler(this.config);
     }
   }
-
-  close() {
-    console.log('close');
-  }
 }
 
-// ToDo: Remove initializing
-// const walletSdk = new WalletSdk({elemId: 'wallet-sdk'});
-
-window.WalletSdk = WalletSdk;
-
-
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+window.StakingSdk = StakingSdk;

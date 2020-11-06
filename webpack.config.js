@@ -1,5 +1,6 @@
 const path = require('path');
-const bundleOutputDir = './dist';
+const bundleOutputDir = './staking-sdk-js';
+// const NpmDtsPlugin = require('npm-dts-webpack-plugin')
 
 module.exports = (env) => {
     const isProductionBuild = env && env.production;
@@ -8,13 +9,17 @@ module.exports = (env) => {
         entry: './src/index.tsx',
         devtool: 'cheap-module-source-map',
         mode: 'production',
-        target: "node",
         output: {
             filename: 'index.js',
             path: path.resolve(bundleOutputDir),
             library: 'widget',
             libraryTarget:'umd'
         },
+        // plugins: [
+        //     new NpmDtsPlugin({
+        //         logLevel: 'debug'
+        //     })
+        // ],
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".jsx"],
         },

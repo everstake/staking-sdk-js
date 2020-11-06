@@ -7,11 +7,12 @@ import CoinItem, {CoinItemProps} from './components/CoinItem/CoinItem';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
 import {PATH} from '../../contexts/NavigationProvider';
+import Loader from '../../components/Loader/Loader';
 
 const CoinList = () => {
   const {closeWidget} = useWidgetState();
   const {navigate} = useNavigation();
-  const {coinList, stakedCoinList, readyToStakeCoinList, selectCoin} = useCoin();
+  const {coinList, coinListLoading, stakedCoinList, readyToStakeCoinList, selectCoin} = useCoin();
 
   const handleCoinClick = (coinId: string) => {
     const isSelected = selectCoin(coinId);
@@ -33,26 +34,28 @@ const CoinList = () => {
       </a>
     </div>
 
-    {!!coinList && coinList.length > 0 ? <div className='coin-list__body'>
-      {stakedCoinList.length && <>
-        <p className='coin-list__subtitle'>Staked</p>
-        <ul className='coin-list__list'>
-          {stakedCoinList.map(coin => {
-            const props = new CoinItemProps(coin, handleCoinClick);
-            return <CoinItem {...props} key={coin.id}/>;
-          })}
-        </ul>
-      </>}
-      {readyToStakeCoinList.length && <>
-        <p className='coin-list__subtitle'>Ready to stake</p>
-        <ul className='coin-list__list'>
-          {readyToStakeCoinList.map(coin => {
-            const props = new CoinItemProps(coin, handleCoinClick);
-            return <CoinItem {...props} key={coin.id}/>;
-          })}
-        </ul>
-      </>}
-    </div> : <p className='coin-list__subtitle'>No coins</p>}
+    {coinListLoading && !coinList.length ? <div className='coin-list__loader-wrap'><Loader/></div> :
+      !!coinList && coinList.length > 0 ? <div className='coin-list__body'>
+        {stakedCoinList.length && <>
+          <p className='coin-list__subtitle'>Staked</p>
+          <ul className='coin-list__list'>
+            {stakedCoinList.map(coin => {
+              const props = new CoinItemProps(coin, handleCoinClick);
+              return <CoinItem {...props} key={coin.id}/>;
+            })}
+          </ul>
+        </>}
+        {readyToStakeCoinList.length && <>
+          <p className='coin-list__subtitle'>Ready to stake</p>
+          <ul className='coin-list__list'>
+            {readyToStakeCoinList.map(coin => {
+              const props = new CoinItemProps(coin, handleCoinClick);
+              return <CoinItem {...props} key={coin.id}/>;
+            })}
+          </ul>
+        </>}
+      </div> : <p className='coin-list__subtitle'>No coins</p>
+    }
   </div>;
 };
 

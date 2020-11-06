@@ -1,8 +1,8 @@
 import {useContext} from 'react';
-import {CoinContext} from '../contexts/CoinProvider';
+import {CoinContext, CoinI} from '../contexts/CoinProvider';
 
 const useCoin = () => {
-  return useContext(CoinContext);
+  return useContext<CoinI>(CoinContext);
 };
 
 export default useCoin;
