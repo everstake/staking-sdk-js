@@ -2,20 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'focus-visible/dist/focus-visible.min';
 import './index.sass';
-import StakingSdk from './pages/StakingSdk/StakingSdk';
+import App from './pages/App/App';
 import Providers from './contexts/Providers';
-import {WalletConfig} from './contexts/StateProvider';
 import emitter from './utils/Emitter';
+import {StakingSdkConfig} from './models/config.model';
 
 declare const window: any;
 
-export class WalletSdk {
+export class StakingSdk {
   handlers: any = {};
-  constructor(public config: WalletConfig) {
+  constructor(public config: StakingSdkConfig) {
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
-          <StakingSdk handlers={this.handlers}/>
+          <App handlers={this.handlers}/>
         </Providers>
       </React.StrictMode>,
       document.getElementById(config.elemId)
@@ -34,4 +34,4 @@ export class WalletSdk {
   }
 }
 
-window.WalletSdk = WalletSdk;
+window.StakingSdk = StakingSdk;

@@ -28,25 +28,37 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="wallet-sdk"></div>
+    <div id="staking-sdk"></div>
     <script>
-      function openWalletSdk() {
-        const walletSdk = new WalletSdk({
-          elemId: 'wallet-sdk'
+      function openStakingSdk() {
+        const stakingSdk = new StakingSdk({
+          elemId: 'staking-sdk',
+          coins: [
+            {
+              symbol: "XTZ",
+              address: 'Tezos user address',
+              balance: '0.256'
+            },
+            {
+              symbol: "ATOM",
+              address: 'ATOM user address',
+              balance: '24.5803'
+            }
+          ]
         });
-        walletSdk.open();
-        walletSdk.on('stake', (data) => {
-          console.log('walletSdk stake', data);
+        stakingSdk.open();
+        stakingSdk.on('stake', (data) => {
+          console.log('stakingSdk stake', data);
         })
-        walletSdk.on('unstake', (data) => {
-          console.log('walletSdk unstake', data);
+        stakingSdk.on('unstake', (data) => {
+          console.log('stakingSdk unstake', data);
         })
-        walletSdk.on('claimRewards', (data) => {
-          console.log('walletSdk claimRewards', data);
+        stakingSdk.on('claimRewards', (data) => {
+          console.log('stakingSdk claimRewards', data);
         })
       }
     </script>
-    <button onclick="openWalletSdk()">Open</button>
+    <button onclick="openStakingSdk()">Open</button>
 
 
     <!--

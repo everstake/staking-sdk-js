@@ -1,33 +1,13 @@
 import React, {createContext, useEffect, useState} from 'react';
 import 'wicg-inert';
 import {KEYCODE} from '../models/utils';
-
-export class WalletConfig {
-  elemId: string;
-  theme?: Theme;
-  constructor(elemId: string, theme?: Theme) {
-    this.elemId = elemId;
-    if (theme) {
-      this.theme = theme;
-    }
-  }
-}
-
-export interface Theme {
-  ColorPrimary: string;
-  ColorPrimaryDark: string;
-  ColorAccent: string;
-  WindowBackground: string;
-  DetailsHeaderBg: string;
-  FocusColor: string;
-  ColorGreen: string;
-  WarningColor: string;
-}
+import {Theme, StakingSdkConfig} from '../models/config.model';
+import {hexToRgb} from '../utils/utils';
 
 export interface StateContextI {
   isOpen: boolean;
-  config?: WalletConfig;
-  openWidget: (walletConfig: WalletConfig) => void;
+  config?: StakingSdkConfig;
+  openWidget: (walletConfig: StakingSdkConfig) => void;
   closeWidget?: () => void;
 }
 
@@ -36,18 +16,13 @@ const initialValue: StateContextI = {
   openWidget: () => undefined
 };
 
-const hexToRgb = (hex: string): string => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? parseInt(result[1], 16) + ', ' + parseInt(result[2], 16) + ', ' + parseInt(result[3], 16) : '';
-};
-
 export const StateContext = createContext<StateContextI>(initialValue);
 
 const StateProvider: React.FC = ({children}) => {
   const [state, setState] = useState<boolean>(initialValue.isOpen);
-  const [config, setConfig] = useState<WalletConfig | undefined>(undefined);
+  const [config, setConfig] = useState<StakingSdkConfig | undefined>(undefined);
 
-  const openWidget = (walletConfig: WalletConfig) => {
+  const openWidget = (walletConfig: StakingSdkConfig) => {
     setState(true);
     setConfig(walletConfig);
     addInert(walletConfig.elemId);
