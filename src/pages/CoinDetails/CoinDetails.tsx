@@ -8,10 +8,12 @@ import {PATH} from '../../contexts/NavigationProvider';
 import emitter from '../../utils/Emitter';
 import useApi from '../../hooks/useApi';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import useWidgetState from '../../hooks/useWidgetState';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
+  const {userCoinData} = useWidgetState();
   const [claimLoading, setClaimLoading] = useState(false);
   const {claim} = useApi();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -23,8 +25,12 @@ const CoinDetails: React.FC = () => {
   const claimRewards = async () => {
     setClaimLoading(true);
     try {
-      const claimRes = await claim(selectedCoin.id, {address: ''});
-      emitter.emit('claimRewards', claimRes);
+      const address = userCoinData(selectedCoin?.symbol)?.address;
+      if (!address) {
+        throw Error('Address not fount');
+      }
+      const claimRes = await claim(selectedCoin.id, {address});
+      emitter.emit('claim', claimRes);
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

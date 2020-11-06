@@ -28,6 +28,7 @@ const CustomInput: React.FC<IProps> = (props: IProps) => {
     <span className='input__wrap'>
       <input className={inputClassName}
              onChange={props.onChange}
+             step='any'
              type={props.type}
              name={props.name}
              placeholder={props.placeholder}

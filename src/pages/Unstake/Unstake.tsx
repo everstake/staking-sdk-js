@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState} from 'react';
 import './Unstake.sass';
 import useCoin from '../../hooks/useCoin';
 import {Coin} from '../../models/coins.model';
@@ -11,6 +11,7 @@ import Big from 'big.js';
 import emitter from '../../utils/Emitter';
 import useApi from '../../hooks/useApi';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import useWidgetState from '../../hooks/useWidgetState';
 
 interface UnstakeForm {
   amount: string;
@@ -24,6 +25,7 @@ const Unstake: React.FC = () => {
   const {unstake} = useApi();
   const [unstakeLoading, setUnstakeLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const {userCoinData} = useWidgetState();
   const {register, handleSubmit, errors, setValue, getValues} = useForm<UnstakeForm>({
     defaultValues: {amount}
   });
@@ -57,7 +59,11 @@ const Unstake: React.FC = () => {
   const handleUnstake = async(data: UnstakeForm) => {
     setUnstakeLoading(true);
     try {
-      const unstakeRes = await unstake(selectedCoin.id, {amount: data.amount, address: ''});
+      const address = userCoinData(selectedCoin?.symbol)?.address;
+      if (!address) {
+        throw Error('Address not fount');
+      }
+      const unstakeRes = await unstake(selectedCoin.id, {amount: data.amount, address});
       emitter.emit('unstake', unstakeRes);
     } catch (e) {
       setErrorMessage(e.message);

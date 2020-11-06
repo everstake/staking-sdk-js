@@ -14,6 +14,7 @@ import Big from 'big.js';
 import emitter from '../../utils/Emitter';
 import useApi from '../../hooks/useApi';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import useWidgetState from '../../hooks/useWidgetState';
 
 interface StakeParams {
   amount: string;
@@ -28,8 +29,9 @@ const Stake: React.FC<StakeParams> = (params) => {
   const {goBack} = useNavigation();
   const {config, initCalculator, updateAmount, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator(amount);
   const {selectedCoin} = useCoin();
+  const {userCoinData} = useWidgetState();
   // ToDo: use real balance
-  const [balance, setBalance] = useState<string>('20');
+  const [balance, setBalance] = useState<string>('0');
   const {selectedCoinValidator} = useValidators();
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
@@ -41,10 +43,11 @@ const Stake: React.FC<StakeParams> = (params) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const getRangeValue = (partAmount: string, fullAmount: string): number => {
-    return +Big(partAmount || 0).times(100).div(fullAmount).toFixed();
+    return +Big(partAmount || 0).times(100).div(fullAmount === '0' ? 1 : fullAmount).toFixed();
   };
 
   useEffect(() => {
+    setBalance(userCoinData(selectedCoin?.symbol)?.balance || '0');
     setRangeValue(getRangeValue(amount, balance));
   }, []);
 
@@ -74,6 +77,8 @@ const Stake: React.FC<StakeParams> = (params) => {
       return 'Amount must be number';
     } else if (Big(value).gt(balance)) {
       return 'Amount cannot be more than your balance';
+    } else if (Big(value).eq(0)) {
+      return 'Amount cannot be 0';
     } else {
       return true;
     }
@@ -95,7 +100,11 @@ const Stake: React.FC<StakeParams> = (params) => {
   const handleStake = async (data: StakeForm) => {
     setStakeLoading(true);
     try {
-      const stakeRes = await stake(selectedCoin.id, {amount: data.amount, address: '', validatorId: selectedCoinValidator.id});
+      const address = userCoinData(selectedCoin?.symbol)?.address;
+      if (!address) {
+        throw Error('Address not fount');
+      }
+      const stakeRes = await stake(selectedCoin.id, {amount: data.amount, address, validatorId: selectedCoinValidator.id});
       emitter.emit('stake', stakeRes);
     } catch (e) {
       setErrorMessage(e.message);

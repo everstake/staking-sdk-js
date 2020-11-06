@@ -5,33 +5,52 @@ import './index.sass';
 import App from './pages/App/App';
 import Providers from './contexts/Providers';
 import emitter from './utils/Emitter';
-import {StakingSdkConfig} from './models/config.model';
+import {StakingSdkConfig, StakingSdkEvent, UserCoin} from './models/config.model';
 
 declare const window: any;
 
 export class StakingSdk {
-  handlers: any = {};
+  private handlers: any = {};
   constructor(public config: StakingSdkConfig) {
+    console.log('StakingSdk constructor');
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
-          <App handlers={this.handlers}/>
+          <App config={config} handlers={this.handlers}/>
         </Providers>
       </React.StrictMode>,
       document.getElementById(config.elemId)
     );
   }
 
-  on(event: string, listener: (...args: any[]) => void) {
+  on(event: StakingSdkEvent, listener: (...args: any[]) => void) {
     return emitter.on(event, listener);
   }
 
-  open() {
+  open(coins: UserCoin[]) {
     const handler = this.handlers.onOpen;
     if (typeof handler === 'function') {
-      handler(this.config);
+      handler(coins);
     }
   }
 }
+
+const staking = new StakingSdk({elemId: 'staking-sdk'});
+const c = [
+  {
+    symbol: 'XTZ',
+    address: 'Tezos user address',
+    balance: '0.256'
+  },
+  {
+    symbol: 'ICX',
+    address: 'ICON user address',
+    balance: '24.5803'
+  }
+];
+
+setTimeout(() => {
+  staking.open(c);
+}, 100);
 
 window.StakingSdk = StakingSdk;

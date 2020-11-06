@@ -1,4 +1,4 @@
-import React, {MouseEvent} from 'react';
+import React, {MouseEvent, useEffect} from 'react';
 import './App.sass';
 import useNavigation from '../../hooks/useNavigation';
 import useWidgetState from '../../hooks/useWidgetState';
@@ -8,25 +8,30 @@ import CoinDetails from '../CoinDetails/CoinDetails';
 import Stake from '../Stake/Stake';
 import Calculator from '../Calculator/Calculator';
 import Unstake from '../Unstake/Unstake';
-import {StakingSdkConfig} from '../../models/config.model';
+import {StakingSdkConfig, UserCoin} from '../../models/config.model';
 
 export interface StakingSdkProps {
   handlers: {
-    onOpen: ((config: StakingSdkConfig) => void) | undefined;
+    onOpen: ((coins: UserCoin[]) => void) | undefined;
   };
+  config: StakingSdkConfig;
 }
 
 const App: React.FC<StakingSdkProps> = (props) => {
-  const {isOpen, openWidget, closeWidget} = useWidgetState();
+  const {init, isOpen, openWidget, closeWidget} = useWidgetState();
   const {route} = useNavigation();
 
-  props.handlers.onOpen = (config: StakingSdkConfig) => {
-    openWidget(config);
+  props.handlers.onOpen = (coins: UserCoin[]) => {
+    openWidget(coins);
   };
 
   const handleCardClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
+
+  useEffect(() => {
+    init(props.config);
+  }, []);
 
   return isOpen ? <div className='staking-sdk__backdrop' onClick={closeWidget}>
     <div className='staking-sdk' onClick={handleCardClick}>

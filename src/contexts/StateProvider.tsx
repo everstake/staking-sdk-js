@@ -1,41 +1,59 @@
 import React, {createContext, useEffect, useState} from 'react';
 import 'wicg-inert';
 import {KEYCODE} from '../models/utils';
-import {Theme, StakingSdkConfig} from '../models/config.model';
+import {Theme, StakingSdkConfig, UserCoin} from '../models/config.model';
 import {hexToRgb} from '../utils/utils';
+import useNavigation from '../hooks/useNavigation';
 
 export interface StateContextI {
+  init: (walletConfig: StakingSdkConfig) => void;
   isOpen: boolean;
   config?: StakingSdkConfig;
-  openWidget: (walletConfig: StakingSdkConfig) => void;
+  openWidget: (coins: UserCoin[]) => void;
   closeWidget?: () => void;
+  userCoinData: (coinSymbol: string | undefined) => UserCoin | undefined;
 }
 
 const initialValue: StateContextI = {
+  init: () => undefined,
   isOpen: false,
-  openWidget: () => undefined
+  openWidget: () => undefined,
+  userCoinData: () => undefined
 };
 
 export const StateContext = createContext<StateContextI>(initialValue);
 
 const StateProvider: React.FC = ({children}) => {
+  const {reset} = useNavigation();
   const [state, setState] = useState<boolean>(initialValue.isOpen);
   const [config, setConfig] = useState<StakingSdkConfig | undefined>(undefined);
+  const [userCoins, setUserCoins] = useState<UserCoin[]>([]);
 
-  const openWidget = (walletConfig: StakingSdkConfig) => {
-    setState(true);
+  const init = (walletConfig: StakingSdkConfig) => {
+    if (!walletConfig) {
+      throw Error('Config not initialized');
+    }
     setConfig(walletConfig);
-    addInert(walletConfig.elemId);
     if (walletConfig.theme) {
       updateColorTheme(walletConfig.theme);
     }
   };
 
+  const openWidget = (coins: UserCoin[]) => {
+    if (!config) {
+      throw Error('Config not initialized');
+    }
+    setState(true);
+    addInert(config.elemId);
+    setUserCoins(coins);
+  };
+
   const closeWidget = () => {
     setState(false);
     removeInert();
-    // setConfig(undefined);
-    // ToDo: Уточнить нужно ли обнулять конфиги и навигацию в этом месте
+    setConfig(undefined);
+    setUserCoins([]);
+    reset();
   };
 
   const checkCloseWidget = (e: KeyboardEvent) => {
@@ -71,11 +89,19 @@ const StateProvider: React.FC = ({children}) => {
   const updateColorTheme = (theme: Theme) => {
     const root = document.documentElement;
     Object.keys(theme).forEach((property) => {
-      root.style.setProperty('--everstake' + property.charAt(0).toUpperCase() + property.slice(1), hexToRgb(theme[property as (keyof Theme)]));
+      root.style.setProperty('--everstake' + property.charAt(0).toUpperCase() + property.slice(1),
+        hexToRgb(theme[property as (keyof Theme)]));
     });
   };
 
-  return <StateContext.Provider value={{isOpen: state, openWidget, closeWidget, config}}>
+  const userCoinData = (coinSymbol: string | undefined): UserCoin | undefined => {
+    if (!config || !coinSymbol) {
+      return undefined;
+    }
+    return userCoins.find(coin => coin.symbol === coinSymbol);
+  };
+
+  return <StateContext.Provider value={{init, isOpen: state, openWidget, closeWidget, config, userCoinData}}>
     {children}
   </StateContext.Provider>;
 };

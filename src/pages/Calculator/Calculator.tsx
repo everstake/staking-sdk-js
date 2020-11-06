@@ -12,6 +12,7 @@ import ValidatorSelector from '../../components/ValidatorSelector/ValidatorSelec
 import useValidators from '../../hooks/useValidators';
 import CalculateInfoCard from '../../components/CalculateInfoCard/CalculateInfoCard';
 import {PATH} from '../../contexts/NavigationProvider';
+import Big from 'big.js';
 
 interface CalculatorForm {
   amount: string;
@@ -81,6 +82,8 @@ const Calculator: React.FC = () => {
   const validateAmount = (value: number): string | true => {
     if (isNaN(value)) {
       return 'Amount must be number';
+    } else if (Big(value).eq(0)) {
+      return 'Amount cannot be 0';
     } else {
       return true;
     }

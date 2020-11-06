@@ -1,7 +1,6 @@
 export interface StakingSdkConfig {
   elemId: string;
   theme?: Theme;
-  coins: UserCoin[];
 }
 
 export interface Theme {
@@ -20,3 +19,5 @@ export interface UserCoin {
   address: string;
   balance: string;
 }
+
+export type StakingSdkEvent = 'stake' | 'unstake' | 'claim';

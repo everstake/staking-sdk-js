@@ -17,6 +17,7 @@ export interface NavigationContextI {
   tree: RouteI[];
   navigate: (path: PATH, params?: { [key: string]: any }) => boolean;
   goBack: () => boolean;
+  reset: () => void;
 }
 
 export enum PATH {
@@ -57,7 +58,8 @@ const initialValue: NavigationContextI = {
   navigations,
   tree: [rootRoute],
   navigate: () => false,
-  goBack: () => false
+  goBack: () => false,
+  reset: () => undefined
 };
 
 export const NavigationContext = createContext<NavigationContextI>(initialValue);
@@ -99,7 +101,11 @@ const NavigationProvider: React.FC = ({children}) => {
     return isNavigation;
   };
 
-  return <NavigationContext.Provider value={{route, tree, navigations, navigate, goBack}}>
+  const reset = () => {
+    setRoute({...navigations[0]});
+  };
+
+  return <NavigationContext.Provider value={{route, tree, navigations, navigate, goBack, reset}}>
     {children}
   </NavigationContext.Provider>;
 };
