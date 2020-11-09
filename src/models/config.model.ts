@@ -1,20 +1,20 @@
 export interface StakingSdkConfig {
-  elemId: string;
-  theme?: Theme;
+  id: string;
+  theme?: StakingSdkTheme;
 }
 
-export interface Theme {
-  ColorPrimary: string;
-  ColorPrimaryDark: string;
-  ColorAccent: string;
-  WindowBackground: string;
-  DetailsHeaderBg: string;
-  FocusColor: string;
-  ColorGreen: string;
-  WarningColor: string;
+export interface StakingSdkTheme {
+  colorPrimary: string;
+  colorPrimaryDark: string;
+  colorAccent: string;
+  windowBackground: string;
+  detailsHeaderBg: string;
+  focusColor: string;
+  colorGreen: string;
+  warningColor: string;
 }
 
-export interface UserCoin {
+export interface StakingSdkUserCoin {
   symbol: string;
   address: string;
   balance: string;

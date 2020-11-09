@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 import 'wicg-inert';
 import {KEYCODE} from '../models/utils';
-import {Theme, StakingSdkConfig, UserCoin} from '../models/config.model';
+import {StakingSdkTheme, StakingSdkConfig, StakingSdkUserCoin} from '../models/config.model';
 import {hexToRgb} from '../utils/utils';
 import useNavigation from '../hooks/useNavigation';
 
@@ -9,9 +9,9 @@ export interface StateContextI {
   init: (walletConfig: StakingSdkConfig) => void;
   isOpen: boolean;
   config?: StakingSdkConfig;
-  openWidget: (coins: UserCoin[]) => void;
+  openWidget: (coins: StakingSdkUserCoin[]) => void;
   closeWidget: () => void;
-  userCoinData: (coinSymbol: string | undefined) => UserCoin | undefined;
+  userCoinData: (coinSymbol: string | undefined) => StakingSdkUserCoin | undefined;
 }
 
 const initialValue: StateContextI = {
@@ -28,7 +28,7 @@ const StateProvider: React.FC = ({children}) => {
   const {reset} = useNavigation();
   const [state, setState] = useState<boolean>(initialValue.isOpen);
   const [config, setConfig] = useState<StakingSdkConfig | undefined>(undefined);
-  const [userCoins, setUserCoins] = useState<UserCoin[]>([]);
+  const [userCoins, setUserCoins] = useState<StakingSdkUserCoin[]>([]);
 
   const init = (walletConfig: StakingSdkConfig) => {
     if (!walletConfig) {
@@ -40,13 +40,13 @@ const StateProvider: React.FC = ({children}) => {
     }
   };
 
-  const openWidget = (coins: UserCoin[]) => {
+  const openWidget = (coins: StakingSdkUserCoin[]) => {
     if (!config) {
       throw Error('Config not initialized');
     }
     setUserCoins(coins);
     setState(true);
-    addInert(config.elemId);
+    addInert(config.id);
   };
 
   const closeWidget = () => {
@@ -86,15 +86,15 @@ const StateProvider: React.FC = ({children}) => {
     });
   };
 
-  const updateColorTheme = (theme: Theme) => {
+  const updateColorTheme = (theme: StakingSdkTheme) => {
     const root = document.documentElement;
     Object.keys(theme).forEach((property) => {
       root.style.setProperty('--everstake' + property.charAt(0).toUpperCase() + property.slice(1),
-        hexToRgb(theme[property as (keyof Theme)]));
+        hexToRgb(theme[property as (keyof StakingSdkTheme)]));
     });
   };
 
-  const userCoinData = (coinSymbol: string | undefined): UserCoin | undefined => {
+  const userCoinData = (coinSymbol: string | undefined): StakingSdkUserCoin | undefined => {
     if (!config || !coinSymbol) {
       return undefined;
     }

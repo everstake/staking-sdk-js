@@ -20,6 +20,7 @@ module.exports = (env) => {
             new CopyPlugin({
                 patterns: [
                     { from: './sdk-package.json', to: `package.json` },
+                    { from: './README.md', to: `README.md` },
                 ]
             }),
 

@@ -8,11 +8,11 @@ import CoinDetails from '../CoinDetails/CoinDetails';
 import Stake from '../Stake/Stake';
 import Calculator from '../Calculator/Calculator';
 import Unstake from '../Unstake/Unstake';
-import {StakingSdkConfig, UserCoin} from '../../models/config.model';
+import {StakingSdkConfig, StakingSdkUserCoin} from '../../models/config.model';
 
 export interface StakingSdkProps {
   handlers: {
-    onOpen: ((coins: UserCoin[]) => void) | undefined;
+    onOpen: ((coins: StakingSdkUserCoin[]) => void) | undefined;
   };
   config: StakingSdkConfig;
 }
@@ -21,7 +21,7 @@ const App: React.FC<StakingSdkProps> = (props) => {
   const {init, isOpen, openWidget, closeWidget} = useWidgetState();
   const {route} = useNavigation();
 
-  props.handlers.onOpen = (coins: UserCoin[]) => {
+  props.handlers.onOpen = (coins: StakingSdkUserCoin[]) => {
     openWidget(coins);
   };
 

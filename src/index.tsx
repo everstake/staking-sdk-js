@@ -5,17 +5,17 @@ import './index.sass';
 import App from './pages/App/App';
 import Providers from './contexts/Providers';
 import emitter from './utils/Emitter';
-import {StakingSdkConfig, StakingSdkEvent, UserCoin} from './models/config.model';
+import {StakingSdkConfig, StakingSdkEvent, StakingSdkUserCoin} from './models/config.model';
 
 declare const window: any;
 
 export class StakingSdk {
   private handlers: any = {};
   constructor(public config: StakingSdkConfig) {
-    const {elemId} = config;
-    const targetElement = document.getElementById(elemId);
+    const {id} = config;
+    const targetElement = document.getElementById(id);
     if (!targetElement) {
-      throw Error(`DOM Element with id '${elemId}' not found!`);
+      throw Error(`DOM Element with id '${id}' not found!`);
     }
     ReactDOM.render(
       <React.StrictMode>
@@ -31,7 +31,7 @@ export class StakingSdk {
     return emitter.on(event, listener);
   }
 
-  open(coins: UserCoin[]) {
+  open(coins: StakingSdkUserCoin[]) {
     const handler = this.handlers.onOpen;
     if (typeof handler === 'function') {
       handler(coins);
@@ -39,7 +39,7 @@ export class StakingSdk {
   }
 }
 
-const staking = new StakingSdk({elemId: 'staking-sdk'});
+const staking = new StakingSdk({id: 'staking-sdk'});
 const c = [
   {
     symbol: 'XTZ',

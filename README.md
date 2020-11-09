@@ -1,44 +1,89 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#StakingSdk
 
-## Available Scripts
+*A simple library to add everstake functionality to your wallet.*
 
-In the project directory, you can run:
+## Features
 
-### `yarn start`
+- Simple API
+- Simple integration into any web wallet
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Installation
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Import in your project
 
-### `yarn test`
+ES6 and newer
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```javascript
+import {StakingSdk} from 'staking-sdk-js';
+```
 
-### `yarn build`
+ES5
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```javascript
+const StakingSdk = require('staking-sdk-js');
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Markup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+````html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    ...
+  </head>
+  <body>
+    ...
+    <div id="staking-sdk"></div>
+  </body>
+</html>
+````
 
-### `yarn eject`
+### Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+````javascript
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+// You may initialize a StakingSdk with only one line of javascript code:
+const stakingSdk = new StakingSdk({id: 'staking-sdk'});
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+// To open the interface, use the 'open' method with an array of UserCoin type:
+stakingSdk.open([
+  {
+    symbol: 'XTZ',
+    address: 'Tezos user address',
+    balance: '1'
+  }
+]);
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+// To subscribe to events use the 'on' method:
+stakingSdk.on('stake', stakeData => {
+  // your code
+})
+````
 
-## Learn More
+### Interfaces
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+````typescript
+interface StakingSdkConfig {
+    id: string;
+    theme?: Theme;
+}
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+interface StakingSdkTheme {
+    colorPrimary: string;
+    colorPrimaryDark: string;
+    colorAccent: string;
+    windowBackground: string;
+    detailsHeaderBg: string;
+    focusColor: string;
+    colorGreen: string;
+    warningColor: string;
+}
+
+interface StakingSdkUserCoin {
+    symbol: string;
+    address: string;
+    balance: string;
+}
+
+type StakingSdkEvent = 'stake' | 'unstake' | 'claim';
+````

@@ -102,7 +102,6 @@ const NavigationProvider: React.FC = ({children}) => {
   };
 
   const reset = () => {
-    console.log('reset');
     setRoute({...navigations[0]});
   };
 
