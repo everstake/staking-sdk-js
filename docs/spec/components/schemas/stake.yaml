@@ -18,8 +18,9 @@ StakeModel:
       example: "10.0"
       description: "Amount of rewards awailable for claiming. Zero if there is nothing to claim or coin does not support reward claiming."
     validator:
-      description: If amount is not zero here is the information about validator supported by this stake.
-      $ref: "#/components/schemas/ValidatorModel"
+      allOf:
+        - description: If amount is not zero here is the information about validator supported by this stake.
+        - $ref: "#/components/schemas/ValidatorModel"
 StakeListParams:
   type: array
   items:
@@ -36,45 +37,3 @@ StakeListParams:
         type: string
         example: tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY
         description: User address to get staked balance for.
-StakeParams:
-  type: object
-  required:
-    - address
-    - validatorId
-    - amount
-  properties:
-    address:
-      type: string
-      example: tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY
-      description: User address to stake from.
-    validatorId:
-      type: string
-      example: "1"
-      description: Validator to stake funds for.
-    amount:
-      type: string
-      example: "123.334"
-      description: Amount to stake.
-UnstakeParams:
-  type: object
-  required:
-    - address
-    - amount
-  properties:
-    address:
-      type: string
-      example: tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY
-      description: User address to unstake to.
-    amount:
-      type: string
-      example: "123.334"
-      description: Amount to unstake.
-ClaimParams:
-  type: object
-  required:
-    - address
-  properties:
-    address:
-      type: string
-      example: tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY
-      description: User address to claim pending rewards to.

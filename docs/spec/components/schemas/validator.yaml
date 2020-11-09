@@ -14,6 +14,10 @@ ValidatorModel:
       type: string
       description: Validator name.
       example: "Everstake"
+    address:
+      type: string
+      description: Validator staking address. Never shown in the UI, but sent to the wallet to create a new transaction.
+      example: tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM
     fee:
       type: string
       description: String value for the validator fee in percents from user's reward.

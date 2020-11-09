@@ -19,16 +19,13 @@ put:
             type: "array"
             items:
               $ref: "#/components/schemas/StakeModel"
-    400 Invalid coin id:
-      description: "Invalid coid id"
+    400:
+      description: Bad request
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorInvalidCoinId"
-    400 Invalid address format:
-      description: "Invalid address format"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorInvalidAddressFormat"
+            oneOf:
+              - $ref: "#/components/schemas/ErrorInvalidCoinId"
+              - $ref: "#/components/schemas/ErrorInvalidAddressFormat"
+            
   
