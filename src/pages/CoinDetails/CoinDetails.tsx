@@ -13,7 +13,7 @@ import useWidgetState from '../../hooks/useWidgetState';
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
-  const {userCoinData} = useWidgetState();
+  const {userCoinData, closeWidget} = useWidgetState();
   const [claimLoading, setClaimLoading] = useState(false);
   const {claim} = useApi();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -31,6 +31,7 @@ const CoinDetails: React.FC = () => {
       }
       const claimRes = await claim(selectedCoin.id, {address});
       emitter.emit('claim', claimRes);
+      closeWidget();
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

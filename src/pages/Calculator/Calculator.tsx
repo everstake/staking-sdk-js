@@ -35,8 +35,6 @@ const Calculator: React.FC = () => {
     }
   });
 
-  console.log('render');
-
   useEffect(() => {
     if (selectedCoin && selectedCoinValidator && !isOpenCoinSelector && !isOpenValidatorSelector) {
       initCalculator(selectedCoin, selectedCoinValidator.fee);

@@ -10,7 +10,7 @@ export interface StateContextI {
   isOpen: boolean;
   config?: StakingSdkConfig;
   openWidget: (coins: UserCoin[]) => void;
-  closeWidget?: () => void;
+  closeWidget: () => void;
   userCoinData: (coinSymbol: string | undefined) => UserCoin | undefined;
 }
 
@@ -18,6 +18,7 @@ const initialValue: StateContextI = {
   init: () => undefined,
   isOpen: false,
   openWidget: () => undefined,
+  closeWidget: () => undefined,
   userCoinData: () => undefined
 };
 
@@ -43,15 +44,14 @@ const StateProvider: React.FC = ({children}) => {
     if (!config) {
       throw Error('Config not initialized');
     }
+    setUserCoins(coins);
     setState(true);
     addInert(config.elemId);
-    setUserCoins(coins);
   };
 
   const closeWidget = () => {
     setState(false);
     removeInert();
-    setConfig(undefined);
     setUserCoins([]);
     reset();
   };

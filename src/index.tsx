@@ -12,13 +12,18 @@ declare const window: any;
 export class StakingSdk {
   private handlers: any = {};
   constructor(public config: StakingSdkConfig) {
+    const {elemId} = config;
+    const targetElement = document.getElementById(elemId);
+    if (!targetElement) {
+      throw Error(`DOM Element with id '${elemId}' not found!`);
+    }
     ReactDOM.render(
       <React.StrictMode>
         <Providers>
           <App config={config} handlers={this.handlers}/>
         </Providers>
       </React.StrictMode>,
-      document.getElementById(config.elemId)
+      targetElement
     );
   }
 
@@ -34,22 +39,22 @@ export class StakingSdk {
   }
 }
 
-// const staking = new StakingSdk({elemId: 'staking-sdk'});
-// const c = [
-//   {
-//     symbol: 'XTZ',
-//     address: 'Tezos user address',
-//     balance: '0.256'
-//   },
-//   {
-//     symbol: 'ICX',
-//     address: 'ICON user address',
-//     balance: '24.5803'
-//   }
-// ];
-//
-// setTimeout(() => {
-//   staking.open(c);
-// }, 100);
+const staking = new StakingSdk({elemId: 'staking-sdk'});
+const c = [
+  {
+    symbol: 'XTZ',
+    address: 'Tezos user address',
+    balance: '0.256'
+  },
+  {
+    symbol: 'ICX',
+    address: 'ICON user address',
+    balance: '24.5803'
+  }
+];
+
+setTimeout(() => {
+  staking.open(c);
+}, 100);
 
 window.StakingSdk = StakingSdk;

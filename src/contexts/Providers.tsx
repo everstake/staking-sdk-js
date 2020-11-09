@@ -15,8 +15,8 @@ const theme = createMuiTheme({
 
 const Providers: React.FC = ({children}) => {
   return (
-    <StateProvider>
-      <NavigationProvider>
+    <NavigationProvider>
+      <StateProvider>
         <CoinProvider>
           <ValidatorsProvider>
             <ThemeProvider theme={theme}>
@@ -24,8 +24,8 @@ const Providers: React.FC = ({children}) => {
             </ThemeProvider>
           </ValidatorsProvider>
         </CoinProvider>
-      </NavigationProvider>
-    </StateProvider>
+      </StateProvider>
+    </NavigationProvider>
   );
 };
 

@@ -29,8 +29,7 @@ const Stake: React.FC<StakeParams> = (params) => {
   const {goBack} = useNavigation();
   const {config, initCalculator, updateAmount, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator(amount);
   const {selectedCoin} = useCoin();
-  const {userCoinData} = useWidgetState();
-  // ToDo: use real balance
+  const {userCoinData, closeWidget} = useWidgetState();
   const [balance, setBalance] = useState<string>('0');
   const {selectedCoinValidator} = useValidators();
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
@@ -106,6 +105,7 @@ const Stake: React.FC<StakeParams> = (params) => {
       }
       const stakeRes = await stake(selectedCoin.id, {amount: data.amount, address, validatorId: selectedCoinValidator.id});
       emitter.emit('stake', stakeRes);
+      closeWidget();
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

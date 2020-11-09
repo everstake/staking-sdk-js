@@ -12,7 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -20,7 +20,7 @@
     "declaration": true,
     "jsx": "react",
     "outDir": "staking-sdk-js",
-    "noEmit": false
+    "noEmit": true
   },
   "include": [
     "src"

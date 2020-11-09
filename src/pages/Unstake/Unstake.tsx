@@ -25,7 +25,7 @@ const Unstake: React.FC = () => {
   const {unstake} = useApi();
   const [unstakeLoading, setUnstakeLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const {userCoinData} = useWidgetState();
+  const {userCoinData, closeWidget} = useWidgetState();
   const {register, handleSubmit, errors, setValue, getValues} = useForm<UnstakeForm>({
     defaultValues: {amount}
   });
@@ -65,6 +65,7 @@ const Unstake: React.FC = () => {
       }
       const unstakeRes = await unstake(selectedCoin.id, {amount: data.amount, address});
       emitter.emit('unstake', unstakeRes);
+      closeWidget();
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);
