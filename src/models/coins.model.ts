@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import {ValidatorDto} from './validators.model';
 
 export interface CoinDto {
@@ -21,10 +22,15 @@ export interface CoinDto {
 }
 
 export interface StakeDto {
-  coinId: string;
-  amount: string;
-  amountToClaim: string;
-  validator: ValidatorDto;
+  readonly coinId: string;
+  readonly amount: string;
+  readonly amountToClaim: string;
+  readonly validator: ValidatorDto;
+}
+
+export class StakeListParams {
+  constructor(public coinId: string, public address: string) {
+  }
 }
 
 export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
@@ -69,7 +75,7 @@ export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
     this.toUsd = coin.toUsd;
     this.about = coin.about;
     this.aboutUrl = coin.aboutUrl;
-    this.validators = coin.validators;
+    this.validators = coin.validators || [];
 
     if (staking) {
       this.amount = staking.amount;
@@ -81,11 +87,11 @@ export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
   }
 
   get isStaked(): boolean {
-    return !!this.amount && !isNaN(+this.amount) && +this.amount > 0;
+    return !!this.amount && !isNaN(+this.amount) && !Big(this.amount).eq(0);
   }
 
   get hasRewards(): boolean {
-    return !!this.amountToClaim && !isNaN(+this.amountToClaim) && +this.amountToClaim > 0;
+    return !!this.amountToClaim && !isNaN(+this.amountToClaim) && !Big(this.amountToClaim).eq(0);
   }
 
   private getFee(): string {

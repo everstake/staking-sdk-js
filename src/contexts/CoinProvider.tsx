@@ -1,7 +1,7 @@
-import React, {createContext, useCallback, useEffect, useState} from 'react';
-import useWidgetState from '../hooks/useWidgetState';
-import {Coin, CoinDto, StakeDto} from '../models/coins.model';
+import React, {createContext, useEffect, useState} from 'react';
+import {Coin, CoinDto, StakeDto, StakeListParams} from '../models/coins.model';
 import useApi from '../hooks/useApi';
+import {UserCoin} from '../models/config.model';
 
 const COIN_LIST_KEY = 'everstake-coin-list';
 const STAKING_KEY = 'everstake-staking';
@@ -14,6 +14,10 @@ export interface CoinI {
   getCoin: (coinId: string) => Coin | undefined;
   selectCoin: (coinId: string) => boolean;
   selectedCoin: Coin | undefined;
+  userCoins: UserCoin[];
+  fetchCoins: (coins: UserCoin[]) => void;
+  clearUserCoins: () => void;
+  userCoinData: (coinSymbol: string | undefined) => UserCoin | undefined;
 }
 
 const initialValue: CoinI = {
@@ -23,7 +27,11 @@ const initialValue: CoinI = {
   readyToStakeCoinList: [],
   getCoin: () => undefined,
   selectCoin: () => false,
-  selectedCoin: undefined
+  selectedCoin: undefined,
+  userCoins: [],
+  fetchCoins: () => undefined,
+  clearUserCoins: () => undefined,
+  userCoinData: () => undefined
 };
 
 export const CoinContext = createContext<CoinI>(initialValue);
@@ -50,16 +58,24 @@ const CoinProvider: React.FC = ({children}) => {
   const [coinListLoading, setCoinListLoading] = useState<boolean>(initialValue.coinListLoading);
   const [coinList, setCoinList] = useState<Coin[]>(getCacheCoinList());
   const [selectedCoin, setSelectedCoin] = useState<Coin | undefined>(undefined);
-  const {isOpen} = useWidgetState();
   const {getCoinList, getStakeList} = useApi();
   const [onlineStatus, setOnlineStatus] = useState<boolean>(navigator.onLine);
+  const [userCoins, setUserCoins] = useState<UserCoin[]>([]);
 
-  const fetchCoins = useCallback(async () => {
+  const fetchCoins = async (coins: UserCoin[]) => {
     try {
+      setUserCoins(coins);
       setCoinListLoading(true);
       const coinListRes = await getCoinList();
       localStorage.setItem(COIN_LIST_KEY, JSON.stringify(coinListRes));
-      const stakingRes = await getStakeList();
+      const filteredList: StakeListParams[] = [];
+      coinListRes.forEach(coin => {
+        const fC = coins.find(c => c.symbol === coin.symbol);
+        if (fC) {
+          filteredList.push({coinId: coin.id, address: fC.address});
+        }
+      });
+      const stakingRes = await getStakeList(filteredList);
       setOnlineStatus(true);
       localStorage.setItem(STAKING_KEY, JSON.stringify(stakingRes));
       setCoinList(mergeCoinList(coinListRes, stakingRes));
@@ -69,21 +85,15 @@ const CoinProvider: React.FC = ({children}) => {
         setOnlineStatus(false);
       }
     }
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchCoins();
-    }
-  }, [fetchCoins, isOpen]);
+  };
 
   useEffect(() => {
     if (!onlineStatus) {
-      window.addEventListener('online',  fetchCoins);
+      window.addEventListener('online',  () => fetchCoins(userCoins));
     } else {
-      window.removeEventListener('online',  fetchCoins);
+      window.removeEventListener('online',  () => fetchCoins(userCoins));
     }
-    return () => window.removeEventListener('online',  fetchCoins);
+    return () => window.removeEventListener('online',  () => fetchCoins(userCoins));
   }, [onlineStatus]);
 
   const getStakedCoinList = (): Coin[] => {
@@ -108,6 +118,14 @@ const CoinProvider: React.FC = ({children}) => {
     }
   };
 
+  const userCoinData = (coinSymbol: string | undefined): UserCoin | undefined => {
+    return userCoins.find(coin => coin.symbol === coinSymbol);
+  };
+
+  const clearUserCoins = () => {
+    setUserCoins([]);
+  };
+
   return <CoinContext.Provider value={{
     coinList,
     coinListLoading,
@@ -115,7 +133,11 @@ const CoinProvider: React.FC = ({children}) => {
     readyToStakeCoinList: getReadyToStakeCoinList(),
     getCoin,
     selectedCoin,
-    selectCoin
+    selectCoin,
+    userCoins,
+    fetchCoins,
+    clearUserCoins,
+    userCoinData
   }}>
     {children}
   </CoinContext.Provider>;

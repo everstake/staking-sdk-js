@@ -16,15 +16,15 @@ const theme = createMuiTheme({
 const Providers: React.FC = ({children}) => {
   return (
     <NavigationProvider>
-      <StateProvider>
-        <CoinProvider>
+      <CoinProvider>
+        <StateProvider>
           <ValidatorsProvider>
             <ThemeProvider theme={theme}>
               {children}
             </ThemeProvider>
           </ValidatorsProvider>
-        </CoinProvider>
-      </StateProvider>
+        </StateProvider>
+      </CoinProvider>
     </NavigationProvider>
   );
 };

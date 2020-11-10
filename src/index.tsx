@@ -5,13 +5,13 @@ import './index.sass';
 import App from './pages/App/App';
 import Providers from './contexts/Providers';
 import emitter from './utils/Emitter';
-import {StakingSdkConfig, StakingSdkEvent, StakingSdkUserCoin} from './models/config.model';
+import {Config, UserCoin} from './models/config.model';
 
 declare const window: any;
 
-export class StakingSdk {
+export default class StakingSDK {
   private handlers: any = {};
-  constructor(public config: StakingSdkConfig) {
+  constructor(private config: Config) {
     const {id} = config;
     const targetElement = document.getElementById(id);
     if (!targetElement) {
@@ -27,34 +27,52 @@ export class StakingSdk {
     );
   }
 
-  on(event: StakingSdkEvent, listener: (...args: any[]) => void) {
+  on(event: 'stake' | 'unstake' | 'claim', listener: (...args: any[]) => void) {
     return emitter.on(event, listener);
   }
 
-  open(coins: StakingSdkUserCoin[]) {
+  open(coins: UserCoin[]) {
     const handler = this.handlers.onOpen;
     if (typeof handler === 'function') {
       handler(coins);
     }
   }
+
+  close() {
+    const handler = this.handlers.onClose;
+    if (typeof handler === 'function') {
+      handler();
+    }
+  }
 }
 
-const staking = new StakingSdk({id: 'staking-sdk'});
-const c = [
-  {
-    symbol: 'XTZ',
-    address: 'Tezos user address',
-    balance: '0.256'
-  },
-  {
-    symbol: 'ICX',
-    address: 'ICON user address',
-    balance: '24.5803'
-  }
-];
+// const staking = new StakingSDK({id: 'staking-sdk'});
+// const initCoins = [
+//   {
+//     symbol: 'XTZ',
+//     address: 'Tezos user address',
+//     balance: '0.256'
+//   },
+//   {
+//     symbol: 'ICX',
+//     address: 'ICON user address',
+//     balance: '24.5803'
+//   }
+// ];
+// staking.on('stake', data => {
+//   console.log('stake data', data);
+// });
+//
+// staking.on('unstake', data => {
+//   console.log('unstake data', data);
+// });
+//
+// staking.on('claim', data => {
+//   console.log('claim data', data);
+// });
+//
+// setTimeout(() => {
+//   staking.open(initCoins);
+// }, 0);
 
-setTimeout(() => {
-  staking.open(c);
-}, 100);
-
-window.StakingSdk = StakingSdk;
+window.StakingSDK = StakingSDK;

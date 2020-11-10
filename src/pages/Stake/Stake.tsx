@@ -12,9 +12,8 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import Big from 'big.js';
 import emitter from '../../utils/Emitter';
-import useApi from '../../hooks/useApi';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import useWidgetState from '../../hooks/useWidgetState';
+import {EventData} from '../../models/config.model';
 
 interface StakeParams {
   amount: string;
@@ -28,8 +27,7 @@ const Stake: React.FC<StakeParams> = (params) => {
   const {amount} = params;
   const {goBack} = useNavigation();
   const {config, initCalculator, updateAmount, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator(amount);
-  const {selectedCoin} = useCoin();
-  const {userCoinData, closeWidget} = useWidgetState();
+  const {selectedCoin, userCoinData} = useCoin();
   const [balance, setBalance] = useState<string>('0');
   const {selectedCoinValidator} = useValidators();
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
@@ -37,7 +35,6 @@ const Stake: React.FC<StakeParams> = (params) => {
   const {register, handleSubmit, errors, setValue, getValues} = useForm<StakeForm>({
     defaultValues: {amount: config.amount}
   });
-  const {stake} = useApi();
   const [stakeLoading, setStakeLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -96,16 +93,15 @@ const Stake: React.FC<StakeParams> = (params) => {
     return `${value}% ${selectedCoin.symbol}`;
   };
 
-  const handleStake = async (data: StakeForm) => {
+  const handleStake = (data: StakeForm) => {
     setStakeLoading(true);
     try {
       const address = userCoinData(selectedCoin?.symbol)?.address;
       if (!address) {
         throw Error('Address not fount');
       }
-      const stakeRes = await stake(selectedCoin.id, {amount: data.amount, address, validatorId: selectedCoinValidator.id});
-      emitter.emit('stake', stakeRes);
-      closeWidget();
+      emitter.emit('stake',
+        new EventData(selectedCoin.id, data.amount, selectedCoinValidator.name, selectedCoinValidator.address, 'stake'));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

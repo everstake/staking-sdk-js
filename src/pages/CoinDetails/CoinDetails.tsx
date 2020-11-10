@@ -6,16 +6,13 @@ import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
 import emitter from '../../utils/Emitter';
-import useApi from '../../hooks/useApi';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import useWidgetState from '../../hooks/useWidgetState';
+import {EventData} from '../../models/config.model';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
-  const {userCoinData, closeWidget} = useWidgetState();
   const [claimLoading, setClaimLoading] = useState(false);
-  const {claim} = useApi();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!selectedCoin) {
@@ -24,14 +21,12 @@ const CoinDetails: React.FC = () => {
 
   const claimRewards = async () => {
     setClaimLoading(true);
+    if (!selectedCoin.amountToClaim || !selectedCoin.validator) {
+      throw Error('Ooops!');
+    }
     try {
-      const address = userCoinData(selectedCoin?.symbol)?.address;
-      if (!address) {
-        throw Error('Address not fount');
-      }
-      const claimRes = await claim(selectedCoin.id, {address});
-      emitter.emit('claim', claimRes);
-      closeWidget();
+      emitter.emit('claim',
+        new EventData(selectedCoin.id, selectedCoin.amountToClaim, selectedCoin.validator.name, selectedCoin.validator.address, 'claim'));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

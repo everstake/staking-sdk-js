@@ -20,7 +20,7 @@
     "declaration": true,
     "jsx": "react",
     "outDir": "staking-sdk-js",
-    "noEmit": true
+    "noEmit": false
   },
   "include": [
     "src"

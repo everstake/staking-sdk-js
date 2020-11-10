@@ -1,9 +1,9 @@
-export interface StakingSdkConfig {
+export interface Config {
   id: string;
-  theme?: StakingSdkTheme;
+  theme?: Theme;
 }
 
-export interface StakingSdkTheme {
+export interface Theme {
   colorPrimary: string;
   colorPrimaryDark: string;
   colorAccent: string;
@@ -14,10 +14,18 @@ export interface StakingSdkTheme {
   warningColor: string;
 }
 
-export interface StakingSdkUserCoin {
+export interface UserCoin {
   symbol: string;
   address: string;
   balance: string;
 }
 
-export type StakingSdkEvent = 'stake' | 'unstake' | 'claim';
+export class EventData {
+  constructor(public coinId: string,
+              public amount: string,
+              public validatorName: string,
+              public validatorAddress: string,
+              public type: Event) {}
+}
+
+export type Event = 'stake' | 'unstake' | 'claim';

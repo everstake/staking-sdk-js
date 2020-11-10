@@ -9,9 +9,8 @@ import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import Big from 'big.js';
 import emitter from '../../utils/Emitter';
-import useApi from '../../hooks/useApi';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import useWidgetState from '../../hooks/useWidgetState';
+import {EventData} from '../../models/config.model';
 
 interface UnstakeForm {
   amount: string;
@@ -22,10 +21,8 @@ const Unstake: React.FC = () => {
   const {goBack} = useNavigation();
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
   const [amount, setAmount] = useState<string>('');
-  const {unstake} = useApi();
   const [unstakeLoading, setUnstakeLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const {userCoinData, closeWidget} = useWidgetState();
   const {register, handleSubmit, errors, setValue, getValues} = useForm<UnstakeForm>({
     defaultValues: {amount}
   });
@@ -56,16 +53,14 @@ const Unstake: React.FC = () => {
     }
   };
 
-  const handleUnstake = async(data: UnstakeForm) => {
+  const handleUnstake = (data: UnstakeForm) => {
     setUnstakeLoading(true);
+    if (!selectedCoin.amountToClaim || !selectedCoin.validator) {
+      throw Error('Ooops!');
+    }
     try {
-      const address = userCoinData(selectedCoin?.symbol)?.address;
-      if (!address) {
-        throw Error('Address not fount');
-      }
-      const unstakeRes = await unstake(selectedCoin.id, {amount: data.amount, address});
-      emitter.emit('unstake', unstakeRes);
-      closeWidget();
+      emitter.emit('unstake',
+        new EventData(selectedCoin.id, data.amount, selectedCoin.validator.name, selectedCoin.validator.address, 'unstake'));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);
