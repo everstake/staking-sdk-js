@@ -1,14 +1,18 @@
-#Staking SDK
+# Staking SDK
 
-*A simple library to add everstake functionality to your wallet.*
+*A simple library to add Everstake support to your wallet.*
 
 ## Features
 
-- Simple API and integration in any web wallet
+- Simple API and integration for any web wallet
+
+## Example
+
+See sample usage in `example` directory.
 
 ## Installation
 
-### Import in your project
+### Import library into your project
 
 ES6 and newer
 
@@ -41,7 +45,7 @@ const StakingSDK = require('staking-sdk-js');
 
 ````javascript
 
-// You may initialize a StakingSDK with only one line of javascript code:
+// Initialize SDK
 const everstake = new StakingSDK({id: 'staking-sdk'});
 
 // To open the popup, use the 'open' method with an array of StakingUserCoin type:
@@ -94,7 +98,6 @@ interface EventData {
   validatorAddress: string;
   type: Event;
 }
-
 
 type Event = 'stake' | 'unstake' | 'claim';
 ````
