@@ -60,7 +60,7 @@ const Unstake: React.FC = () => {
     }
     try {
       emitter.emit('unstake',
-        new EventData(selectedCoin.id, data.amount, selectedCoin.validator.name, selectedCoin.validator.address, 'unstake'));
+        new EventData(selectedCoin.symbol, data.amount, selectedCoin.validator.name, selectedCoin.validator.address, 'unstake'));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

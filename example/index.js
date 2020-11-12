@@ -11,7 +11,7 @@ openBtn.addEventListener('click', () => {
   sdk.open([
     {
       symbol: 'XTZ',
-      address: 'Tezos user address',
+      address: 'tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM',
       balance: '1'
     }
   ])

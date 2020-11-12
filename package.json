@@ -49,12 +49,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build-prod": "./node_modules/.bin/webpack --config webpack.config.js --mode production --env.production",
+    "copy-past-to-example": "cp -a ./staking-sdk-js/. ./example/staking-sdk-js",
+    "build-prod": "./node_modules/.bin/webpack --config webpack.config.js --mode production --env.production && npm run copy-past-to-example",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "schema:fetch": "node ./scripts/fetch-schema.js",
-    "schema:generate": "node ./scripts/schema-codegen.js --srcPath ./src/typings/api-schema.json --destPath ./src/typings/api --separatedFiles false",
-    "schema:codegen": "npm run schema:fetch && npm run schema:generate:api"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

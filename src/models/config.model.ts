@@ -21,7 +21,7 @@ export interface UserCoin {
 }
 
 export class EventData {
-  constructor(public coinId: string,
+  constructor(public symbol: string,
               public amount: string,
               public validatorName: string,
               public validatorAddress: string,

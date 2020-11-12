@@ -101,7 +101,7 @@ const Stake: React.FC<StakeParams> = (params) => {
         throw Error('Address not fount');
       }
       emitter.emit('stake',
-        new EventData(selectedCoin.id, data.amount, selectedCoinValidator.name, selectedCoinValidator.address, 'stake'));
+        new EventData(selectedCoin.symbol, data.amount, selectedCoinValidator.name, selectedCoinValidator.address, 'stake'));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

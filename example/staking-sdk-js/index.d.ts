@@ -29,12 +29,12 @@ export interface UserCoin {
     balance: string;
 }
 export class EventData {
-    coinId: string;
+    symbol: string;
     amount: string;
     validatorName: string;
     validatorAddress: string;
     type: Event;
-    constructor(coinId: string, amount: string, validatorName: string, validatorAddress: string, type: Event);
+    constructor(symbol: string, amount: string, validatorName: string, validatorAddress: string, type: Event);
 }
 export type Event = 'stake' | 'unstake' | 'claim';
 

@@ -26,7 +26,7 @@ const CoinDetails: React.FC = () => {
     }
     try {
       emitter.emit('claim',
-        new EventData(selectedCoin.id, selectedCoin.amountToClaim, selectedCoin.validator.name, selectedCoin.validator.address, 'claim'));
+        new EventData(selectedCoin.symbol, selectedCoin.amountToClaim, selectedCoin.validator.name, selectedCoin.validator.address, 'claim'));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

@@ -48,7 +48,7 @@ const StakingSDK = require('staking-sdk-js');
 // Initialize SDK
 const everstake = new StakingSDK({id: 'staking-sdk'});
 
-// To open the popup, use the 'open' method with an array of StakingUserCoin type:
+// To open the popup, use the 'open' method with an array of UserCoin type:
 everstake.open([
   {
     symbol: 'XTZ',
@@ -92,7 +92,7 @@ interface UserCoin {
 }
 
 interface EventData {
-  coinId: string;
+  symbol: string;
   amount: string;
   validatorName: string;
   validatorAddress: string;
