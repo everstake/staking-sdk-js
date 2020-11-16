@@ -11,16 +11,23 @@ StakeModel:
       description: "Global coin id."
     amount:
       type: string
-      example: "10.0"
-      description: "Amount staked in this coin. If zero nothing is staked."
+      example: "100.012"
+      description: "Total amount staked."
     amountToClaim:
       type: string
       example: "10.0"
       description: "Amount of rewards awailable for claiming. Zero if there is nothing to claim or coin does not support reward claiming."
-    validator:
-      allOf:
-        - description: If amount is not zero here is the information about validator supported by this stake.
-        - $ref: "#/components/schemas/ValidatorModel"
+    validators:
+      description: If amount is not zero here is the information about validators supported by this stake.
+      type: array
+      items:
+        allOf:
+          - $ref: "#/components/schemas/ValidatorModel"
+          - properties:
+              amount:
+                type: string
+                example: "100.012"
+                description: Amount staked for this validator, can be empty for 1toN type coins (ICON)
 StakeListParams:
   type: array
   items:

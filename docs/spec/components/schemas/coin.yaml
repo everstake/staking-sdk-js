@@ -3,6 +3,7 @@ CoinModel:
   required:
     - id
     - name
+    - stakeType
     - iconUrl
     - apr
     - order
@@ -27,6 +28,18 @@ CoinModel:
       type: string
       description: Coin name
       example: "Tezos"
+    stakeType:
+      type: string
+      enum:
+        - 1to1
+        - Nto1
+        - 1toN
+      description: >
+        Stake type, how many stakes are possible, how many validators per stake
+          * `1to1` - Single stake for single validator (Tezos)
+          * `Nto1` - Several stakes, each for one validator (Cosmos)
+          * `1toN` - One stake, voting for multiple validators (ICON)
+      example: 1to1
     iconUrl:
       type: string
       description: Icon url
