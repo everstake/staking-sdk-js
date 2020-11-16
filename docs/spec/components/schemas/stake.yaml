@@ -1,0 +1,39 @@
+StakeModel:
+  type: object
+  required:
+    - coinId
+    - amount
+    - amountToClaim
+  properties:
+    coinId: 
+      type: string
+      example: "1"
+      description: "Global coin id."
+    amount:
+      type: string
+      example: "10.0"
+      description: "Amount staked in this coin. If zero nothing is staked."
+    amountToClaim:
+      type: string
+      example: "10.0"
+      description: "Amount of rewards awailable for claiming. Zero if there is nothing to claim or coin does not support reward claiming."
+    validator:
+      allOf:
+        - description: If amount is not zero here is the information about validator supported by this stake.
+        - $ref: "#/components/schemas/ValidatorModel"
+StakeListParams:
+  type: array
+  items:
+    type: object
+    required:
+      - coinId
+      - address
+    properties:
+      coinId:
+        type: string
+        example: "1"
+        description: Id of the coin to get staked balance for.
+      address:
+        type: string
+        example: tz1h3rQ8wBxFd8L9B3d7Jhaawu6Z568XU3xY
+        description: User address to get staked balance for.

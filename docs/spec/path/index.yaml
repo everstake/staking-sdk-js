@@ -1,0 +1,4 @@
+/coin:
+  $ref: ./coin/coin.yaml
+/stake:
+  $ref: ./stake/stake.yaml
