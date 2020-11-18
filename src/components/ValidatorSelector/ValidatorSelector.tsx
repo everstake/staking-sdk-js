@@ -10,10 +10,10 @@ interface ValidatorSelectorProps {
 
 const ValidatorSelector: React.FC<ValidatorSelectorProps> = (props) => {
   const {close} = props;
-  const {coinValidators, selectCoinValidator, selectedCoinValidator} = useValidators();
+  const {coinValidators, selectCoinValidators, selectedCoinValidators} = useValidators();
 
   const handleValidatorClick = (validatorId: string) => {
-    const isSelected = selectCoinValidator(validatorId);
+    const isSelected = selectCoinValidators([validatorId]);
     if (isSelected) {
       close();
     }
@@ -32,7 +32,7 @@ const ValidatorSelector: React.FC<ValidatorSelectorProps> = (props) => {
             <button className={'validator__btn' + (validator.isDefault ? ' validator__btn--accent' : '')}
                     onClick={() => handleValidatorClick(validator.id)}>
               <div className='validator__check-area'>
-                {(selectedCoinValidator && selectedCoinValidator.id === validator.id) && <CheckIcon/>}
+                {(selectedCoinValidators[0].id === validator.id) && <CheckIcon/>}
               </div>
               <div className='validator__container'>
                 <div className='validator__info'>

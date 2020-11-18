@@ -4,6 +4,7 @@ import {ValidatorDto} from './validators.model';
 export interface CoinDto {
   readonly id: string;
   readonly name: string;
+  readonly stakeType: STAKE_TYPE;
   readonly iconUrl: string;
   readonly apr: string;
   readonly order: string;
@@ -21,11 +22,17 @@ export interface CoinDto {
   readonly validators: ValidatorDto[];
 }
 
+export enum STAKE_TYPE {
+  '1to1' = '1to1', // - Single stake for single validator (Tezos)
+  'Nto1' = 'Nto1', // - Several stakes, each for one validator (Cosmos)
+  '1toN' = '1toN', // - One stake, voting for multiple validators (ICON)
+}
+
 export interface StakeDto {
   readonly coinId: string;
   readonly amount: string;
   readonly amountToClaim: string;
-  readonly validator: ValidatorDto;
+  readonly validators: ValidatorDto[];
 }
 
 export class StakeListParams {
@@ -36,6 +43,7 @@ export class StakeListParams {
 export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
   id: string;
   name: string;
+  stakeType: STAKE_TYPE;
   iconUrl: string;
   apr: string;
   order: string;
@@ -54,13 +62,14 @@ export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
 
   amount?: string;
   amountToClaim?: string;
-  validator?: ValidatorDto;
+  stakeValidators?: ValidatorDto[];
 
   fee: string;
 
   constructor(coin: CoinDto, staking?: StakeDto) {
     this.id = coin.id;
     this.name = coin.name;
+    this.stakeType = coin.stakeType;
     this.iconUrl = coin.iconUrl;
     this.apr = coin.apr;
     this.order = coin.order;
@@ -80,7 +89,7 @@ export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
     if (staking) {
       this.amount = staking.amount;
       this.amountToClaim = staking.amountToClaim;
-      this.validator = staking.validator;
+      this.stakeValidators = staking.validators;
     }
 
     this.fee = this.getFee();

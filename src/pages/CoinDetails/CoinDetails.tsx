@@ -1,38 +1,19 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './CoinDetails.sass';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
-import emitter from '../../utils/Emitter';
-import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import {EventData} from '../../models/config.model';
+import ClaimInfo from './components/ClaimInfo/ClaimInfo';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
-  const [claimLoading, setClaimLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!selectedCoin) {
     return null;
   }
-
-  const claimRewards = async () => {
-    setClaimLoading(true);
-    if (!selectedCoin.amountToClaim || !selectedCoin.validator) {
-      throw Error('Ooops!');
-    }
-    try {
-      emitter.emit('claim',
-        new EventData(selectedCoin.symbol, selectedCoin.amountToClaim, selectedCoin.validator.name, selectedCoin.validator.address, 'claim'));
-    } catch (e) {
-      setErrorMessage(e.message);
-      setTimeout(() => setErrorMessage(null), 2500);
-    }
-    setClaimLoading(false);
-  };
 
   return (
     <div className='coin-details'>
@@ -71,25 +52,7 @@ const CoinDetails: React.FC = () => {
       </div>
 
       <div className='coin-details__body'>
-        {(selectedCoin.isStaked || selectedCoin.hasRewards) && <div className='coin-details__action-block'>
-          {selectedCoin.isStaked && <div className='staked'>
-            <p className='staked__title'>Staked</p>
-            <div className='staked__wrap'>
-              <p className='staked__amount'>{selectedCoin.amount} {selectedCoin.symbol}</p>
-              <button onClick={() => navigate(PATH.UNSTAKE)} className='staked__action unstake-btn'>Unstake</button>
-            </div>
-            <div className='staked__info'>
-              <p className='staked__item'>Validator: <span>{selectedCoin.validator?.name || '-'}</span></p>
-              <p className='staked__item'>Yearly income: <span>{selectedCoin.apr}%</span></p>
-            </div>
-          </div>}
-
-          {selectedCoin.hasRewards && <div className='rewards'>
-            <button disabled={claimLoading} onClick={claimRewards} className='rewards__btn accent-btn'>Claim rewards</button>
-            {errorMessage && <ErrorMessage className={'rewards__error'} text={errorMessage}/>}
-            <p className='rewards__info'>Available rewards: <span>{selectedCoin.amountToClaim} {selectedCoin.symbol}</span></p>
-          </div>}
-        </div>}
+        <ClaimInfo coin={selectedCoin}/>
 
         <div className='about'>
           <p className='about__title'>About</p>

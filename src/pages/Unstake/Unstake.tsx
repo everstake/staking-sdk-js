@@ -10,7 +10,7 @@ import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import Big from 'big.js';
 import emitter from '../../utils/Emitter';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import {EventData} from '../../models/config.model';
+import {EVENT, EventData, EventDataValidator} from '../../models/config.model';
 
 interface UnstakeForm {
   amount: string;
@@ -55,12 +55,14 @@ const Unstake: React.FC = () => {
 
   const handleUnstake = (data: UnstakeForm) => {
     setUnstakeLoading(true);
-    if (!selectedCoin.amountToClaim || !selectedCoin.validator) {
+    if (!selectedCoin.amountToClaim || !selectedCoin.stakeValidators) {
       throw Error('Ooops!');
     }
     try {
-      emitter.emit('unstake',
-        new EventData(selectedCoin.symbol, data.amount, selectedCoin.validator.name, selectedCoin.validator.address, 'unstake'));
+      const validators: EventDataValidator[] = selectedCoin.stakeValidators.map(validator => {
+        return {validatorName: validator.name, validatorAddress: validator.address};
+      });
+      emitter.emit(EVENT.UNSTAKE, new EventData(selectedCoin.symbol, data.amount, validators, EVENT.UNSTAKE));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);

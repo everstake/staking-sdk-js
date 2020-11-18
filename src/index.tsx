@@ -46,33 +46,33 @@ export default class StakingSDK {
   }
 }
 
-// const staking = new StakingSDK({id: 'staking-sdk'});
-// const initCoins = [
-//   {
-//     symbol: 'XTZ',
-//     address: 'Tezos user address',
-//     balance: '0.256'
-//   },
-//   {
-//     symbol: 'ICX',
-//     address: 'ICON user address',
-//     balance: '24.5803'
-//   }
-// ];
-// staking.on('stake', data => {
-//   console.log('stake data', data);
-// });
-//
-// staking.on('unstake', data => {
-//   console.log('unstake data', data);
-// });
-//
-// staking.on('claim', data => {
-//   console.log('claim data', data);
-// });
-//
-// setTimeout(() => {
-//   staking.open(initCoins);
-// }, 0);
+const staking = new StakingSDK({id: 'staking-sdk'});
+const initCoins = [
+  {
+    symbol: 'XTZ',
+    address: 'Tezos user address',
+    balance: '0.256'
+  },
+  {
+    symbol: 'ICX',
+    address: 'ICON user address',
+    balance: '24.5803'
+  }
+];
+staking.on('stake', data => {
+  console.log('stake data', data);
+});
+
+staking.on('unstake', data => {
+  console.log('unstake data', data);
+});
+
+staking.on('claim', data => {
+  console.log('claim data', data);
+});
+
+setTimeout(() => {
+  staking.open(initCoins);
+}, 0);
 
 window.StakingSDK = StakingSDK;

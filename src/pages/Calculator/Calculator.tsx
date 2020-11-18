@@ -13,6 +13,7 @@ import useValidators from '../../hooks/useValidators';
 import CalculateInfoCard from '../../components/CalculateInfoCard/CalculateInfoCard';
 import {PATH} from '../../contexts/NavigationProvider';
 import Big from 'big.js';
+import {validatorsToText} from '../../utils/utils';
 
 interface CalculatorForm {
   amount: string;
@@ -24,7 +25,7 @@ const Calculator: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
   const {config, initCalculator, updateAmount, isValidationFee, isReinvestment, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator();
-  const {selectedCoinValidator} = useValidators();
+  const {selectedCoinValidators} = useValidators();
   const [isOpenCoinSelector, setIsOpenCoinSelector] = useState(false);
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
   const {register, handleSubmit, errors, getValues, setValue, control} = useForm<CalculatorForm>({
@@ -36,13 +37,13 @@ const Calculator: React.FC = () => {
   });
 
   useEffect(() => {
-    if (selectedCoin && selectedCoinValidator && !isOpenCoinSelector && !isOpenValidatorSelector) {
-      initCalculator(selectedCoin, selectedCoinValidator.fee);
+    if (selectedCoin && !isOpenCoinSelector && !isOpenValidatorSelector) {
+      initCalculator(selectedCoin, selectedCoinValidators[0]?.fee || '0');
       setValue('amount', config.amount);
       setValue('includeValidatorFee', config.includeValidatorFee);
       setValue('includeReinvestment', config.includeReinvestment);
     }
-  }, [selectedCoin, selectedCoinValidator, isOpenCoinSelector, isOpenValidatorSelector]);
+  }, [selectedCoin, selectedCoinValidators, isOpenCoinSelector, isOpenValidatorSelector]);
 
   if (!selectedCoin) {
     return null;
@@ -55,6 +56,10 @@ const Calculator: React.FC = () => {
 
   const closeCoinSelector = () => {
     setIsOpenCoinSelector(false);
+  };
+
+  const openValidatorSelector = () => {
+    setIsOpenValidatorSelector(true);
   };
 
   const closeValidatorSelector = () => {
@@ -126,15 +131,16 @@ const Calculator: React.FC = () => {
               <span className='selectors__btn-type'>Currency</span>
             </span>
           </button>
-          <button type='button' onClick={() => setIsOpenValidatorSelector(true)} className='selectors__btn'>
-            <span className={'selectors__btn-container' + (selectedCoinValidator?.isDefault ? ' selectors__btn-container--accent' : '')}>
+          {selectedCoin.stakeType !== '1toN' && <button type='button' onClick={openValidatorSelector} className='selectors__btn'>
+            <span
+              className={'selectors__btn-container' + (selectedCoinValidators.find(validator => validator.isDefault) ? ' selectors__btn-container--accent' : '')}>
               <span className='selectors__btn-info'>
-                <span className='selectors__btn-title'>{selectedCoinValidator?.name}</span>
-                <span className='selectors__btn-desc'>Fee: {selectedCoinValidator?.fee}%</span>
+                <span className='selectors__btn-title'>{validatorsToText(selectedCoinValidators)}</span>
+                <span className='selectors__btn-desc'>Fee: {selectedCoinValidators[0]?.fee || '0'}%</span>
               </span>
               <span className='selectors__btn-type'>Validator</span>
             </span>
-          </button>
+          </button>}
         </div>
 
         <div className='calculator__settings'>
@@ -144,11 +150,11 @@ const Calculator: React.FC = () => {
             monthlyIncome={monthlyIncome}
             yearlyIncome={yearlyIncome}/>
 
-          <CustomCheckbox name='includeValidatorFee'
-                          className='calculator__checkbox'
-                          label='Include validator fee'
-                          onChange={(checked) => handleCheckboxChange('includeValidatorFee', checked)}
-                          control={control}/>
+          {selectedCoin.stakeType !== '1toN' && <CustomCheckbox name='includeValidatorFee'
+                           className='calculator__checkbox'
+                           label='Include validator fee'
+                           onChange={(checked) => handleCheckboxChange('includeValidatorFee', checked)}
+                           control={control}/>}
 
           <CustomCheckbox name='includeReinvestment'
                           className='calculator__checkbox'

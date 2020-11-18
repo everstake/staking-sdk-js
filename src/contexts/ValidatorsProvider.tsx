@@ -5,28 +5,28 @@ import useCoin from '../hooks/useCoin';
 
 export interface ValidatorsContextI {
   coinValidators: Validator[];
-  selectCoinValidator: (validatorId: string) => boolean;
-  selectedCoinValidator: Validator | undefined;
+  selectCoinValidators: (validatorIds: string[]) => boolean;
+  selectedCoinValidators: Validator[];
 }
 
 const initialValue: ValidatorsContextI = {
   coinValidators: [],
-  selectCoinValidator: () => false,
-  selectedCoinValidator: undefined
+  selectCoinValidators: () => false,
+  selectedCoinValidators: []
 };
 
 export const ValidatorsContext = createContext<ValidatorsContextI>(initialValue);
 
 const ValidatorsProvider: React.FC = ({children}) => {
   const [coinValidators, setCoinValidators] = useState<Validator[]>(initialValue.coinValidators);
-  const [selectedCoinValidators, setSelectedCoinValidators] = useState<{[coinId: string]: Validator}>({});
+  const [selectedValidatorsForCoins, setSelectedValidatorsForCoins] = useState<{[coinId: string]: Validator[]}>({});
   const {selectedCoin} = useCoin();
 
   const fetchValidators = useCallback(() => {
     if (selectedCoin) {
       const validatorsEntity = selectedCoin.validators.map(validator => new Validator(validator));
       setCoinValidators(validatorsEntity);
-      if (!selectedCoinValidators[selectedCoin.id]) {
+      if (!selectedValidatorsForCoins[selectedCoin.id]) {
         setDefaultCoinValidator(validatorsEntity);
       }
     }
@@ -42,37 +42,37 @@ const ValidatorsProvider: React.FC = ({children}) => {
     if (!defaultValidator || !selectedCoin) {
       return;
     }
-    setSelectedCoinValidators(prevState => {
+    setSelectedValidatorsForCoins(prevState => {
       const coinValidatorsMap = {...prevState};
-      coinValidatorsMap[selectedCoin.id] = defaultValidator;
+      coinValidatorsMap[selectedCoin.id] = [defaultValidator];
       return coinValidatorsMap;
     });
   };
 
-  const selectCoinValidator = (validatorId: string): boolean => {
-    const findValidator = coinValidators.find(validator => validator.id === validatorId);
-    if (!findValidator || !selectedCoin) {
+  const selectCoinValidators = (validatorIds: string[]): boolean => {
+    const findValidators: Validator[] = coinValidators.filter(validator => validatorIds.find(validatorId => validatorId === validator.id));
+    if (!selectedCoin) {
       return false;
     }
-    setSelectedCoinValidators(prevState => {
+    setSelectedValidatorsForCoins(prevState => {
       const coinValidatorsMap = {...prevState};
-      coinValidatorsMap[selectedCoin.id] = findValidator;
+      coinValidatorsMap[selectedCoin.id] = findValidators;
       return coinValidatorsMap;
     });
     return true;
   };
 
-  const selectedCoinValidator = (): Validator | undefined => {
+  const selectedCoinValidators = (): Validator[] => {
     if (!selectedCoin) {
-      return;
+      return [];
     }
-    return selectedCoinValidators[selectedCoin.id];
+    return selectedValidatorsForCoins[selectedCoin.id] || [];
   };
 
   return <ValidatorsContext.Provider value={{
     coinValidators,
-    selectedCoinValidator: selectedCoinValidator(),
-    selectCoinValidator
+    selectedCoinValidators: selectedCoinValidators(),
+    selectCoinValidators
   }}>
     {children}
   </ValidatorsContext.Provider>;

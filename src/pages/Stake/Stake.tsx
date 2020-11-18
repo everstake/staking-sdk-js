@@ -13,7 +13,9 @@ import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import Big from 'big.js';
 import emitter from '../../utils/Emitter';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
-import {EventData} from '../../models/config.model';
+import {EVENT, EventData, EventDataValidator} from '../../models/config.model';
+import {validatorsToText} from '../../utils/utils';
+import ValidatorMultiSelector from '../../components/ValidatorMultiSelector/ValidatorMultiSelector';
 
 interface StakeParams {
   amount: string;
@@ -29,7 +31,7 @@ const Stake: React.FC<StakeParams> = (params) => {
   const {config, initCalculator, updateAmount, dailyIncome, monthlyIncome, yearlyIncome} = useCalculator(amount);
   const {selectedCoin, userCoinData} = useCoin();
   const [balance, setBalance] = useState<string>('0');
-  const {selectedCoinValidator} = useValidators();
+  const {selectedCoinValidators} = useValidators();
   const [isOpenValidatorSelector, setIsOpenValidatorSelector] = useState(false);
   const [rangeValue, setRangeValue] = useState<number | number[]>(0);
   const {register, handleSubmit, errors, setValue, getValues} = useForm<StakeForm>({
@@ -48,13 +50,13 @@ const Stake: React.FC<StakeParams> = (params) => {
   }, []);
 
   useEffect(() => {
-    if (selectedCoin && selectedCoinValidator) {
-      initCalculator(selectedCoin, selectedCoinValidator.fee);
+    if (selectedCoin) {
+      initCalculator(selectedCoin, selectedCoinValidators[0].fee);
       setValue('amount', config.amount);
     }
-  }, [selectedCoin, selectedCoinValidator]);
+  }, [selectedCoin, selectedCoinValidators]);
 
-  if (!selectedCoin || !selectedCoinValidator) {
+  if (!selectedCoin) {
     return null;
   }
 
@@ -62,6 +64,10 @@ const Stake: React.FC<StakeParams> = (params) => {
     const formAmount = getValues('amount');
     updateAmount(formAmount);
     setRangeValue(getRangeValue(formAmount, balance));
+  };
+
+  const openValidatorSelector = () => {
+    setIsOpenValidatorSelector(true);
   };
 
   const closeValidatorSelector = () => {
@@ -100,8 +106,10 @@ const Stake: React.FC<StakeParams> = (params) => {
       if (!address) {
         throw Error('Address not fount');
       }
-      emitter.emit('stake',
-        new EventData(selectedCoin.symbol, data.amount, selectedCoinValidator.name, selectedCoinValidator.address, 'stake'));
+      const validators: EventDataValidator[] = selectedCoinValidators.map(validator => {
+        return {validatorName: validator.name, validatorAddress: validator.address};
+      });
+      emitter.emit(EVENT.STAKE, new EventData(selectedCoin.symbol, data.amount, validators, EVENT.STAKE));
     } catch (e) {
       setErrorMessage(e.message);
       setTimeout(() => setErrorMessage(null), 2500);
@@ -110,7 +118,10 @@ const Stake: React.FC<StakeParams> = (params) => {
   };
 
   return <div className='stake'>
-    {isOpenValidatorSelector && <ValidatorSelector close={closeValidatorSelector}/>}
+    {isOpenValidatorSelector && (selectedCoin.stakeType !== '1toN' ?
+      <ValidatorSelector close={closeValidatorSelector}/> :
+      <ValidatorMultiSelector close={closeValidatorSelector}/>)
+    }
     {!isOpenValidatorSelector && <form className='stake__form' onSubmit={handleSubmit(handleStake)}>
       <div className='stake__header'>
         <button className='back-btn icon-btn' onClick={() => goBack()}>{<BackArrowIcon/>}</button>
@@ -141,13 +152,13 @@ const Stake: React.FC<StakeParams> = (params) => {
 
       <div className='stake__selector-wrap'>
         <p className='selector__header'>Select validator</p>
-        <button type='button' onClick={() => setIsOpenValidatorSelector(true)} className='selector__btn'>
-            <span className={'selector__btn-container' + (selectedCoinValidator?.isDefault ? ' selector__btn-container--accent' : '')}>
+        <button type='button' onClick={openValidatorSelector} className='selector__btn'>
+            <span className={'selector__btn-container' + (selectedCoinValidators[0].isDefault ? ' selector__btn-container--accent' : '')}>
               <span className='selector__btn-info'>
-                <span className='selector__btn-title'>{selectedCoinValidator?.name}</span>
-                <span className='selector__btn-desc'>Fee: {selectedCoinValidator?.fee}%</span>
+                <span className='selector__btn-title'>{validatorsToText(selectedCoinValidators)}</span>
+                {selectedCoin.stakeType !== '1toN' && <span className='selector__btn-desc'>Fee: {selectedCoinValidators[0].fee}%</span>}
               </span>
-              {selectedCoinValidator?.isReliable && <p className='selector__reliable-label'>Reliable</p>}
+              {selectedCoinValidators[0].isReliable && <p className='selector__reliable-label'>Reliable</p>}
             </span>
         </button>
       </div>

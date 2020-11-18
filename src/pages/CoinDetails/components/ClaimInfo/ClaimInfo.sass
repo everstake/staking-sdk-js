@@ -1,0 +1,53 @@
+@import "src/sass/vars"
+.staking-sdk
+  .claim-info
+    margin-left: 16px
+    &__title
+      font: 400 14px/20px var(--everstakeFont)
+      color: rgba(var(--everstakeColorAccent), .4)
+      margin-top: 16px
+      margin-bottom: 1px
+      &--list
+        border-bottom: 1px solid rgba(var(--everstakeColorAccent), .12)
+        padding-bottom: 4px
+        margin-bottom: 13px
+    .staked
+      border-bottom: 1px solid rgba(var(--everstakeColorAccent), .12)
+      padding-right: 16px
+      margin-bottom: 12px
+      &:last-child
+        margin-bottom: 0
+      &__header
+        display: flex
+        align-items: center
+        justify-content: space-between
+        margin-bottom: 10px
+      &__amount
+        font: 500 24px/28px var(--everstakeFont)
+        color: rgba(var(--everstakeColorAccent), .87)
+      .validator
+        display: flex
+        width: 100%
+        font: 400 14px/24px var(--everstakeFont)
+        color: rgba(var(--everstakeColorAccent), .87)
+        margin-bottom: 12px
+        &__value
+          font-weight: 500
+          margin-left: 4px
+          +clipping_text
+    .rewards
+      padding-bottom: 20px
+      padding-right: 16px
+      border-bottom: 1px solid rgba(var(--everstakeColorAccent), .12)
+      &__info
+        font: 400 14px/24px var(--everstakeFont)
+        color: rgba(var(--everstakeColorAccent), .6)
+        margin-bottom: 12px
+        span
+          color: rgba(var(--everstakeColorAccent), .87)
+          font-weight: 500
+      &__btn
+        padding: 12px
+      &__error
+        margin-bottom: 12px
+
