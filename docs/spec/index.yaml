@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  description: Wallet SDK Static API
+  version: 0.0.4
+  title: Wallet SDK Static API
+servers:
+  - url: https://wallet-sdk-static.herokuapp.com/
+    description: Static server
+tags:
+  - name: "Coin"
+    description: "Methods for coins"
+paths:
+  $ref: ./path/index.yaml
+components:
+  $ref: ./components/index.yaml
