@@ -153,12 +153,19 @@ const Stake: React.FC<StakeParams> = (params) => {
       <div className='stake__selector-wrap'>
         <p className='selector__header'>Select validator</p>
         <button type='button' onClick={openValidatorSelector} className='selector__btn'>
-            <span className={'selector__btn-container' + (selectedCoinValidators[0].isDefault ? ' selector__btn-container--accent' : '')}>
-              <span className='selector__btn-info'>
-                <span className='selector__btn-title'>{validatorsToText(selectedCoinValidators)}</span>
-                {selectedCoin.stakeType !== '1toN' && <span className='selector__btn-desc'>Fee: {selectedCoinValidators[0].fee}%</span>}
-              </span>
-              {selectedCoinValidators[0].isReliable && <p className='selector__reliable-label'>Reliable</p>}
+            <span className={'selector__btn-container' + (selectedCoinValidators.find(validator => validator.isDefault) ? ' selector__btn-container--accent' : '')}>
+              {selectedCoin.stakeType !== '1toN' ?
+                <>
+                  <span className='selector__btn-info'>
+                    <span className='selector__btn-title'>{validatorsToText(selectedCoinValidators)}</span>
+                    {selectedCoin.stakeType !== '1toN' && <span className='selector__btn-desc'>Fee: {selectedCoinValidators[0].fee}%</span>}
+                  </span>
+                </> :
+                <>
+                  <span className='selector__btn-title'>{validatorsToText(selectedCoinValidators)}</span>
+                </>
+              }
+              {selectedCoinValidators.find(validator => validator.isReliable) && <p className='selector__reliable-label'>Reliable</p>}
             </span>
         </button>
       </div>

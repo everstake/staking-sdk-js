@@ -37,9 +37,9 @@ const ValidatorMultiSelector: React.FC<ValidatorMultiSelectorProps> = (props) =>
     }
   };
 
-  return <div className='validator-multi-selector'>
+  return <form onSubmit={confirm} className='validator-multi-selector'>
     <div className='validator-multi-selector__header'>
-      <button className='close-btn icon-btn' onClick={close}>{<CloseIcon/>}</button>
+      <button type='button' className='close-btn icon-btn' onClick={close}>{<CloseIcon/>}</button>
       <h3 className='validator-multi-selector__title'>Select validator</h3>
     </div>
 
@@ -62,10 +62,10 @@ const ValidatorMultiSelector: React.FC<ValidatorMultiSelectorProps> = (props) =>
             </label>
           </li>)}
         </ul>
-        <button onClick={confirm} className='validator-multi-selector__btn accent-btn'>Confirm</button>
+        <button disabled={!validatorIds || !validatorIds.length} className='validator-multi-selector__btn accent-btn'>Confirm</button>
       </>}
     </div> : <p className='coin-selector__subtitle'>No validators</p>}
-  </div>;
+  </form>;
 };
 
 export default ValidatorMultiSelector;

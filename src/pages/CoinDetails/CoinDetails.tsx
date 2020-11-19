@@ -38,7 +38,7 @@ const CoinDetails: React.FC = () => {
               <h3 className='info-block__title'>{`${selectedCoin.name} (${selectedCoin.symbol})`}</h3>
               <div className='info-block__bottom'>
                 <p className='info-block__item'>APR: <span>{selectedCoin.apr}%</span></p>
-                <p className='info-block__item'>Service fee: <span>{selectedCoin.fee}</span></p>
+                {selectedCoin.stakeType !== '1toN' && <p className='info-block__item'>Service fee: <span>{selectedCoin.fee}</span></p>}
               </div>
             </div>
           </div>
