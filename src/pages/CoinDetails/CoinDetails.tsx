@@ -1,19 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './CoinDetails.sass';
 import useCoin from '../../hooks/useCoin';
 import useNavigation from '../../hooks/useNavigation';
 import BackArrowIcon from '../../components/icons/BackArrowIcon';
 import InfoIcon from '../../components/icons/InfoIcon';
 import {PATH} from '../../contexts/NavigationProvider';
-import ClaimInfo from './components/ClaimInfo/ClaimInfo';
+import StakeInfo from './components/StakeInfo/StakeInfo';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 const CoinDetails: React.FC = () => {
   const {selectedCoin} = useCoin();
   const {goBack, navigate} = useNavigation();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!selectedCoin) {
     return null;
   }
+
+  const openStakePage = () => {
+    if (selectedCoin.stakeType === '1toN' && selectedCoin.stakeValidators && !!selectedCoin.stakeValidators.length) {
+      setErrorMessage('Please unstake your funds first.');
+      setTimeout(() => setErrorMessage(null), 3500);
+      return;
+    }
+    navigate(PATH.STAKE, {amount: ''});
+  };
 
   return (
     <div className='coin-details'>
@@ -43,16 +54,20 @@ const CoinDetails: React.FC = () => {
             </div>
           </div>
           <div className='coin-details__actions'>
-            <button className='coin-details__action stake-btn' onClick={() => navigate(PATH.STAKE, {amount: ''})}>Stake</button>
+            <button className='coin-details__action stake-btn' onClick={openStakePage}>Stake</button>
             <button className='coin-details__action open-calculator-btn' onClick={() => navigate(PATH.CALCULATOR)}>
               Open calculator
             </button>
           </div>
+
         </div>
       </div>
 
       <div className='coin-details__body'>
-        <ClaimInfo coin={selectedCoin}/>
+
+        {errorMessage && <div className='coin-details__error'><ErrorMessage text={errorMessage}/></div>}
+
+        <StakeInfo coin={selectedCoin}/>
 
         <div className='about'>
           <p className='about__title'>About</p>

@@ -50,12 +50,12 @@ const staking = new StakingSDK({id: 'staking-sdk'});
 const initCoins = [
   {
     symbol: 'XTZ',
-    address: 'Tezos user address',
+    address: 'tz1LLNkQK4UQV6QcFShiXJ2vT2ELw449MzAA',
     balance: '0.256'
   },
   {
-    symbol: 'ICX',
-    address: 'ICON user address',
+    symbol: 'atom',
+    address: 'cosmos1gdmscydnyl0pj6lcjzmeuhr6g5g68u97z3jm8l',
     balance: '24.5803'
   }
 ];

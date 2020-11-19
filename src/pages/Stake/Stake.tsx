@@ -102,6 +102,9 @@ const Stake: React.FC<StakeParams> = (params) => {
   const handleStake = (data: StakeForm) => {
     setStakeLoading(true);
     try {
+      if (selectedCoin.stakeType === '1to1' && selectedCoin.stakeValidators && selectedCoin.stakeValidators[0].id !== selectedCoinValidators[0].id) {
+        throw Error('Cannot stake for a different validator. Unstake your funds first.');
+      }
       const address = userCoinData(selectedCoin?.symbol)?.address;
       if (!address) {
         throw Error('Address not fount');
@@ -112,7 +115,7 @@ const Stake: React.FC<StakeParams> = (params) => {
       emitter.emit(EVENT.STAKE, new EventData(selectedCoin.symbol, data.amount, validators, EVENT.STAKE));
     } catch (e) {
       setErrorMessage(e.message);
-      setTimeout(() => setErrorMessage(null), 2500);
+      setTimeout(() => setErrorMessage(null), 3500);
     }
     setStakeLoading(false);
   };

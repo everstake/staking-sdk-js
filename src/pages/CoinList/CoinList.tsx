@@ -36,7 +36,7 @@ const CoinList = () => {
 
     {coinListLoading && !coinList.length ? <div className='coin-list__loader-wrap'><Loader/></div> :
       !!coinList && coinList.length > 0 ? <div className='coin-list__body'>
-        {stakedCoinList.length && <>
+        {!!stakedCoinList.length && <>
           <p className='coin-list__subtitle'>Staked</p>
           <ul className='coin-list__list'>
             {stakedCoinList.map(coin => {
@@ -45,7 +45,7 @@ const CoinList = () => {
             })}
           </ul>
         </>}
-        {readyToStakeCoinList.length && <>
+        {!!readyToStakeCoinList.length && <>
           <p className='coin-list__subtitle'>Ready to stake</p>
           <ul className='coin-list__list'>
             {readyToStakeCoinList.map(coin => {

@@ -76,7 +76,7 @@ export class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
     this.yieldInterval = coin.yieldInterval;
     this.yieldPercent = coin.yieldPercent;
     this.isActive = coin.isActive;
-    this.symbol = coin.symbol;
+    this.symbol = coin.symbol.toUpperCase();
     this.precision = coin.precision;
     this.needsClaiming = coin.needsClaiming;
     this.intervalStake = coin.intervalStake;

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './ClaimInfo.sass';
+import './StakeInfo.sass';
 import {Coin} from '../../../../models/coins.model';
 import {PATH} from '../../../../contexts/NavigationProvider';
 import ErrorMessage from '../../../../components/ErrorMessage/ErrorMessage';
@@ -7,13 +7,13 @@ import {EVENT, EventData, EventDataValidator} from '../../../../models/config.mo
 import emitter from '../../../../utils/Emitter';
 import useNavigation from '../../../../hooks/useNavigation';
 import {ValidatorDto} from '../../../../models/validators.model';
-import {validatorsToText} from '../../../../utils/utils';
+import {formatAmount, validatorsToText} from '../../../../utils/utils';
 
-interface ClaimInfoProps {
+interface StakeInfoProps {
   coin: Coin;
 }
 
-const ClaimInfo: React.FC<ClaimInfoProps> = (props) => {
+const StakeInfo: React.FC<StakeInfoProps> = (props) => {
   const {coin} = props;
   const {stakeType, stakeValidators} = coin;
   const [claimLoading, setClaimLoading] = useState(false);
@@ -49,7 +49,7 @@ const ClaimInfo: React.FC<ClaimInfoProps> = (props) => {
       </>}
 
       {coin.hasRewards && <div className='rewards'>
-        <p className='rewards__info'>Available rewards: <span>{coin.amountToClaim} {coin.symbol}</span></p>
+        <p className='rewards__info'>Available rewards: <span>{formatAmount(coin.amountToClaim || 0, coin.symbol)}</span></p>
         <button disabled={claimLoading} onClick={claim} className='rewards__btn accent-btn'>Claim rewards</button>
         {errorMessage && <ErrorMessage className={'rewards__error'} text={errorMessage}/>}
       </div>}
@@ -62,7 +62,7 @@ const Validator1to1: React.FC<{ validators: ValidatorDto[], symbol: string, amou
   const {navigate} = useNavigation();
   return <div className='staked'>
     <div className='staked__header'>
-      <p className='staked__amount'>{amount} {symbol}</p>
+      <p className='staked__amount'>{formatAmount(amount, symbol)}</p>
       <button onClick={() => navigate(PATH.UNSTAKE)} className='staked__action unstake-btn'>Unstake</button>
     </div>
 
@@ -78,7 +78,7 @@ const Validator1toN: React.FC<{ validators: ValidatorDto[], symbol: string, amou
 
   return <div className='staked'>
     <div className='staked__header'>
-      <p className='staked__amount'>{amount} {symbol}</p>
+      <p className='staked__amount'>{formatAmount(amount, symbol)}</p>
       <button onClick={() => navigate(PATH.UNSTAKE)} className='staked__action unstake-btn'>Unstake</button>
     </div>
 
@@ -95,7 +95,7 @@ const ValidatorNto1: React.FC<{ validators: ValidatorDto[], symbol: string }> = 
     {validators.map(validator => {
       return <div className='staked' key={validator.id}>
         <div className='staked__header'>
-          <p className='staked__amount'>{validator.amount} {symbol}</p>
+          <p className='staked__amount'>{formatAmount(validator.amount || 0, symbol)}</p>
           <button onClick={() => navigate(PATH.UNSTAKE)} className='staked__action unstake-btn'>Unstake</button>
         </div>
 
@@ -107,4 +107,4 @@ const ValidatorNto1: React.FC<{ validators: ValidatorDto[], symbol: string }> = 
   </>;
 };
 
-export default ClaimInfo;
+export default StakeInfo;

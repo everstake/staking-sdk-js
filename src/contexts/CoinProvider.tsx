@@ -70,7 +70,7 @@ const CoinProvider: React.FC = ({children}) => {
       localStorage.setItem(COIN_LIST_KEY, JSON.stringify(coinListRes));
       const filteredList: StakeListParams[] = [];
       coinListRes.forEach(coin => {
-        const fC = coins.find(c => c.symbol === coin.symbol);
+        const fC = coins.find(c => c.symbol.toUpperCase() === coin.symbol.toUpperCase());
         if (fC) {
           filteredList.push({coinId: coin.id, address: fC.address});
         }
@@ -119,7 +119,7 @@ const CoinProvider: React.FC = ({children}) => {
   };
 
   const userCoinData = (coinSymbol: string | undefined): UserCoin | undefined => {
-    return userCoins.find(coin => coin.symbol === coinSymbol);
+    return userCoins.find(coin => coin.symbol.toUpperCase() === coinSymbol);
   };
 
   const clearUserCoins = () => {

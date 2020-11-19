@@ -1,5 +1,6 @@
 import Big from 'big.js';
 import {Coin} from '../models/coins.model';
+import {formatAmount} from './utils';
 
 export class CalculatorModel {
   private readonly coinSymbol: string;
@@ -52,13 +53,13 @@ export class CalculatorModel {
   }
 
   get dailyIncome(): string {
-    return formatAmount(this.perDay, this.coinPrecision, this.coinSymbol);
+    return formatAmount(this.perDay, this.coinSymbol, +this.coinPrecision);
   }
   get monthlyIncome(): string {
-    return formatAmount(this.perMonth, this.coinPrecision, this.coinSymbol);
+    return formatAmount(this.perMonth, this.coinSymbol, +this.coinPrecision);
   }
   get yearlyIncome(): string {
-    return formatAmount(this.perYear, this.coinPrecision, this.coinSymbol);
+    return formatAmount(this.perYear, this.coinSymbol, +this.coinPrecision);
   }
 
   private calculate(duration: number, periodDuration: string): number {
@@ -78,10 +79,6 @@ export class CalculatorModel {
     return +periodIncome.toFixed();
   }
 }
-
-export const formatAmount = (amount: number, precision: string, symbol: string): string => {
-  return Big(amount).round(+precision).toFixed() + ' ' + symbol;
-};
 
 const MILLISECONDS_PER_SECOND = 1000;
 const SECONDS_PER_MINUTE = 60;

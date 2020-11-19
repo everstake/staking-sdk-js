@@ -1,6 +1,7 @@
 import React from 'react';
 import './CoinItem.sass';
 import {Coin} from '../../../../models/coins.model';
+import {formatAmount} from '../../../../utils/utils';
 
 export class CoinItemProps {
   id: string;
@@ -30,7 +31,7 @@ const CoinItem: React.FC<CoinItemProps> = (props) => {
           <p className='coin-item__name'>{props.name}</p>
           <p className='coin-item__apr'>{props.isActive ? props.apr + '%' : 'Coming soon'}</p>
         </div>
-        {props.amount && +props.amount > 0 && <div className='coin-item__staked-sum'>{props.amount} {props.symbol}</div>}
+        {props.amount && +props.amount > 0 && <div className='coin-item__staked-sum'>{formatAmount(props.amount, props.symbol)}</div>}
       </div>
     </button>
   </li>;
