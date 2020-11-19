@@ -70,34 +70,42 @@ everstake.close();
 
 ````typescript
 interface Config {
-    id: string;
-    theme?: Theme;
+  id: string;
+  theme?: Theme;
 }
 
 interface Theme {
-    colorPrimary: string;
-    colorPrimaryDark: string;
-    colorAccent: string;
-    windowBackground: string;
-    detailsHeaderBg: string;
-    focusColor: string;
-    colorGreen: string;
-    warningColor: string;
+  colorPrimary: string;
+  colorPrimaryDark: string;
+  colorAccent: string;
+  windowBackground: string;
+  detailsHeaderBg: string;
+  focusColor: string;
+  colorGreen: string;
+  warningColor: string;
 }
 
 interface UserCoin {
-    symbol: string;
-    address: string;
-    balance: string;
+  symbol: string;
+  address: string;
+  balance: string;
 }
 
 interface EventData {
   symbol: string;
   amount: string;
-  validatorName: string;
-  validatorAddress: string;
-  type: Event;
+  validators: EventDataValidator[];
+  type: EVENT;
 }
 
-type Event = 'stake' | 'unstake' | 'claim';
+interface EventDataValidator {
+  validatorName: string;
+  validatorAddress: string;
+}
+
+export enum EVENT {
+  STAKE = 'stake',
+  UNSTAKE = 'unstake',
+  CLAIM = 'claim'
+}
 ````

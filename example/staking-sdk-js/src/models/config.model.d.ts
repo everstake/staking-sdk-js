@@ -20,9 +20,17 @@ export interface UserCoin {
 export declare class EventData {
     symbol: string;
     amount: string;
+    validators: EventDataValidator[];
+    type: EVENT;
+    constructor(symbol: string, amount: string, validators: EventDataValidator[], type: EVENT);
+}
+export declare class EventDataValidator {
     validatorName: string;
     validatorAddress: string;
-    type: Event;
-    constructor(symbol: string, amount: string, validatorName: string, validatorAddress: string, type: Event);
+    constructor(validatorName: string, validatorAddress: string);
 }
-export declare type Event = 'stake' | 'unstake' | 'claim';
+export declare enum EVENT {
+    STAKE = "stake",
+    UNSTAKE = "unstake",
+    CLAIM = "claim"
+}

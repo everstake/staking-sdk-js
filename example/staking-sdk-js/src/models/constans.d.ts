@@ -1,1 +1,1 @@
-export declare const API = "https://wallet-sdk-static.herokuapp.com";
+export declare const API = "https://wallet-sdk.everstake.one";

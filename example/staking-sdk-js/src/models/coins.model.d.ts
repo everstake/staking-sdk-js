@@ -2,6 +2,7 @@ import { ValidatorDto } from './validators.model';
 export interface CoinDto {
     readonly id: string;
     readonly name: string;
+    readonly stakeType: STAKE_TYPE;
     readonly iconUrl: string;
     readonly apr: string;
     readonly order: string;
@@ -18,11 +19,16 @@ export interface CoinDto {
     readonly aboutUrl: string;
     readonly validators: ValidatorDto[];
 }
+export declare enum STAKE_TYPE {
+    '1to1' = "1to1",
+    'Nto1' = "Nto1",
+    '1toN' = "1toN"
+}
 export interface StakeDto {
     readonly coinId: string;
     readonly amount: string;
     readonly amountToClaim: string;
-    readonly validator: ValidatorDto;
+    readonly validators: ValidatorDto[];
 }
 export declare class StakeListParams {
     coinId: string;
@@ -32,6 +38,7 @@ export declare class StakeListParams {
 export declare class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> {
     id: string;
     name: string;
+    stakeType: STAKE_TYPE;
     iconUrl: string;
     apr: string;
     order: string;
@@ -49,7 +56,7 @@ export declare class Coin implements CoinDto, Omit<Partial<StakeDto>, 'coinId'> 
     validators: ValidatorDto[];
     amount?: string;
     amountToClaim?: string;
-    validator?: ValidatorDto;
+    stakeValidators?: ValidatorDto[];
     fee: string;
     constructor(coin: CoinDto, staking?: StakeDto);
     get isStaked(): boolean;

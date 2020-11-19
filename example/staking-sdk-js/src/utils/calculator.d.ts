@@ -22,4 +22,3 @@ export declare class CalculatorModel {
     get yearlyIncome(): string;
     private calculate;
 }
-export declare const formatAmount: (amount: number, precision: string, symbol: string) => string;
